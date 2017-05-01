@@ -1,0 +1,4 @@
+---
+- hosts: addons
+  roles:
+    - addons
