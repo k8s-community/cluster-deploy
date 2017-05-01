@@ -1,0 +1,22 @@
+[gcloud]
+localhost ansible_connection=local
+
+[master]
+k8s-master-01
+
+[node]
+k8s-node-01
+k8s-node-02
+k8s-node-03
+
+[build]
+k8s-build-01
+
+[etcd:children]
+master
+
+# [etcd]
+# XX.XX.XX.XX
+
+[addons:children]
+master
