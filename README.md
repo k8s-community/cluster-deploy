@@ -1,1 +1,2 @@
-# k8s-deploy
+# cluster-deploy
+Kubernetes cluster deployment palybook
