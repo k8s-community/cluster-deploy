@@ -1,4 +1,5 @@
 ---
-- hosts: gcloud
+- hosts: localhost
+  connection: local
   roles:
     - instance
