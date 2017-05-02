@@ -1,6 +1,3 @@
-[gcloud]
-localhost ansible_connection=local
-
 [master]
 k8s-master-01
 
