@@ -1,0 +1,15 @@
+# This inventory hosts file should be generated automatically.
+# Please do not edit all that bellow
+
+{% for item in gce_groups %}
+[{{ item.name }}]
+
+{% if item.name == 'master' %}
+[etcd:children]
+master
+
+[addons:children]
+master
+
+{% endif %}
+{% endfor %}

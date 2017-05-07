@@ -1,5 +1,24 @@
 ---
 - hosts: localhost
   connection: local
-  roles:
-    - instance
+  pre_tasks:
+    - name: Check inventory hosts file
+      stat:
+        path: '{{ gce_inventory_file }}'
+      register: st
+    - name: Create inventory hosts file from template
+      template:
+        src: inventory.j2
+        dest: '{{ gce_inventory_file }}'
+      when: not st.stat.exists
+  tasks:
+    - name: Create VM instances groups
+      include_role:
+        name: instance
+      vars:
+        gce_instance_group: '{{ gce_group.name }}'
+        gce_instance_names: '{{ gce_group.nodes }}'
+        gce_machine_type: '{{ gce_group.type }}'
+      with_items: '{{ gce_groups }}'
+      loop_control:
+        loop_var: gce_group
