@@ -1,2 +1,29 @@
 ---
-# tasks file for instance
+- name: Create VM instances group {{ gce_instance_group }}
+  gce:
+    instance_names: '{{ gce_instance_names }}'
+    zone: '{{ gce_instances_zone }}'
+    machine_type: '{{ gce_machine_type }}'
+    image: '{{ gce_image }}'
+    # disk_size: '{{ gce_disk_size }}'
+    network: '{{ gce_network_name }}'
+    subnetwork: '{{ gce_subnet_name }}'
+    ip_forward: '{{ gce_ip_forward | lower }}'
+    metadata: '{{ gce_metadata }}'
+    service_account_permissions: '{{ gce_sa_permissions }}'    
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+  register: gce
+
+- name: Wait for SSH to come up
+  wait_for:
+    host: '{{ item.public_ip }}'
+    port: 22
+  with_items: '{{ gce.instance_data | default([], true) }}'
+
+- lineinfile:
+    dest: '{{ gce_inventory_file }}'
+    insertafter: "^\\[{{ gce_instance_group }}\\]" 
+    line: '{{ item.name }} ansible_host={{ item.public_ip  }}'
+  with_items: '{{ gce.instance_data | default([], true) }}'
