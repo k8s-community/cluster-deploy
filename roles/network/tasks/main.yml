@@ -1,2 +1,67 @@
 ---
-# tasks file for network
+# Create a 'k8s' network
+- name: Create Kubernetes cluster network
+  gce_net:
+    name: '{{ gce_network_name }}'
+    mode: custom
+    subnet_name: '{{ gce_subnet_name }}'
+    subnet_region: '{{ gce_instances_region }}'
+    ipv4_range: '{{ gce_instances_ip_range }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+- name: Firewall - allow internal https
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-internal-https
+    allowed: tcp:443
+    src_range:
+      - '{{ gce_instances_ip_range }}'
+      - '{{ gce_overlay_ip_range }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+- name: Firewall - allow internal etcd
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-internal-etcd
+    allowed: tcp:2379-2380
+    src_range:
+      - '{{ gce_instances_ip_range }}'
+      - '{{ gce_overlay_ip_range }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+- name: Firewall - allow internal kubelet, cAdvisor
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-internal-kubelet
+    allowed: tcp:10250,10255,4194
+    src_range:
+      - '{{ gce_instances_ip_range }}'
+      - '{{ gce_overlay_ip_range }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+- name: Firewall - allow internal flannel
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-internal-flannel
+    allowed: udp:8472
+    src_range:
+      - '{{ gce_instances_ip_range }}'
+      - '{{ gce_overlay_ip_range }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+- name: Firewall - allow external https, ssh
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-external-https-ssh
+    allowed: tcp:443,22
+    src_range: 
+      - 0.0.0.0/0
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+   
