@@ -3,6 +3,7 @@ Ansible Role: ETCD
 
 This role install ETCD registry on Redhat linux based systems.
 
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
 Requirements
 ------------
