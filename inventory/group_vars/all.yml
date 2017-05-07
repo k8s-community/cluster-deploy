@@ -72,7 +72,10 @@ gce_groups:
 # https://cloud.google.com/compute/docs/images
 gce_image: centos-7
 
-# Script that starts at creating the VM instance
+# You can choose to specify a startup script that will run when your instance
+# boots up or restarts. Startup scripts can be used to install software and updates,
+# and to ensure that services are running within the virtual machine.
+# Learn more: https://cloud.google.com/compute/docs/startupscript
 gce_startup_script: |
   #!/bin/bash
 
