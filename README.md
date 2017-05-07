@@ -49,3 +49,8 @@ Thank you for your understanding!
 ## License
 
 [MIT Public License](https://github.com/k8s-community/cluster-deploy/blob/master/LICENSE)
+
+## Author Information
+
+Kubernets Community [k8s-community](https://github.com/k8s-community)
+
