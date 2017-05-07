@@ -3,6 +3,7 @@ Ansible Role: Instance
 
 This role install VM instance on GCE.
 
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
 Requirements
 ------------
@@ -22,7 +23,7 @@ Available variables are listed below, along with default values (see `defaults/m
 
 A service account's credentials include a generated email address that is unique.
 Specify the email address of the user account.
-You can create one according to the procedure specified in this [reference](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount)
+You can create service account according to the [procedure](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount)
 
 	gce_project_id: "your project id"
 
@@ -30,16 +31,16 @@ Specify your project ID which one used from your GCP account
 
 	gce_credentials_file: 'gcloud.json'
 
-The full path of your unique service account credentials file. 
-Details on generating this can be found at [https://docs.ansible.com](https://docs.ansible.com/ansible/guide_gce.html#credentials)
-You can download json credentials according to the procedure specified in this [reference](https://support.google.com/cloud/answer/6158849?hl=en&ref_topic=6262490#serviceaccounts)
+Specify full path of your unique service account credentials file. 
+Details on generating this can be found at [https://docs.ansible.com](https://docs.ansible.com/ansible/guide_gce.html#credentials).
+You can download json credentials according to the [procedure](https://support.google.com/cloud/answer/6158849?hl=en&ref_topic=6262490#serviceaccounts)
 
 	gce_domain_name: k8s
 	gce_cluster_name: cluster
 
 It will be used as the Internal dns domain name if DNS is enabled.
 Services will be discoverable under
-<service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
+`<service-name>.<namespace>.svc.<domainname>.<clustername>`, e.g.
 myservice.default.svc.k8s.cluster
 
 	gce_network_name: k8s
