@@ -21,12 +21,12 @@ Available variables are listed below, along with default values (see `defaults/m
 
 A service account's credentials include a generated email address that is unique.
 Specify the email address of the user account.
-You can create service account according to the [procedure](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount)
+You can create service account according to the [procedure](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount).
 ```yaml
 gce_service_account_email: "your service account email"
 ```
 
-Specify your project ID which one used from your GCP account
+Specify your project ID which one used from your GCP account.
 ```yaml
 gce_project_id: "your project id"
 ```
@@ -45,14 +45,14 @@ gce_instances_region: europe-west1
 ```
 
 A zone is an isolated location within a region.
-Resources that live in a zone, such as instances, are referred to as zonal resources
+Resources that live in a zone, such as instances, are referred to as zonal resources.
 ```yaml
 gce_instances_zone: europe-west1-b
 ```
 
 GCE instances IP addresses range. It should be an IP addresses range corresponed with zone, e.g.
-Western Europe Zone has 10.132.0.0/20 IP range
-Use default IP range for determined zone in most of all cases
+Western Europe Zone has `10.132.0.0/20` IP range.
+Use default IP range for determined zone in most of all cases.
 ```yaml
 gce_instances_ip_range: 10.132.0.0/24
 ```
@@ -66,20 +66,20 @@ gce_overlay_ip_range: 10.20.0.0/16
 It will be used as the Internal dns domain name if DNS is enabled.
 Services will be discoverable under
 `<service-name>.<namespace>.svc.<domainname>.<clustername>`, e.g.
-myservice.default.svc.k8s.cluster
+`myservice.default.svc.k8s.cluster`.
 ```yaml
 gce_domain_name: k8s
 gce_cluster_name: cluster
 ```
 
-The network determines what network traffic the instance can access
-Use auto generated network name in most of all cases
+The network determines what network traffic the instance can access.
+Use auto generated network name in most of all cases.
 ```yaml
 gce_network_name: k8s
 ```
 
 Assigns the instance an IPv4 address from the subnetwork’s range.
-Use auto generated subnetwork name in most of all cases
+Use auto generated subnetwork name in most of all cases.
 ```yaml
 gce_subnet_name: k8s-cluster
 ```
