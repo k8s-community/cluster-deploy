@@ -3,7 +3,7 @@
     - master
     - node
   remote_user: '{{ k8s_ssh_user }}'
-    
+
 - hosts:
     - master
     - node
