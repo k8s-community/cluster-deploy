@@ -1,0 +1,35 @@
+---
+- hosts:
+    - master
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  become_method: sudo
+  pre_tasks:
+    - name: Copy CA
+      copy:
+        src: files/
+        dest: '{{ ssl_dir }}'
+  roles:
+    - role: ssl
+      ssl_name: master
+      ssl_hosts: "{{ groups['master'] }}"
+      ssl_ips: "{{ groups['master']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
+      ssl_custom:
+        - 'kubernetes'
+        - 'kubernetes.default'
+        - 'kubernetes.default.svc'
+        - 'kubernetes.default.svc.{{ k8s_cluster_domain }}'
+        - '{{ k8s_master_name }}'
+        - '{{ k8s_services_name }}'
+        - '{{ k8s_registry_name }}'
+        - '127.0.0.1'
+        - '{{ k8s_cluster_service_ip }}'
+      when: inventory_hostname in ssl_hosts[0]
+  post_tasks:
+    - set_fact:
+        rest_hosts: "{{ groups['master'] | difference([inventory_hostname]) | map('extract', hostvars, 'ansible_hostname')|list }}"
+    - shell: > 
+        rsync -u {{ ssl_dir }}/master* {{ item }}:{{ ssl_dir }}/
+      with_items: 
+        - "{{ rest_hosts }}"
+      when: inventory_hostname in groups['master'][0]
