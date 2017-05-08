@@ -1,0 +1,4 @@
+---
+gce_install_net_tools: true
+gce_install_system_tools: true
+gce_install_docker: true

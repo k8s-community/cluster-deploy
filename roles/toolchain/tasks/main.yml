@@ -1,0 +1,50 @@
+---
+- name: Install net tools
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - lsof
+    - mtr
+    - net-tools
+    - nmap
+    - tcpdump
+    - telnet
+  when: gce_install_net_tools
+
+- name: Install system tools
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - git
+    - iotop
+    - iperf
+    - rsync
+    - screen
+    - strace
+    - wget
+  when: gce_install_system_tools
+
+- name: Install docker
+  yum:
+    name: docker
+    state: present
+  when: gce_install_docker
+  notify:
+    - restart docker
+
+- name: Enable docker
+  service:
+    name: docker
+    enabled: yes
+  when: gce_install_docker
+  notify:
+    - restart docker
+
+- name: Install docker wrapper
+  copy:
+    src: docker
+    dest: /usr/local/bin/docker
+    mode: 0555
+  when: gce_install_docker
