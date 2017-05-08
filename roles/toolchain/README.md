@@ -18,17 +18,17 @@ Available variables are listed below, along with default values (see `defaults/m
 
 Install network tools.
 ```yaml
-gce_install_net_tools: true
+toolchain_install_net_tools: true
 ```
 
 Install system tools.
 ```yaml
-gce_install_system_tools: true
+toolchain_install_system_tools: true
 ```
 
 Install docker.
 ```yaml
-gce_install_docker: true
+toolchain_install_docker: true
 ```
 
 Example Playbook

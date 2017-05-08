@@ -10,7 +10,7 @@
     - nmap
     - tcpdump
     - telnet
-  when: gce_install_net_tools
+  when: toolchain_install_net_tools
 
 - name: Install system tools
   yum:
@@ -24,7 +24,7 @@
     - screen
     - strace
     - wget
-  when: gce_install_system_tools
+  when: toolchain_install_system_tools
 
 - name: Install docker
   yum:
@@ -38,7 +38,7 @@
   service:
     name: docker
     enabled: yes
-  when: gce_install_docker
+  when: toolchain_install_docker
   notify:
     - restart docker
 
@@ -47,4 +47,4 @@
     src: docker
     dest: /usr/local/bin/docker
     mode: 0555
-  when: gce_install_docker
+  when: toolchain_install_docker

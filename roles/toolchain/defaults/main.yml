@@ -1,4 +1,4 @@
 ---
-gce_install_net_tools: true
-gce_install_system_tools: true
-gce_install_docker: true
+toolchain_install_net_tools: true
+toolchain_install_system_tools: true
+toolchain_install_docker: true
