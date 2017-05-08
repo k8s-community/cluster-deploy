@@ -1,0 +1,9 @@
+---
+- hosts:
+    - master
+    - node
+  remote_user: '{{ gce_ssh_user }}'
+  become: true
+  become_method: sudo
+  roles:
+    - ssl
