@@ -80,9 +80,6 @@ gce_startup_script: |
   #!/bin/bash
 
   yum update -y
-  yum install docker -y
-  systemctl enable docker.service
-  systemctl start docker.service
 
 # Account name of remote user. Ansible will use this user account to ssh into
 # the managed machines. The user must be able to use sudo without asking
