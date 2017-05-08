@@ -1,0 +1,13 @@
+{
+  "CN": "{{ item.cn }}",
+  "hosts": [""],
+  "key": {
+    "algo": "{{ ssl_key_algo }}",
+    "size": {{ ssl_key_size }}
+  },
+  "names": [
+    {
+      "O": "{{ item.org }}"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "CN": "{{ inventory_hostname }}",
+  "hosts": [
+    {% for host in ssl_hosts %}"{{ host }}",
+    {% endfor %}
+    {% for host in ssl_ips %}"{{ host }}",
+    {% endfor %}
+    {% for host in ssl_custom %}"{{ host }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ],
+  "key": {
+    "algo": "{{ ssl_key_algo }}",
+    "size": {{ ssl_key_size }}
+  },
+  "names": [
+    {
+      "C": "{{ ssl_country }}",
+      "L": "{{ ssl_city }} ",
+      "O": "{{ ssl_org }}",
+      "OU": "{{ ssl_division }}",
+      "ST": "{{ ssl_state }}"
+    }
+  ]
+}

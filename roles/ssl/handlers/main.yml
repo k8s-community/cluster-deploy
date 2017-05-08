@@ -1,2 +1,6 @@
 ---
-# handlers file for ssl
+- name: eanble ca certificate
+  command: update-ca-trust enable
+
+- name: extract ca certificate
+  command: update-ca-trust extract

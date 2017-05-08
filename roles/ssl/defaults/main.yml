@@ -1,2 +1,19 @@
 ---
-# defaults file for ssl
+ssl_name: kubernetes
+ssl_bin_dir: /usr/bin
+ssl_dir: /etc/ssl/kubernetes
+ssl_country: NL
+ssl_city: Rotterdam
+ssl_org: k8s.community
+ssl_division: k8s
+ssl_state: Rotterdam
+ssl_key_algo: rsa
+ssl_key_size: 2048
+ssl_expiry_hours: 43800h
+ssl_hosts:
+  - '{{ inventory_hostname }}'
+ssl_ips:
+  - '{{ ansible_default_ipv4.address }}'
+ssl_custom:
+  - '127.0.0.1'
+ssl_clients: []

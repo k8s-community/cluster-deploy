@@ -2,8 +2,47 @@
 - hosts:
     - master
     - node
-  remote_user: '{{ gce_ssh_user }}'
+  remote_user: '{{ k8s_ssh_user }}'
+    
+- hosts:
+    - master
+    - node
+  serial: 1
+  remote_user: '{{ k8s_ssh_user }}'
   become: true
   become_method: sudo
+  pre_tasks:
+    - name: Copy CA
+      copy:
+        src: files/
+        dest: '{{ ssl_dir }}'
   roles:
-    - ssl
+    - role: ssl
+      ssl_hosts: "{{ groups['master'] + groups['node'] }}"
+      ssl_ips: "{{ (groups['master']+groups['node'])|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
+      ssl_custom:
+        - 'kubernetes'
+        - 'kubernetes.default'
+        - 'kubernetes.default.svc'
+        - 'kubernetes.default.svc.{{ k8s_cluster_domain }}'
+        - '{{ k8s_master_name }}'
+        - '{{ k8s_services_name }}'
+        - '{{ k8s_registry_name }}'
+        - '127.0.0.1'
+        - '{{ k8s_cluster_service_ip }}'
+      ssl_clients:
+        - name: kubelet
+          cn: system:node:{{ inventory_hostname }}
+          org: system:nodes
+        - name: kube-proxy
+          cn: system:kube-proxy
+          org: system:nodes
+        - name: controller
+          cn: system:controller
+          org: system:masters
+        - name: scheduler
+          cn: system:scheduler
+          org: system:masters
+        - name: admin
+          cn: system:admin
+          org: system:masters
