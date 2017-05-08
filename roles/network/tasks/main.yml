@@ -17,7 +17,7 @@
     allowed: tcp:443
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ gce_overlay_ip_range }}'
+      - '{{ k8s_overlay_ip_range }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
@@ -28,7 +28,7 @@
     allowed: tcp:2379-2380
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ gce_overlay_ip_range }}'
+      - '{{ k8s_overlay_ip_range }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
@@ -39,7 +39,7 @@
     allowed: tcp:10250,10255,4194
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ gce_overlay_ip_range }}'
+      - '{{ k8s_overlay_ip_range }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
@@ -50,7 +50,7 @@
     allowed: udp:8472
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ gce_overlay_ip_range }}'
+      - '{{ k8s_overlay_ip_range }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'

@@ -4,12 +4,12 @@
   pre_tasks:
     - name: Check inventory hosts file
       stat:
-        path: '{{ gce_inventory_file }}'
+        path: '{{ k8s_inventory_file }}'
       register: st
     - name: Create inventory hosts file from template
       template:
         src: inventory.j2
-        dest: '{{ gce_inventory_file }}'
+        dest: '{{ k8s_inventory_file }}'
       when: not st.stat.exists
   tasks:
     - name: Create VM instances groups

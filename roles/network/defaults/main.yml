@@ -1,4 +1,11 @@
 ---
+# It will be used as the Internal dns domain name if DNS is enabled.
+# Services will be discoverable under
+# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
+# myservice.default.svc.k8s.cluster
+k8s_domain_name: k8s
+k8s_cluster_name: cluster
+
 # A service account's credentials include a generated email address that is unique.
 # Specify the email address of the user account
 # You can create one according to the procedure specified in this reference
@@ -15,20 +22,13 @@ gce_credentials_file: '{{ ansible_env.HOME }}/gcloud.json'
 # Specify your project ID which one used from your GCP account
 gce_project_id: my-project-id
 
-# It will be used as the Internal dns domain name if DNS is enabled.
-# Services will be discoverable under
-# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
-# myservice.default.svc.k8s.cluster
-gce_domain_name: k8s
-gce_cluster_name: cluster
-
 # The network determines what network traffic the instance can access
 # Use auto generated network name in most of all cases
-gce_network_name: '{{ gce_domain_name }}'
+gce_network_name: '{{ k8s_domain_name }}'
 
 # Assigns the instance an IPv4 address from the subnetwork’s range.
 # Use auto generated subnetwork name in most of all cases
-gce_subnet_name: '{{ gce_network_name }}-{{ gce_cluster_name }}'
+gce_subnet_name: '{{ gce_network_name }}-{{ k8s_cluster_name }}'
 
 # A region is a specific geographical location where you can run your resources.
 # Each region has one or more zones.
@@ -47,4 +47,4 @@ gce_instances_ip_range: 10.132.0.0/24
 # Flannel internal overlay network. It will assign IP
 # addresses from this range to individual pods.
 # This network must be unused block of space.
-gce_overlay_ip_range: 10.20.0.0/16
+k8s_overlay_ip_range: 10.20.0.0/16

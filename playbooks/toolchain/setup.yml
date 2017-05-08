@@ -3,7 +3,7 @@
     - master
     - node
     - build
-  remote_user: '{{ gce_ssh_user }}'
+  remote_user: '{{ k8s_ssh_user }}'
   become: true
   become_method: sudo
   roles:

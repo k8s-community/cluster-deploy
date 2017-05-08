@@ -1,4 +1,24 @@
 ---
+# Account name of remote user. Ansible will use this user account to ssh into
+# the managed machines. The user must be able to use sudo without asking
+# for password
+k8s_ssh_user: dev
+
+# SSH key that will be used to connect your VM instances
+# Use this default value if you won't use special separate key for this purposes
+k8s_ssh_key: '{{ lookup("file", "{{ ansible_env.HOME }}/.ssh/id_rsa.pub") }}'
+
+# It will be used as the Internal dns domain name if DNS is enabled.
+# Services will be discoverable under
+# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
+# myservice.default.svc.k8s.cluster
+k8s_domain_name: k8s
+k8s_cluster_name: cluster
+
+# Path to the Inventory hosts file
+# It should be auto generated during the crating of VM inctances
+k8s_inventory_file: '{{ inventory_dir }}/{{ k8s_cluster_name }}'
+
 # A service account's credentials include a generated email address that is unique.
 # Specify the email address of the user account
 # You can create one according to the procedure specified in this reference
@@ -15,36 +35,16 @@ gce_credentials_file: '{{ ansible_env.HOME }}/gcloud.json'
 # Specify your project ID which one used from your GCP account
 gce_project_id: my-project-id
 
-# It will be used as the Internal dns domain name if DNS is enabled.
-# Services will be discoverable under
-# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
-# myservice.default.svc.k8s.cluster
-gce_domain_name: k8s
-gce_cluster_name: cluster
-
 # The network determines what network traffic the instance can access
 # Use auto generated network name in most of all cases
-gce_network_name: '{{ gce_domain_name }}'
+gce_network_name: '{{ k8s_domain_name }}'
 
 # Assigns the instance an IPv4 address from the subnetwork’s range.
 # Use auto generated subnetwork name in most of all cases
-gce_subnet_name: '{{ gce_network_name }}-{{ gce_cluster_name }}'
+gce_subnet_name: '{{ gce_network_name }}-{{ k8s_cluster_name }}'
 
 # Forwarding allows the instance to help route packets
 gce_ip_forward: true
-
-# Path to the Inventory hosts file
-# It should be auto generated during the crating of VM inctances
-gce_inventory_file: '{{ inventory_dir }}/{{ gce_cluster_name }}'
-
-# Account name of remote user. Ansible will use this user account to ssh into
-# the managed machines. The user must be able to use sudo without asking
-# for password
-gce_ssh_user: dev
-
-# SSH key that will be used to connect your VM instances
-# Use this default value if you won't use special separate key for this purposes
-gce_ssh_key: '{{ lookup("file", "{{ ansible_env.HOME }}/.ssh/id_rsa.pub") }}'
 
 # A zone is an isolated location within a region.
 # Resources that live in a zone, such as instances,
@@ -97,5 +97,5 @@ gce_sa_permissions:
 # Additional metadata to specify custom information like predefined
 # users/ssh kyes or startup script
 gce_metadata: 
-  ssh-keys: "{{ gce_ssh_user }}:{{ gce_ssh_key }}"
+  ssh-keys: "{{ k8s_ssh_user }}:{{ k8s_ssh_key }}"
   startup-script: '{{ gce_startup_script }}'

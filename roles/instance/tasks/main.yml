@@ -23,7 +23,7 @@
   with_items: '{{ gce.instance_data | default([], true) }}'
 
 - lineinfile:
-    dest: '{{ gce_inventory_file }}'
+    dest: '{{ k8s_inventory_file }}'
     insertafter: "^\\[{{ gce_instance_group }}\\]" 
     line: '{{ item.name }} ansible_host={{ item.public_ip  }}'
   with_items: '{{ gce.instance_data | default([], true) }}'

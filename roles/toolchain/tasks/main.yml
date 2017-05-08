@@ -30,7 +30,7 @@
   yum:
     name: docker
     state: present
-  when: gce_install_docker
+  when: toolchain_install_docker
   notify:
     - restart docker
 

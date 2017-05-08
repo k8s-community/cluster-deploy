@@ -1,26 +1,64 @@
 ---
+# Account name of remote user. Ansible will use this user account to ssh into
+# the managed machines. The user must be able to use sudo without asking
+# for password
+k8s_ssh_user: dev
+
+# SSH key that will be used to connect your VM instances
+# Use this default value if you won't use special separate key for this purposes
+# k8s_ssh_key: '{{ lookup("file", "{{ ansible_env.HOME }}/.ssh/id_rsa.pub") }}'
+
 # It will be used as the Internal dns domain name if DNS is enabled.
 # Services will be discoverable under
 # <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
 # myservice.default.svc.k8s.cluster
-gce_domain_name: k8s
-gce_cluster_name: cluster
-# gce_cluster_domain: '{{ gce_domain_name }}.{{ gce_cluster_name }}'
-
-# The network determines what network traffic the instance can access
-# Use auto generated network name in most of all cases
-# gce_network_name: '{{ gce_domain_name }}'
-
-# Assigns the instance an IPv4 address from the subnetwork’s range.
-# Use auto generated subnetwork name in most of all cases
-# gce_subnet_name: '{{ gce_network_name }}-{{ gce_cluster_name }}'
-
-# Forwarding allows the instance to help route packets
-# gce_ip_forward: true
+k8s_domain_name: k8s
+k8s_cluster_name: cluster
+k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
 # Path to the Inventory hosts file
 # It should be auto generated during the crating of VM inctances
-gce_inventory_file: '{{ inventory_dir }}/{{ gce_cluster_name }}'
+k8s_inventory_file: '{{ inventory_dir }}/{{ k8s_cluster_name }}'
+
+# Kubernetes master and services host names
+k8s_master_name: master.k8s.community
+k8s_services_name: services.k8s.community
+
+# Docker registry host name
+k8s_registry_name: registry.k8s.community
+
+# IP address of kubernetes service
+k8s_cluster_service_ip: 10.254.0.1
+
+# IP address of Kube DNS
+k8s_cluster_dns: 10.254.0.10
+
+# Kubernetes internal network for services.
+# Kubernetes services will get fake IP addresses from this range.
+# This range must not conflict with anything in your infrastructure. These
+# addresses do not need to be routable and must just be an unused block of space.
+# k8s_services_ip_range: 10.254.0.0/16
+
+# Flannel internal overlay network. It will assign IP
+# addresses from this range to individual pods.
+# This network must be unused block of space.
+# k8s_overlay_ip_range: 10.20.0.0/16
+
+# It should be an IP addresses range corresponed with zone, e.g.
+# Western Europe Zone has 10.132.0.0/20 IP range
+# Use default IP range for determined zone in most of all cases
+# gce_instances_ip_range: 10.132.0.0/24
+
+# The network determines what network traffic the instance can access
+# Use auto generated network name in most of all cases
+# k8s_network_name: '{{ k8s_domain_name }}'
+
+# Assigns the instance an IPv4 address from the subnetwork’s range.
+# Use auto generated subnetwork name in most of all cases
+# gce_subnet_name: '{{ gce_network_name }}-{{ k8s_cluster_name }}'
+
+# Forwarding allows the instance to help route packets
+# gce_ip_forward: true
 
 # A region is a specific geographical location where you can run your resources.
 # Each region has one or more zones.
@@ -30,22 +68,6 @@ gce_inventory_file: '{{ inventory_dir }}/{{ gce_cluster_name }}'
 # Resources that live in a zone, such as instances,
 # are referred to as zonal resources
 # gce_instances_zone: europe-west1-b
-
-# It should be an IP addresses range corresponed with zone, e.g.
-# Western Europe Zone has 10.132.0.0/20 IP range
-# Use default IP range for determined zone in most of all cases
-# gce_instances_ip_range: 10.132.0.0/24
-
-# Flannel internal overlay network. It will assign IP
-# addresses from this range to individual pods.
-# This network must be unused block of space.
-# gce_overlay_ip_range: 10.20.0.0/16
-
-# Kubernetes internal network for services.
-# Kubernetes services will get fake IP addresses from this range.
-# This range must not conflict with anything in your infrastructure. These
-# addresses do not need to be routable and must just be an unused block of space.
-# gce_services_ip_range: 10.254.0.0/16
 
 # List of groups with VM instance names and machine types
 # Instance groups let you organize VM instances or use them
@@ -80,15 +102,6 @@ gce_startup_script: |
   #!/bin/bash
 
   yum update -y
-
-# Account name of remote user. Ansible will use this user account to ssh into
-# the managed machines. The user must be able to use sudo without asking
-# for password
-gce_ssh_user: dev
-
-# SSH key that will be used to connect your VM instances
-# Use this default value if you won't use special separate key for this purposes
-# gce_ssh_key: '{{ lookup("file", "{{ ansible_env.HOME }}/.ssh/id_rsa.pub") }}'
 
 # Select the type and level of API access to grant the VM.
 # Default: read-only access to Storage and Service Management,
