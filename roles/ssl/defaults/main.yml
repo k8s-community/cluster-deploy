@@ -1,19 +1,49 @@
 ---
+# SSL certificate name
+# The file names will use the same name
 ssl_name: kubernetes
+
+# Path to SSL generators `cfssl` and `cfsssljson`
 ssl_bin_dir: /usr/bin
+
+# Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/kubernetes
+
+# Country name which used in `C` attribute of certificates
 ssl_country: NL
+
+# City name which used in `L` attribute of certificates
 ssl_city: Rotterdam
+
+# Organization name which used in `O` attribute of certificates
 ssl_org: k8s.community
+
+# Organization Unit name which used in `OU` attribute of certificates
 ssl_division: k8s
+
+# State name which used in `ST` attribute of certificates
 ssl_state: Rotterdam
+
+# Key encoding algorithm
 ssl_key_algo: rsa
+
+# Size of hash for key encoding algorithm
 ssl_key_size: 2048
+
+# How much hours certificate will used before expiration
 ssl_expiry_hours: 43800h
+
+# Host names used in X509v3 Subject Alternative Name field
 ssl_hosts:
   - '{{ inventory_hostname }}'
+
+# IP addresses used in X509v3 Subject Alternative Name field
 ssl_ips:
   - '{{ ansible_default_ipv4.address }}'
+
+# Additional host names or IP addresses used in X509v3 Subject Alternative Name field
 ssl_custom:
   - '127.0.0.1'
+
+# Special certificates for Kube clients. The fields `O` and `OU` used as user and his group
 ssl_clients: []
