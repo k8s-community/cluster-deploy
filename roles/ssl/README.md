@@ -33,29 +33,29 @@ Path to files with SSL certificates and keys.
 ssl_dir: /etc/ssl/kubernetes
 ```
 
-Country name which used in `C` attribute of certificates.
+Country name which used in `C` attribute of certificates (`NL`,`RU`, etc).
 ```yaml
-ssl_country: NL
+ssl_country: country-name
 ```
 
 City name which used in `L` attribute of certificates.
 ```yaml
-ssl_city: Rotterdam
+ssl_city: city-name
 ```
 
 Organization name which used in `O` attribute of certificates.
 ```yaml
-ssl_org: k8s.community
+ssl_org: organization-name
 ```
 
 Organization Unit name which used in `OU` attribute of certificates.
 ```yaml
-ssl_division: k8s
+ssl_division: organization-unit-name
 ```
 
 State name which used in `ST` attribute of certificates.
 ```yaml
-ssl_state: Rotterdam
+ssl_state: state-name
 ```
 
 Key encoding algorithm.

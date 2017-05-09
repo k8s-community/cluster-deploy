@@ -21,23 +21,40 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 k8s_inventory_file: '{{ inventory_dir }}/{{ k8s_cluster_name }}'
 
 # Kubernetes master and services host names
-k8s_master_name: master.k8s.community
-k8s_services_name: services.k8s.community
+k8s_master_name: master.your-domain-name
+k8s_services_name: services.your-domain-name
 
 # Docker registry host name
-k8s_registry_name: registry.k8s.community
+k8s_registry_name: registry.your-domain-name
 
-# IP address of kubernetes service
-k8s_cluster_service_ip: 10.254.0.1
+# Country name which used in `C` attribute of certificates (`NL`,`RU`, etc)
+ssl_country: country-name
 
-# IP address of Kube DNS
-k8s_cluster_dns: 10.254.0.10
+# City name which used in `L` attribute of certificates
+ssl_city: city-name
+
+# Organization name which used in `O` attribute of certificates
+ssl_org: organization-name
+
+# Organization Unit name which used in `OU` attribute of certificates
+ssl_division: organization-unit-name
+
+# State name which used in `ST` attribute of certificates
+ssl_state: state-name
 
 # Kubernetes internal network for services.
 # Kubernetes services will get fake IP addresses from this range.
 # This range must not conflict with anything in your infrastructure. These
 # addresses do not need to be routable and must just be an unused block of space.
-# k8s_services_ip_range: 10.254.0.0/16
+k8s_services_ip_range: 10.254.0.0/16
+
+# IP address of kubernetes service
+# Usually it's first address in services subnet
+k8s_cluster_service_ip: 10.254.0.1
+
+# IP address of Kube DNS
+# It should be in range of services subnet
+k8s_cluster_dns: 10.254.0.10
 
 # Flannel internal overlay network. It will assign IP
 # addresses from this range to individual pods.
