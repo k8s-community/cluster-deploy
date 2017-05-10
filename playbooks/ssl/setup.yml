@@ -1,20 +1,48 @@
 ---
 - hosts:
     - master
-    - node
   remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  become_method: sudo
+  pre_tasks:
+    - name: Check CA 
+      stat:
+        path: '{{ ssl_dir }}/ca.pem'
+      register: ca
+      when: inventory_hostname in groups['master'][0]
+  roles:
+    - role: ssl
+      ssl_ca_only: true
+      when: inventory_hostname in groups['master'][0] and not ca.stat.exists
+  post_tasks:
+    - name: Check CA 
+      stat:
+        path: '{{ ssl_dir }}/ca.key'
+      register: cakey
+      when: inventory_hostname in groups['master'][0]
+    - name: Get CA locally
+      fetch:
+        src: '{{ ssl_dir }}/ca.pem'
+        dest: ca/
+        flat: yes
+      when: inventory_hostname in groups['master'][0] and not cakey.stat.exists
+    - name: Get CA key locally
+      fetch:
+        src: '{{ ssl_dir }}/ca-key.pem'
+        dest: ca/
+        flat: yes
+      when: inventory_hostname in groups['master'][0] and not cakey.stat.exists
 
 - hosts:
     - master
     - node
-  serial: 1
   remote_user: '{{ k8s_ssh_user }}'
   become: true
   become_method: sudo
   pre_tasks:
     - name: Copy CA
       copy:
-        src: files/
+        src: ca/
         dest: '{{ ssl_dir }}'
   roles:
     - role: ssl

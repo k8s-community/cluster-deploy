@@ -1,4 +1,7 @@
 ---
+# Generate CA certificate only
+ssl_ca_only: false
+
 # SSL certificate name
 # The file names will use the same name
 ssl_name: kubernetes

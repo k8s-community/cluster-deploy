@@ -17,6 +17,11 @@ Role Variables
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 
+Generate CA certificate only
+```yaml
+ssl_ca_only: false
+```
+
 SSL certificate name.
 The file names will use the same name.
 ```yaml
