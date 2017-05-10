@@ -1,2 +1,34 @@
 ---
-# tasks file for etcd
+- name: Install etcd
+  yum:
+    name: etcd
+    state: present
+
+- name: Enable etcd
+  service:
+    name: etcd
+    enabled: yes
+
+- name: Check etcd directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ ssl_dir }}'
+    - '{{ etcd_conf_dir }}'
+    - '{{ etcd_data_dir }}'
+
+- name: Setup etcd
+  template:
+    src: etcd.conf.j2
+    dest: '{{ etcd_conf_dir }}/etcd.conf'
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart etcd
+
+- name: Set profile
+  template:
+    src: profile.sh.j2
+    dest: /etc/profile.d/etcd.sh

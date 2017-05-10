@@ -1,0 +1,68 @@
+{% macro initial_cluster() -%}
+{% for host in etcd_hosts -%}
+  {{ hostvars[host].ansible_hostname }}={{ etcd_peer_url_scheme }}://{{ hostvars[host].ansible_default_ipv4.address }}:{{ etcd_peer_port }}
+  {%- if not loop.last -%},{%- endif -%}
+{%- endfor -%}
+{% endmacro -%}
+
+# [member]
+{% if etcd_hosts and etcd_hosts | length > 0 %}
+ETCD_NAME={{ ansible_hostname }}
+ETCD_DATA_DIR={{ etcd_data_dir }}/{{ ansible_hostname }}.etcd
+{% else %}
+ETCD_NAME=default
+ETCD_DATA_DIR={{ etcd_data_dir }}/default.etcd
+{% endif %}
+#ETCD_WAL_DIR=""
+#ETCD_SNAPSHOT_COUNT="10000"
+#ETCD_HEARTBEAT_INTERVAL="100"
+#ETCD_ELECTION_TIMEOUT="1000"
+ETCD_LISTEN_PEER_URLS={{ etcd_listen_peer_urls }}
+ETCD_LISTEN_CLIENT_URLS={{ etcd_listen_client_urls }}
+#ETCD_MAX_SNAPSHOTS="5"
+#ETCD_MAX_WALS="5"
+#ETCD_CORS=""
+
+#[cluster]
+{% if etcd_hosts and etcd_hosts | length > 0 %}
+ETCD_INITIAL_ADVERTISE_PEER_URLS={{ etcd_initial_advertise_peer_urls }}
+ETCD_INITIAL_CLUSTER="{{ initial_cluster() }}"
+ETCD_INITIAL_CLUSTER_STATE={{ etcd_initial_cluster_state }}
+ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_initial_cluster_token }}
+{% endif %}
+ETCD_ADVERTISE_CLIENT_URLS={{ etcd_advertise_client_urls }}
+#ETCD_DISCOVERY=""
+#ETCD_DISCOVERY_SRV=""
+#ETCD_DISCOVERY_FALLBACK="proxy"
+#ETCD_DISCOVERY_PROXY=""
+#ETCD_STRICT_RECONFIG_CHECK="false"
+
+#[proxy]
+#ETCD_PROXY="off"
+#ETCD_PROXY_FAILURE_WAIT="5000"
+#ETCD_PROXY_REFRESH_INTERVAL="30000"
+#ETCD_PROXY_DIAL_TIMEOUT="1000"
+#ETCD_PROXY_WRITE_TIMEOUT="5000"
+#ETCD_PROXY_READ_TIMEOUT="0"
+
+#[security]
+{% if etcd_url_scheme == 'https' -%}
+ETCD_CERT_FILE="{{ etcd_cert_file }}"
+ETCD_KEY_FILE="{{ etcd_key_file }}"
+ETCD_CLIENT_CERT_AUTH="{{ etcd_client_cert_auth | lower }}"
+ETCD_TRUSTED_CA_FILE="{{ etcd_trusted_ca_file }}"
+{% endif -%}
+{% if etcd_peer_url_scheme == 'https' -%}
+ETCD_PEER_CERT_FILE="{{ etcd_peer_cert_file }}"
+ETCD_PEER_KEY_FILE="{{ etcd_peer_key_file }}"
+ETCD_PEER_CLIENT_CERT_AUTH="{{ etcd_peer_client_cert_auth | lower }}"
+ETCD_PEER_TRUSTED_CA_FILE="{{ etcd_peer_trusted_ca_file }}"
+{% endif -%}
+
+#[logging]
+#ETCD_DEBUG="false"
+# examples for -log-package-levels etcdserver=WARNING,security=DEBUG
+#ETCD_LOG_PACKAGE_LEVELS=""
+
+#[profiling]
+#ETCD_ENABLE_PPROF="false"

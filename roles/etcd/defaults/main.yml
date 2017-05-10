@@ -1,2 +1,51 @@
 ---
-# defaults file for etcd
+# SSL base certificate name
+# SSL folder and file names will use the same name
+ssl_name: etcd
+
+# Path to files with SSL certificates and keys
+ssl_dir: /etc/ssl/{{ ssl_name }}
+
+# ETCD client port, peer port and servers IPs
+etcd_client_port: 2379
+etcd_peer_port: 2380
+
+# ETCD host names
+etcd_hosts: {}
+
+# Default directories for configs, datastore
+etcd_conf_dir: /etc/etcd
+etcd_data_dir: /var/lib/etcd
+
+# Cluster state and token
+etcd_initial_cluster_state: new
+etcd_initial_cluster_token: etcd-cluster
+
+# URL scheme for clients and between peers
+etcd_url_scheme: https
+etcd_peer_url_scheme: https
+
+# When this is set etcd will check all incoming HTTPS requests for a
+# client certificate signed by the trusted CA,
+# requests that don't supply a valid client certificate will fail
+etcd_client_cert_auth: false
+
+# When set, etcd will check all incoming peer requests from the cluster
+# for valid client certificates signed by the supplied CA.
+etcd_peer_client_cert_auth: false
+
+# Warning!!! The variables bellow should be defined automatically.
+# Please do not edit this manually
+etcd_machine_address: "{{ ansible_default_ipv4.address }}"
+
+etcd_listen_client_urls: "{{ etcd_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_port }},{{ etcd_url_scheme }}://127.0.0.1:{{ etcd_client_port }}"
+etcd_advertise_client_urls: "{{ etcd_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_client_port }}"
+etcd_listen_peer_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_peer_port }}"
+etcd_initial_advertise_peer_urls: "{{ etcd_peer_url_scheme }}://{{ etcd_machine_address }}:{{ etcd_peer_port }}"
+
+etcd_cert_file: "{{ ssl_dir }}/{{ ssl_name }}.pem"
+etcd_key_file: "{{ ssl_dir }}/{{ ssl_name }}-key.pem"
+etcd_trusted_ca_file: "{{ ssl_dir }}/ca.pem"
+etcd_peer_cert_file: "{{ ssl_dir }}/{{ ssl_name }}.pem"
+etcd_peer_key_file: "{{ ssl_dir }}/{{ ssl_name }}-key.pem"
+etcd_peer_trusted_ca_file: "{{ ssl_dir }}/ca.pem"
