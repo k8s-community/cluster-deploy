@@ -42,6 +42,13 @@ ssl_division: organization-unit-name
 # State name which used in `ST` attribute of certificates
 ssl_state: state-name
 
+# SSL base certificate name
+# SSL folder and file names will use the same name
+ssl_name: kubernetes
+
+# Path to files with SSL certificates and keys
+ssl_dir: /etc/ssl/{{ ssl_name }}
+
 # Kubernetes internal network for services.
 # Kubernetes services will get fake IP addresses from this range.
 # This range must not conflict with anything in your infrastructure. These
