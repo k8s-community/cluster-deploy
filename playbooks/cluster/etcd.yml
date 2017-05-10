@@ -4,4 +4,5 @@
   become: true
   become_method: sudo
   roles:
-    - etcd
+    - role: etcd
+      etcd_hosts: '{{ groups["etcd"] }}'
