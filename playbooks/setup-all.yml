@@ -1,7 +1,6 @@
-- include: network/setup.yml
-- include: vm/setup.yml
 - include: toolchain/setup.yml
 - include: ssl/setup.yml
+- include: ssl/master.yml
 - include: cluster/etcd.yml
 - include: cluster/master.yml
 - include: cluster/node.yml
