@@ -17,7 +17,7 @@
         name: instance
       vars:
         gce_instance_group: '{{ gce_group.name }}'
-        gce_instance_names: '{{ gce_group.nodes }}'
+        gce_instance_names: '{{ gce_group.nodes | join(",") }}'
         gce_machine_type: '{{ gce_group.type }}'
       with_items: '{{ gce_groups }}'
       loop_control:
