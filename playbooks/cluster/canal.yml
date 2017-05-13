@@ -1,0 +1,16 @@
+---
+- hosts: master
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  become_method: sudo
+
+  vars:
+    # Kubernetes configs path
+    k8s_conf_dir: /etc/kubernetes
+    k8s_calico_dir: '{{ k8s_conf_dir }}/calico'
+
+  tasks:
+
+    - name: Start Calico & Flannel
+      command: '{{ k8s_calico_dir }}/deploy-calico.sh'
+      when: inventory_hostname in groups["master"][0]
