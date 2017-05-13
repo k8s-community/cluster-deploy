@@ -4,4 +4,5 @@
   become: true
   become_method: sudo
   roles:
-    - addons
+    - role: addons
+      k8s_node_hosts: '{{ groups["node"] }}'

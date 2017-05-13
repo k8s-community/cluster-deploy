@@ -3,5 +3,9 @@
   remote_user: '{{ k8s_ssh_user }}'
   become: true
   become_method: sudo
+  # use serial = 1 in production environment
+  # serial: 1
   roles:
-    - kubernetes
+    - role: kubernetes
+      k8s_master_hosts: '{{ groups["master"] }}'
+      k8s_node_hosts: '{{ groups["node"] }}'
