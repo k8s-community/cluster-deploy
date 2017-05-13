@@ -1,0 +1,47 @@
+---
+# Create load balancer
+- name: Firewall - allow internal health
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-internal-health
+    allowed: tcp:8080,{{ k8s_health_check_port }}
+    src_range:
+      - '{{ k8s_lb_network }}'
+      - '{{ k8s_health_checker_network }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+
+# It should be enabled in Ansible version >= 2.3
+# - name: Register Load Balanser external IP
+#   gce_eip:
+#     name: 'kube-services'
+#     region: '{{ gce_instances_region }}'
+#     service_account_email: '{{ gce_service_account_email }}'
+#     credentials_file: '{{ gce_credentials_file }}'
+#     project_id: '{{ gce_project_id }}'
+#   register: ip
+
+- name: Create Kubernetes services load balancer
+  gce_lb:
+    name: 'kube-services'
+    region: '{{ gce_instances_region }}'
+    port_range: '{{ k8s_services_port }}'
+    # external_ip: '{{ ip.address }}'
+    httphealthcheck_name: kube-services-health-check
+    httphealthcheck_port: '{{ k8s_health_check_port }}'
+    httphealthcheck_path: /healthz
+    members: "{{ gce_groups | selectattr('name', 'equalto', 'node') | map(attribute='nodes') | first | map('regex_replace','(.*)', 'europe-west1-b/\\1') | list  }}"
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+  register: lb
+
+- name: Load balancer details
+  debug:
+    msg: '{{ lb }}'
+
+- lineinfile:
+    dest: '{{ k8s_inventory_file }}'
+    insertafter: "^\\[master:vars\\]" 
+    line: 'k8s_lb_external_ip={{ lb.external_ip }}'

@@ -1,2 +1,4 @@
 - include: network/setup.yml
 - include: vm/setup.yml
+- include: network/lb.yml
+  when: k8s_lb_type == 'nginx'

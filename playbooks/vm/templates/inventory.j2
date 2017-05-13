@@ -5,6 +5,8 @@
 [{{ item.name }}]
 
 {% if item.name == 'master' %}
+[master:vars]
+
 [etcd:children]
 master
 

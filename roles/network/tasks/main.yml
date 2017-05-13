@@ -10,6 +10,17 @@
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
+- name: Firewall - allow internal health
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-internal-health
+    allowed: tcp:8080,80
+    src_range:
+      - '{{ k8s_lb_network }}'
+      - '{{ k8s_health_checker_network }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
 - name: Firewall - allow internal https
   gce_net:
     name: '{{ gce_network_name }}'
@@ -17,7 +28,7 @@
     allowed: tcp:443
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ k8s_overlay_ip_range }}'
+      - '{{ k8s_flannel_network }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
@@ -28,7 +39,7 @@
     allowed: tcp:2379-2380
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ k8s_overlay_ip_range }}'
+      - '{{ k8s_flannel_network }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
@@ -39,7 +50,7 @@
     allowed: tcp:10250,10255,4194
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ k8s_overlay_ip_range }}'
+      - '{{ k8s_flannel_network }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
@@ -50,7 +61,7 @@
     allowed: udp:8472
     src_range:
       - '{{ gce_instances_ip_range }}'
-      - '{{ k8s_overlay_ip_range }}'
+      - '{{ k8s_flannel_network }}'
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
