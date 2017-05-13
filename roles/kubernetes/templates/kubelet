@@ -1,0 +1,16 @@
+###
+# kubernetes kubelet (minion) config
+
+# The address for the info server to serve on (set to 0.0.0.0 or "" for all interfaces)
+KUBELET_ADDRESS="--address=0.0.0.0"
+
+# The port for the info server to serve on
+# KUBELET_PORT="--port=10250"
+
+# You may leave this blank to use the actual hostname
+KUBELET_HOSTNAME="--hostname-override={{ inventory_hostname }}"
+
+# location of the api-server
+KUBELET_API_SERVER="--api-servers={% if inventory_hostname in k8s_master_hosts %}https://{{ inventory_hostname }}:{{ k8s_api_port }}{% else %}{{ k8s_api_servers }}{% endif %}"
+
+KUBELET_ARGS="--cni-conf-dir={{ cni_conf_dir }} --network-plugin=cni --register-node=true --register-schedulable={% if inventory_hostname in k8s_master_hosts %}false{% else %}true{% endif %} --pod-manifest-path={{ k8s_manifests_dir }} --kubeconfig={{ k8s_policy_dir }}/kubelet.kubeconfig --cluster-dns={{ k8s_cluster_dns }} --cluster-domain={{ k8s_cluster_domain }} {% if inventory_hostname in k8s_master_hosts %}--tls-cert-file={{ ssl_dir }}/master.pem --tls-private-key-file={{ ssl_dir }}/master-key.pem{% else %}--tls-cert-file={{ ssl_dir }}/{{ ssl_name }}.pem --tls-private-key-file={{ ssl_dir }}/{{ ssl_name }}-key.pem{% endif %} {% if inventory_hostname in k8s_node_hosts %}--node-labels=ingress/role=loadbalancer{% endif %} --v={{ k8s_log_level }}"

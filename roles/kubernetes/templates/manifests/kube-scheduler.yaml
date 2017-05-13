@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-scheduler
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-scheduler
+    image: {{ k8s_hyperkube_image }}:{{ k8s_hyperkube_image_tag }}
+    command:
+    - /hyperkube
+    - scheduler
+    - --master=https://127.0.0.1:{{ k8s_api_port }}
+    - --kubeconfig={{ k8s_policy_dir }}/scheduler.kubeconfig
+    - --leader-elect=true
+    resources:
+      requests:
+        cpu: 100m
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        host: 127.0.0.1
+        port: 10251
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    volumeMounts:
+    - name: policy
+      mountPath: {{ k8s_policy_dir }}
+      readOnly: true
+    - name: certificates
+      mountPath: {{ ssl_dir }}
+      readOnly: true
+  volumes:
+  - name: policy
+    hostPath:
+      path: {{ k8s_policy_dir }}
+  - name: certificates
+    hostPath:
+      path: {{ ssl_dir }}

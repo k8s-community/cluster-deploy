@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1alpha1
+kind: ClusterRole
+metadata:
+  name: cluster-reader
+  labels:
+    basic.auth/role: cluster-reader
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - 'get'
+  - 'list'
+  - 'watch'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - 'get'

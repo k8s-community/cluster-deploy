@@ -1,2 +1,153 @@
 ---
-# tasks file for kubernetes
+- name: Install dependencies
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - socat
+
+- name: Check kubernetes directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ cni_bin_dir }}'
+    - '{{ cni_conf_dir }}'
+    - '{{ k8s_manifests_dir }}'
+    - '{{ k8s_policy_dir }}'
+    - '{{ k8s_calico_dir }}'
+    - '{{ k8s_svc_conf_dir }}'
+    - '{{ k8s_kubelet_dir }}'
+    - '{{ ansible_env.HOME }}/.kube'
+
+- name: Get kubectl
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ k8s_version }}/bin/{{ ansible_system|lower }}/amd64/kubectl"
+    dest: "{{ k8s_bin_dir }}/kubectl"
+    mode: 0755
+    force: yes
+
+- name: Get kubelet
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ k8s_version }}/bin/{{ ansible_system|lower }}/amd64/kubelet"
+    dest: "{{ k8s_bin_dir }}/kubelet"
+    mode: 0755
+    force: yes
+
+- name: Get calicoctl
+  get_url:
+    url: "https://github.com/projectcalico/calicoctl/releases/download/v{{ k8s_calico_version }}/calicoctl"
+    dest: "{{ k8s_bin_dir }}/calicoctl"
+    mode: 0755
+    force: yes
+
+- name: Set ETCD endpoints profile
+  template:
+    src: etcd-ep-profile.sh
+    dest: /etc/profile.d/etcd-ep.sh
+
+- name: Kubernetes accounting manager
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_svc_conf_dir }}/{{ item }}"
+  with_items:
+    - kubernetes-accounting.conf
+  notify:
+    - reload systemd
+
+- name: Kubelet service
+  template:
+    src: kubelet.service
+    dest: "{{ k8s_svc_dir }}/kubelet.service"
+  notify:
+    - reload systemd
+
+- name: Policy files and roles
+  template:
+    src: "policy/{{ item }}"
+    dest: "{{ k8s_policy_dir }}/{{ item }}"
+  when: inventory_hostname in k8s_master_hosts
+  with_items:
+    - known-tokens.csv
+    - basic-auth.csv
+    - admin-clusterrolebinding.yaml
+    - cluster-reader-clusterrole.yaml
+    - cluster-reader-clusterrolebinding.yaml
+    - release-role.yaml
+    - release-rolebinding.yaml
+  notify:
+    - restart kubelet
+
+- name: Master policy configs
+  template:
+    src: policy/kubeconfig.client
+    dest: "{{ k8s_policy_dir }}/{{ item }}.kubeconfig"
+  with_items:
+    - controller
+    - scheduler
+  when: inventory_hostname in k8s_master_hosts
+  notify:
+    - restart kubelet
+
+- name: Agents policy configs
+  template:
+    src: policy/kubeconfig.client
+    dest: "{{ k8s_policy_dir }}/{{ item }}.kubeconfig"
+  with_items:
+    - kubelet
+    - kube-proxy
+  notify:
+    - restart kubelet
+
+- name: Default policy config
+  template:
+    src: policy/kubeconfig.default
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+
+- name: Kubernetes configs
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_conf_dir }}/{{ item }}"
+  with_items:
+    - config
+    - kubelet
+  notify:
+    - restart kubelet
+
+- name: Register API Server, Controller Manager and Scheduler
+  template:
+    src: "manifests/{{ item }}"
+    dest: "{{ k8s_manifests_dir }}/{{ item }}"
+    mode: 0644
+  with_items:
+    - kube-apiserver.yaml
+    - kube-controller-manager.yaml
+    - kube-scheduler.yaml
+  when: inventory_hostname in k8s_master_hosts
+  notify:
+    - restart kubelet
+
+- name: Register Kube proxy
+  template:
+    src: "manifests/kube-proxy.yaml"
+    dest: "{{ k8s_manifests_dir }}/kube-proxy.yaml"
+    mode: 0644
+  notify:
+    - restart kubelet
+
+- name: Register Calico network policy
+  template:
+    src: calico/calico.yaml
+    dest: "{{ k8s_calico_dir }}/calico.yaml"
+    mode: 0644
+  when: inventory_hostname in k8s_master_hosts
+  notify:
+    - restart kubelet
+
+- name: Deploy script for calico
+  template:
+    src: calico/deploy-calico.sh
+    dest: "{{ k8s_calico_dir }}/deploy-calico.sh"
+    mode: 0755
+  when: inventory_hostname in k8s_master_hosts

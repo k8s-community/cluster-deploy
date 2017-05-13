@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-controller-manager
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-controller-manager
+    image: {{ k8s_hyperkube_image }}:{{ k8s_hyperkube_image_tag }}
+    command:
+    - /hyperkube
+    - controller-manager
+    - --master=https://127.0.0.1:{{ k8s_api_port }}
+    - --kubeconfig={{ k8s_policy_dir }}/controller.kubeconfig
+    - --leader-elect=true
+    - --root-ca-file={{ ssl_dir }}/ca.pem
+    - --service-account-private-key-file={{ ssl_dir }}/master-key.pem
+    - --service-cluster-ip-range={{ k8s_services_network }}
+    resources:
+      requests:
+        cpu: 200m
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        host: 127.0.0.1
+        port: 10252
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    volumeMounts:
+    - name: policy
+      mountPath: {{ k8s_policy_dir }}
+      readOnly: true
+    - name: certificates
+      mountPath: {{ ssl_dir }}
+      readOnly: true
+  volumes:
+  - name: policy
+    hostPath:
+      path: {{ k8s_policy_dir }}
+  - name: certificates
+    hostPath:
+      path: {{ ssl_dir }}

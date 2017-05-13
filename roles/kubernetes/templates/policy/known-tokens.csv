@@ -1,0 +1,3 @@
+{{ k8s_admin_token }},{{ k8s_admin_username }},{{ k8s_admin_username }}
+{{ k8s_release_token }},{{ k8s_release_username }},{{ k8s_release_username }}
+{{ k8s_guest_token }},{{ k8s_guest_username }},{{ k8s_guest_username }}

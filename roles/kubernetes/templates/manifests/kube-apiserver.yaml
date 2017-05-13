@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-apiserver
+    image: {{ k8s_hyperkube_image }}:{{ k8s_hyperkube_image_tag }}
+    command:
+    - /hyperkube
+    - apiserver
+    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota
+    - --advertise-address={{ ansible_default_ipv4.address }}
+    - --allow-privileged=true
+    - --anonymous-auth=false
+    - --apiserver-count={{ k8s_master_hosts | length }}
+    - --authorization-mode=RBAC
+    - --basic-auth-file={{ k8s_policy_dir }}/basic-auth.csv
+    - --bind-address=0.0.0.0
+    - --client-ca-file={{ ssl_dir }}/ca.pem
+    - --etcd-servers={{ k8s_etcd_servers }}
+    - --etcd-cafile={{ ssl_dir }}/ca.pem
+    - --insecure-bind-address=0.0.0.0
+    - --insecure-port=8080
+    - --kubelet-certificate-authority={{ ssl_dir }}/ca.pem
+    - --runtime-config=extensions/v1beta1/networkpolicies=true
+    - --secure-port={{ k8s_api_port }}
+    - --service-account-key-file={{ ssl_dir }}/master-key.pem
+    - --service-account-lookup=true
+    - --service-cluster-ip-range={{ k8s_services_network }}
+    - --tls-cert-file={{ ssl_dir }}/master.pem
+    - --tls-private-key-file={{ ssl_dir }}/master-key.pem
+    - --token-auth-file={{ k8s_policy_dir }}/known-tokens.csv
+    - --v={{ k8s_log_level }}
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        host: 127.0.0.1
+        port: 8080
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    ports:
+    - name: https
+      containerPort: {{ k8s_api_port }}
+      hostPort: {{ k8s_api_port }}
+    - name: local
+      containerPort: 8080
+      hostPort: 8080
+    volumeMounts:
+    - name: policy
+      mountPath: {{ k8s_policy_dir }}
+      readOnly: true
+    - name: certificates
+      mountPath: {{ ssl_dir }}
+      readOnly: true
+  volumes:
+  - name: policy
+    hostPath:
+      path: {{ k8s_policy_dir }}
+  - name: certificates
+    hostPath:
+      path: {{ ssl_dir }}

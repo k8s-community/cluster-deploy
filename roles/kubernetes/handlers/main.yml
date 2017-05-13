@@ -1,2 +1,15 @@
 ---
-# handlers file for kubernetes
+- name: reload systemd
+  command: systemctl daemon-reload
+  notify:
+    - enable kubelet
+
+- name: enable kubelet
+  service:
+    name: kubelet
+    enabled: yes
+
+- name: restart kubelet
+  service:
+    name: kubelet
+    state: restarted
