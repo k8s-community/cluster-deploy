@@ -6,7 +6,7 @@ ssl_name: etcd
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/{{ ssl_name }}
 
-# ETCD client port, peer port and servers IPs
+# ETCD client port, peer port
 etcd_client_port: 2379
 etcd_peer_port: 2380
 
