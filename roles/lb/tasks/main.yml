@@ -44,4 +44,4 @@
 - lineinfile:
     dest: '{{ k8s_inventory_file }}'
     insertafter: "^\\[master:vars\\]" 
-    line: 'k8s_lb_external_ip={{ lb.external_ip }}'
+    line: 'k8s_services_external_ip={{ lb.external_ip }}'
