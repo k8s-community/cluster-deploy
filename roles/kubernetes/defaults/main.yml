@@ -78,6 +78,9 @@ k8s_manifests_dir: '{{ k8s_conf_dir }}/manifests'
 k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
 k8s_calico_dir: '{{ k8s_conf_dir }}/calico'
 
+# Docker registry path in case of hostPath configuration
+k8s_kube_registry_dir: /var/lib/kube-registry
+
 # Kubelet data path
 k8s_kubelet_dir: /var/lib/kubelet
 

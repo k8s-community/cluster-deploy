@@ -19,6 +19,7 @@
     - '{{ k8s_calico_dir }}'
     - '{{ k8s_svc_conf_dir }}'
     - '{{ k8s_kubelet_dir }}'
+    - '{{ k8s_kube_registry_dir }}'
     - '{{ ansible_env.HOME }}/.kube'
 
 - name: Get kubectl
