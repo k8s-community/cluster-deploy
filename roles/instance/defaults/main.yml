@@ -82,7 +82,7 @@ gce_startup_script: |
 # TODO
 # It is worked only with ansible version started from 2.3
 # Specify a boot disk size in Gigabytes. 
-# gce_disk_size: 50
+gce_disk_size: 200
 
 # Select the type and level of API access to grant the VM.
 # Default: read-only access to Storage and Service Management,
@@ -91,8 +91,11 @@ gce_startup_script: |
 gce_sa_permissions:
   - compute-rw
   - logging-write
-  - monitoring
+  - monitoring-write
+  - service-control
+  - service-management
   - storage-full
+  - useraccounts-ro
 
 # Additional metadata to specify custom information like predefined
 # users/ssh kyes or startup script

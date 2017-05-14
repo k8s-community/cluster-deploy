@@ -5,7 +5,7 @@
     zone: '{{ gce_instances_zone }}'
     machine_type: '{{ gce_machine_type }}'
     image: '{{ gce_image }}'
-    # disk_size: '{{ gce_disk_size }}'
+    disk_size: '{{ gce_disk_size }}'
     network: '{{ gce_network_name }}'
     subnetwork: '{{ gce_subnet_name }}'
     ip_forward: '{{ gce_ip_forward | lower }}'
