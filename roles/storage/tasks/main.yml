@@ -1,0 +1,16 @@
+---
+- name: Create Persistent Disk
+  gce_pd:
+    name: '{{ gce_storage_name }}'
+    disk_type: '{{ gce_disk_type }}'
+    mode: READ_WRITE
+    size_gb: '{{ gce_storage_size }}'
+    zone: '{{ gce_instances_zone }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+  register: pd
+
+- name: Persistent Disk details
+  debug:
+    msg: '{{ pd }}'
