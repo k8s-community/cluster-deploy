@@ -47,7 +47,7 @@ ssl_state: state-name
 ssl_name: kubernetes
 
 # Path to files with SSL certificates and keys
-ssl_dir: /etc/ssl/{{ ssl_name }}
+ssl_dir: /etc/ssl/kubernetes
 
 # Flannel backend type (Options: gce, vxlan)
 # k8s_flannel_backend: vxlan
@@ -95,6 +95,19 @@ k8s_cluster_dns: 10.254.0.10
 # Resources that live in a zone, such as instances,
 # are referred to as zonal resources
 # gce_instances_zone: europe-west1-b
+
+# Using of network storage
+# If network storage disabled will use local disk for every requested claim 
+# network_storage: true
+
+# Name of GCE persistent disk
+# gce_storage_name: pd-std
+
+# Type of GCE storage, options: `slow`, `fast`
+# gce_storage_type: slow
+
+# Size of GCE persistent disk in Gb
+# gce_storage_size: 100
 
 # Kubernetes load balancer type, valid values: `gce`, `nginx`
 # TODO: load balancer `gce`
@@ -146,8 +159,11 @@ gce_startup_script: |
 # gce_sa_permissions:
 #   - compute-rw
 #   - logging-write
-#   - monitoring
+#   - monitoring-write
+#   - service-control
+#   - service-management
 #   - storage-full
+#   - useraccounts-ro
 
 # Log level 0 - debug
 # k8s_log_level: 2
