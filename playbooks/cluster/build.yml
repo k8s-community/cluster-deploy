@@ -1,0 +1,18 @@
+---
+- hosts: master
+  remote_user: '{{ k8s_ssh_user }}'
+
+- hosts: build
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  become_method: sudo
+  pre_tasks:
+  - set_fact:
+      k8s_cluster_service_ip: "{{ groups['master']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list|first }}"
+  roles:
+    - build
+
+- hosts: build
+  remote_user: '{{ k8s_ssh_user }}'
+  roles:
+    - build

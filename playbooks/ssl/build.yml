@@ -1,0 +1,22 @@
+- hosts: build
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  become_method: sudo
+  pre_tasks:
+    - name: Copy CA
+      copy:
+        src: ca/
+        dest: '{{ ssl_dir }}'
+  roles:
+    - role: ssl
+      ssl_hosts: {}
+      ssl_ips: {}
+      ssl_custom:
+        - '{{ k8s_master_name }}'
+        - '{{ k8s_services_name }}'
+        - '{{ k8s_registry_name }}'
+        - '127.0.0.1'
+      ssl_clients:
+        - name: admin
+          cn: system:admin
+          org: system:masters
