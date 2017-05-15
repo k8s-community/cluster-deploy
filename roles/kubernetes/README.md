@@ -59,7 +59,7 @@ ssl_name: kubernetes
 
 Path to files with SSL certificates and keys
 ```yaml
-ssl_dir: /etc/ssl/{{ ssl_name }}
+ssl_dir: /etc/ssl/kubernetes
 ```
 
 Flannel backend type (Options: gce, vxlan)
