@@ -27,6 +27,9 @@ k8s_services_name: services.your-domain-name
 # Docker registry host name
 k8s_registry_name: registry.your-domain-name
 
+# Charts server repository
+# k8s_charts_repo: github.com/k8s-community/charts
+
 # Country name which used in `C` attribute of certificates (`NL`,`RU`, etc)
 ssl_country: country-name
 

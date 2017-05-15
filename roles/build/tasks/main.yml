@@ -94,3 +94,40 @@
   environment:
     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin
+
+- name: get charts repository
+  git: 
+    repo: 'https://{{ k8s_charts_repo }}'
+    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+  when: ansible_user_id != k8s_ssh_user
+
+- name: test charts
+  command: make test
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
+
+- name: push charts
+  shell: >
+    NAMESPACE=default make push
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
+
+- name: release charts
+  command: helm upgrade charts {{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}/charts -i --wait
+  when: ansible_user_id != k8s_ssh_user
+
+- name: register community charts
+  command: helm repo add community-charts https://{{ k8s_services_name }}/charts
+  when: ansible_user_id != k8s_ssh_user
+
+- name: updates charts repository list
+  command: helm repo up
+  when: ansible_user_id != k8s_ssh_user
