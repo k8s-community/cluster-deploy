@@ -1,7 +1,7 @@
-Ansible Role: Kubernetes
-========================
+Ansible Role: Build Machine
+===========================
 
-This role install Kubernetes common services on Redhat linux based systems.
+This role install Build Machine on Redhat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
