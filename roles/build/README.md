@@ -41,7 +41,6 @@ k8s_services_name: services.your-domain-name
 Path to files with SSL certificates and keys
 ```yaml
 ssl_dir: /etc/ssl/kubernetes
-k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
 ```
 
 URL scheme for kubernetes services
