@@ -24,8 +24,8 @@ k8s_ssh_user: dev
 
 It will be used as the Internal dns domain name if DNS is enabled.
 Services will be discoverable under
-<service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
-myservice.default.svc.k8s.cluster
+`<service-name>.<namespace>.svc.<domainname>.<clustername>`, e.g.
+`myservice.default.svc.k8s.cluster`
 ```yaml
 k8s_domain_name: k8s
 k8s_cluster_name: cluster
