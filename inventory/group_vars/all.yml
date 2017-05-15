@@ -1,4 +1,13 @@
 ---
+# Kubernetes version
+# k8s_version: 1.5.6
+
+# Helm package manager version
+# helm_version: 2.3.1
+
+# Golang compiller version
+# go_version: 1.8.1
+
 # Account name of remote user. Ansible will use this user account to ssh into
 # the managed machines. The user must be able to use sudo without asking
 # for password
@@ -207,7 +216,7 @@ k8s_docker_registry_token: 'docker registry token here'
 # docker login -u=<user> -p=<password> <docker_registry_host:port>
 # cat .docker/config.json | base64
 k8s_docker_registry_auth_code: 'docker registry auth code here'
-k8s_docker_registry_pull_token: 'docker registry auth config token'
+k8s_docker_registry_auth_token: 'docker registry auth config token'
 
 # SSL certificate and private key for running user services into Kubernetes
 k8s_services_cert: |

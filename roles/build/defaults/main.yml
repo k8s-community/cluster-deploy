@@ -1,5 +1,5 @@
 ---
-# Kubernetes hyperkube version
+# Kubernetes version
 k8s_version: 1.5.6
 
 # Helm package manager version
