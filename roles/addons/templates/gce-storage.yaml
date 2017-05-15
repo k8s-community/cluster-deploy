@@ -1,0 +1,12 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: {{ gce_storage_type }}
+provisioner: kubernetes.io/gce-pd
+parameters:
+{% if gce_storage_type == 'slow' %}
+  type: pd-standard
+{% else %}
+  type: pd-ssd
+{% endif %}
+  zone: {{ gce_instances_zone }}

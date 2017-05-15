@@ -1,2 +1,37 @@
 ---
-# tasks file for addons
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_policy_dir }}'
+    - '{{ k8s_addons_dir }}'
+
+- name: Addons
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    - dashboard.yaml
+    - kubedns.yaml
+    - kubedns-autoscaler.yaml
+    - heapster.yaml
+    - echoheaders.yaml
+    - l7-ingress-controller.yaml
+    - nginx-ingress-controller.yaml
+    - kube-registry.yaml
+    - helm-tiller.yaml
+    - gce-storage.yaml
+
+- name: TLS Secret
+  template:
+    src: "tls_secret.yaml"
+    dest: "{{ k8s_policy_dir }}/tls_secret.yaml"
+  when: k8s_services_cert | length > 1000
+
+- name: Deploy script for addons
+  template:
+    src: deploy-addons.sh
+    dest: "{{ k8s_addons_dir }}/deploy-addons.sh"
+    mode: 0755
