@@ -29,6 +29,15 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 k8s_master_name: master.your-domain-name
 k8s_services_name: services.your-domain-name
 
+# Docker registry host name
+k8s_registry_name: registry.your-domain-name
+
+# Docker registry auth code
+k8s_docker_registry_auth_code: 'docker-registry-auth-code'
+
+# Charts server repository
+k8s_charts_repo: github.com/k8s-community/charts
+
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/kubernetes
 

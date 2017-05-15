@@ -38,6 +38,11 @@ k8s_master_name: master.your-domain-name
 k8s_services_name: services.your-domain-name
 ```
 
+Docker registry host name
+```yaml
+k8s_registry_name: registry.your-domain-name
+```
+
 Path to files with SSL certificates and keys
 ```yaml
 ssl_dir: /etc/ssl/kubernetes
