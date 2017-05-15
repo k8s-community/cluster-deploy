@@ -23,6 +23,12 @@
     mode: 0755
   with_items:
     - '{{ ansible_env.HOME }}/.kube'
+    - '{{ ansible_env.HOME }}/.docker'
+
+- name: Default docker auth
+  template:
+    src: docker-config.json.j2
+    dest: "{{ ansible_env.HOME }}/.docker/config.json"
 
 - name: Get kubectl
   get_url:
