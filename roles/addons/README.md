@@ -121,7 +121,9 @@ k8s_services_cert_key: |
 ```
 
 Docker registry secrets
-`docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64`
+```sh
+docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
+```
 ```yaml
 k8s_docker_registry_token: 'docker registry token here'
 ```
@@ -130,9 +132,11 @@ creates docker config with auth info
 Solution 1:
 -----------
 (without login to docker registry)
-`kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \`
-`--docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml`
-`echo '<security_encoded_hash>' | base64 --decode`
+```sh
+kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \
+--docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml
+echo '<security_encoded_hash>' | base64 --decode
+```
 create `.docker/config.json`
 ```json
 {
@@ -148,8 +152,10 @@ create `.docker/config.json`
 Solution 2:
 -----------
 (need real login to docker registry)
-`docker login -u=<user> -p=<password> <docker_registry_host:port>`
-`cat .docker/config.json | base64`
+```sh
+docker login -u=<user> -p=<password> <docker_registry_host:port>
+cat .docker/config.json | base64
+```
 ```yaml
 k8s_docker_registry_auth_code: 'docker registry auth code here'
 k8s_docker_registry_auth_token: 'docker registry auth config token'
