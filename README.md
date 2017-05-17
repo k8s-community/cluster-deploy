@@ -11,12 +11,12 @@ All playbooks require the apache-libcloud module which you can install from pip:
 pip install apache-libcloud
 ```
 
-Install ansible if it does not installed
+Also you can install `Ansible` from pip if it does not installed
 ```sh
 pip install ansible
 ```
 
-## Playbooks using
+## Playbooks usage
 
 Before using of the playbooks you should change/enter all required vars in `inventory/group_vars/all.yml`
 
@@ -30,7 +30,7 @@ Install Kubernetes cluster all-in-one
 ansible-playbook playbooks/setup-all.yml
 ```
 
-All playbooks may be running separatelly, e.g. `setup Kubernetes components: dashboard, etc`
+All playbooks may be running separately, e.g. `setup Kubernetes components: dashboard, etc`
 ```sh
 ansible-playbook playbooks/addons/setup.yml
 ```
