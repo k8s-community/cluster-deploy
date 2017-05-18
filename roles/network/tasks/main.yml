@@ -21,11 +21,11 @@
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
-- name: Firewall - allow internal https
+- name: Firewall - allow internal https, health
   gce_net:
     name: '{{ gce_network_name }}'
-    fwname: k8s-allow-internal-https
-    allowed: tcp:443
+    fwname: k8s-allow-internal-https-health
+    allowed: tcp:443,8080
     src_range:
       - '{{ gce_instances_ip_range }}'
       - '{{ k8s_flannel_network }}'
