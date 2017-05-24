@@ -110,7 +110,7 @@ k8s_cluster_dns: 10.254.0.10
 
 # Using of network storage
 # If network storage disabled will use local disk for every requested claim 
-# network_storage: true
+# network_storage: false
 
 # Name of GCE persistent disk
 # gce_storage_name: pd-std

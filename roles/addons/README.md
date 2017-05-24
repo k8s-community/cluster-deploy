@@ -64,7 +64,7 @@ gce_instances_zone: europe-west1-b
 Using of network storage
 If network storage disabled will use local disk for every requested claim 
 ```yaml
-network_storage: true
+network_storage: false
 ```
 
 Name of GCE persistent disk
