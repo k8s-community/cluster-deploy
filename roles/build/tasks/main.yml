@@ -112,7 +112,7 @@
 
 - name: deploy charts
   shell: >
-    NAMESPACE=default make deploy
+    helm upgrade charts {{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}/charts -i --wait
   args:
     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
   environment:
