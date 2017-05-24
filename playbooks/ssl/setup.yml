@@ -8,12 +8,12 @@
     - name: Check CA 
       stat:
         path: '{{ ssl_dir }}/ca.pem'
-      register: ca
+      register: cacheck
       when: inventory_hostname in groups['master'][0]
   roles:
     - role: ssl
       ssl_ca_only: true
-      when: inventory_hostname in groups['master'][0] and not ca.stat.exists
+      when: inventory_hostname in groups['master'][0] and not cacheck.stat.exists
   post_tasks:
     - name: Check CA 
       stat:
