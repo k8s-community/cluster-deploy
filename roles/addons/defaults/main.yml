@@ -114,7 +114,8 @@ k8s_kube_registry_image_tag: 2.5.1
 # Docker registry secrets
 # docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
 k8s_docker_registry_token: 'docker registry token here'
-# creates docker config with auth info
+
+# Docker config with auth code, auth token generation
 #
 # Solution 1:
 # (without login to docker registry)
@@ -127,7 +128,7 @@ k8s_docker_registry_token: 'docker registry token here'
 # {
 #   "auths": {
 #     "<docker_registry_host>": {
-#       "auth": "<auth_info_from_previous_command>"
+#       "auth": "<auth_code_from_previous_command>"
 #     }
 #   }
 # }

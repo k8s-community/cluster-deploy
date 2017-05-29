@@ -127,7 +127,8 @@ docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
 ```yaml
 k8s_docker_registry_token: 'docker registry token here'
 ```
-creates docker config with auth info
+
+Docker config with auth code, auth token generation
 
 Solution 1:
 -----------
