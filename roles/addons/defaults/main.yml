@@ -120,7 +120,9 @@ k8s_docker_registry_token: 'docker registry token here'
 # (without login to docker registry)
 # kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \
 # --docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml
-# echo '<security_encoded_hash>' | base64 --decode
+# grab hash in field `data.dockercfg` from output result of the command above
+# echo '<data.dockercfg>' | base64 --decode
+# grab `auth code` from output result of the command above and save it into `k8s_docker_registry_auth_code`
 # create `.docker/config.json`
 # {
 #   "auths": {
@@ -129,11 +131,14 @@ k8s_docker_registry_token: 'docker registry token here'
 #     }
 #   }
 # }
+# Save a result of the command below into `k8s_docker_registry_auth_token`
 # cat .docker/config.json | base64
 #
 # Solution 2:
 # (need real login to docker registry)
 # docker login -u=<user> -p=<password> <docker_registry_host:port>
+# Grab `auth code` from `~/.docker/config.json` and save it into `k8s_docker_registry_auth_code`
+# Save a result of the command below into `k8s_docker_registry_auth_token`
 # cat .docker/config.json | base64
 k8s_docker_registry_auth_code: 'docker registry auth code here'
 k8s_docker_registry_auth_token: 'docker registry auth config token'
