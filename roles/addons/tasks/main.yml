@@ -23,6 +23,7 @@
     - kube-registry.yaml
     - helm-tiller.yaml
     - gce-storage.yaml
+    - cockroachdb.yaml
 
 - name: TLS Secret
   template:
