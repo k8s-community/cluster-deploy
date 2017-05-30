@@ -36,3 +36,6 @@
     src: deploy-addons.sh
     dest: "{{ k8s_addons_dir }}/deploy-addons.sh"
     mode: 0755
+
+- name: Run deploy script for addons
+  command: "{{ k8s_addons_dir }}/deploy-addons.sh"
