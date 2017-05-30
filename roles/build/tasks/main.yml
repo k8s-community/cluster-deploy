@@ -43,24 +43,6 @@
     src: kubeconfig.j2
     dest: "{{ ansible_env.HOME }}/.kube/config"
 
-- name: Get helm
-  unarchive:
-    src: 'https://kubernetes-helm.storage.googleapis.com/helm-v{{ helm_version }}-{{ ansible_system|lower }}-amd64.tar.gz'
-    dest: '{{ tmp_dir }}'
-    remote_src: true
-  when: ansible_user_id != k8s_ssh_user
-
-- name: Setup helm
-  copy:
-    src: '{{ tmp_dir }}/{{ ansible_system|lower }}-amd64/helm'
-    dest: '{{ k8s_bin_dir }}/helm'
-    mode: 0755
-    remote_src: true
-  when: ansible_user_id != k8s_ssh_user
-
-- name: Init helm
-  command: helm init --client-only
-
 - name: Get Golang
   unarchive:
     src: 'https://storage.googleapis.com/golang/go{{ go_version }}.{{ ansible_system|lower }}-amd64.tar.gz'
@@ -94,6 +76,24 @@
   environment:
     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin
+
+- name: Get helm
+  unarchive:
+    src: 'https://kubernetes-helm.storage.googleapis.com/helm-v{{ helm_version }}-{{ ansible_system|lower }}-amd64.tar.gz'
+    dest: '{{ tmp_dir }}'
+    remote_src: true
+  when: ansible_user_id != k8s_ssh_user
+
+- name: Setup helm
+  copy:
+    src: '{{ tmp_dir }}/{{ ansible_system|lower }}-amd64/helm'
+    dest: '{{ k8s_bin_dir }}/helm'
+    mode: 0755
+    remote_src: true
+  when: ansible_user_id != k8s_ssh_user
+
+- name: Init helm
+  command: helm init --client-only
 
 - name: get charts repository
   git: 
