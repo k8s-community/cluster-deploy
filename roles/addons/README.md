@@ -131,15 +131,15 @@ k8s_services_cert_key: |
   -----END PRIVATE KEY-----
 ```
 
-Docker registry secrets
+Docker registry secrets. To get it we should do some strange things, but it needs anyway.
+First of all, we should prepare access token for `Docker Registry`
 ```sh
 docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
 ```
 ```yaml
 k8s_docker_registry_token: 'docker registry token here'
 ```
-
-Docker config with auth code, auth token generation
+Second, we should create docker config with auth code, auth token and there are two ways:
 
 Solution 1:
 -----------
@@ -152,7 +152,7 @@ grab hash in field `data.dockercfg` from output result of the command above
 ```sh
 echo '<hash from data.dockercfg>' | base64 --decode
 ```
-grab `auth code` from output result of the command above and save it into `k8s_docker_registry_auth_code`
+grab `auth code` from output result of the command above
 ```
 create `.docker/config.json`
 ```json
@@ -164,26 +164,21 @@ create `.docker/config.json`
   }
 }
 ```
-Save a result of the command below into `k8s_docker_registry_auth_token`
-```sh
-cat ~/.docker/config.json | base64
-```
 
 Solution 2:
 -----------
 (need real login to docker registry)
 ```sh
 docker login -u=<user> -p=<password> <docker_registry_host:port>
-``
-Grab `auth code` from `~/.docker/config.json` and save it into `k8s_docker_registry_auth_code`
-Save a result of the command below into `k8s_docker_registry_auth_token`
-```sh
-cat ~/.docker/config.json | base64
 ```
 
-Docker registry auth code and auth token
+Enter auth code from `.docker/config.json` here
 ```yaml
 k8s_docker_registry_auth_code: 'docker registry auth code here'
+```
+
+Enter result of `cat .docker/config.json | base64` here
+```yaml
 k8s_docker_registry_auth_token: 'docker registry auth config token'
 ```
 

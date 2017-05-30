@@ -124,19 +124,23 @@ k8s_cockroachdb_image_tag: v1.0.1
 k8s_cockroachdb_init_image: webdeva/cockroach-init
 k8s_cockroachdb_init_image_tag: 0.0.2
 
-# Docker registry secrets
+# Docker registry secrets. To get it we should do some strange things, but it needs anyway.
+# First of all, we should prepare access token for `Docker Registry`
 # docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
 k8s_docker_registry_token: 'docker registry token here'
 
-# Docker config with auth code, auth token generation
+# Second, we should create docker config with auth code, auth token and there are two ways:
 #
 # Solution 1:
 # (without login to docker registry)
 # kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \
 # --docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml
+#
 # grab hash in field `data.dockercfg` from output result of the command above
-# echo '<data.dockercfg>' | base64 --decode
-# grab `auth code` from output result of the command above and save it into `k8s_docker_registry_auth_code`
+# echo '<hash from data.dockercfg>' | base64 --decode
+#
+# grab `auth code` from output result of the command above
+#
 # create `.docker/config.json`
 # {
 #   "auths": {
@@ -145,16 +149,15 @@ k8s_docker_registry_token: 'docker registry token here'
 #     }
 #   }
 # }
-# Save a result of the command below into `k8s_docker_registry_auth_token`
-# cat .docker/config.json | base64
 #
 # Solution 2:
 # (need real login to docker registry)
 # docker login -u=<user> -p=<password> <docker_registry_host:port>
-# Grab `auth code` from `~/.docker/config.json` and save it into `k8s_docker_registry_auth_code`
-# Save a result of the command below into `k8s_docker_registry_auth_token`
-# cat .docker/config.json | base64
+
+# Enter auth code from `.docker/config.json` here
 k8s_docker_registry_auth_code: 'docker registry auth code here'
+
+# Enter result of `cat .docker/config.json | base64` here
 k8s_docker_registry_auth_token: 'docker registry auth config token'
 
 # Persistent volume

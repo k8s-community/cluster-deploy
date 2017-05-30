@@ -154,34 +154,35 @@ docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
 ```yaml
 k8s_docker_registry_token: 'docker registry token here'
 ```
-Second, we should create docker config with auth info and there are two ways:
+Second, we should create docker config with auth code, auth token and there are two ways:
 
 ### Solution 1:
 (without login to docker registry)
 ```sh
 kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \
 --docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml
-echo '<security_encoded_hash>' | base64 --decode
+```
+grab hash in field `data.dockercfg` from output result of the command above
+```sh
+echo '<hash from data.dockercfg>' | base64 --decode
+```
+grab `auth code` from output result of the command above
 ```
 create `.docker/config.json`
 ```json
 {
   "auths": {
     "<docker_registry_host>": {
-      "auth": "<auth_info_from_previous_command>"
+      "auth": "<auth_code_from_previous_command>"
     }
   }
 }
-```
-```sh
-cat .docker/config.json | base64
 ```
 
 ### Solution 2:
 (need real login to docker registry)
 ```sh
 docker login -u=<user> -p=<password> <docker_registry_host:port>
-cat .docker/config.json | base64
 ```
 
 Enter auth code from `.docker/config.json` here

@@ -191,31 +191,40 @@ k8s_guest_token: 'Guest user token should be here'
 k8s_guest_username: guest
 k8s_guest_password: 'password'
 
-# Docker registry secrets
+# Docker registry secrets. To get it we should do some strange things, but it needs anyway.
+# First of all, we should prepare access token for `Docker Registry`
 # docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
 k8s_docker_registry_token: 'docker registry token here'
-# creates docker config with auth info
+
+# Second, we should create docker config with auth code, auth token and there are two ways:
 #
 # Solution 1:
 # (without login to docker registry)
 # kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \
 # --docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml
-# echo '<security_encoded_hash>' | base64 --decode
+#
+# grab hash in field `data.dockercfg` from output result of the command above
+# echo '<hash from data.dockercfg>' | base64 --decode
+#
+# grab `auth code` from output result of the command above
+#
 # create `.docker/config.json`
 # {
 #   "auths": {
 #     "<docker_registry_host>": {
-#       "auth": "<auth_info_from_previous_command>"
+#       "auth": "<auth_code_from_previous_command>"
 #     }
 #   }
 # }
-# cat .docker/config.json | base64
 #
 # Solution 2:
 # (need real login to docker registry)
 # docker login -u=<user> -p=<password> <docker_registry_host:port>
-# cat .docker/config.json | base64
+
+# Enter auth code from `.docker/config.json` here
 k8s_docker_registry_auth_code: 'docker registry auth code here'
+
+# Enter result of `cat .docker/config.json | base64` here
 k8s_docker_registry_auth_token: 'docker registry auth config token'
 
 # SSL certificate and private key for running user services into Kubernetes
