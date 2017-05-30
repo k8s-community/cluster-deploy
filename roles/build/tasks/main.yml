@@ -99,6 +99,7 @@
   git: 
     repo: 'https://{{ k8s_charts_repo }}'
     dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+    force: yes
   when: ansible_user_id != k8s_ssh_user
 
 - name: test charts
@@ -124,6 +125,7 @@
   git: 
     repo: 'https://github.com/k8s-community/{{ item }}'
     dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+    force: yes
   when: ansible_user_id != k8s_ssh_user
   with_items: '{{ k8s_cicd_services }}'
 
@@ -148,3 +150,58 @@
     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
   when: ansible_user_id != k8s_ssh_user
   with_items: '{{ k8s_cicd_services }}'
+
+- name: get CICD service
+  git: 
+    repo: 'https://{{ k8s_cicd_repo }}'
+    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+    force: yes
+  when: ansible_user_id != k8s_ssh_user
+
+# TODO: uncomment it when tests will be exist
+# - name: test CICD service
+#   command: make test
+#   args:
+#     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+#   environment:
+#     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+#     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+#   when: ansible_user_id != k8s_ssh_user
+
+- name: Stop CICD service
+  shell: >
+    make stop >/dev/null 2>&1 || true
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
+
+- name: Remove CICD service
+  shell: >
+    make remove >/dev/null 2>&1 || true
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
+
+- name: install CICD service
+  command: make install
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
+
+- name: start CICD service
+  command: make start
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
