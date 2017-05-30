@@ -38,6 +38,15 @@ k8s_docker_registry_auth_code: 'docker-registry-auth-code'
 # Charts server repository
 k8s_charts_repo: github.com/k8s-community/charts
 
+# CICD integration services
+k8s_cicd_services:
+  - github-integration
+  - user-manager
+  - k8s-community
+
+# CICD repository
+k8s_cicd_repo: github.com/k8s-community/cicd
+
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/kubernetes
 

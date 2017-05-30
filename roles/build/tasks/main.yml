@@ -119,3 +119,32 @@
     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
   when: ansible_user_id != k8s_ssh_user
+
+- name: get CICD integraton services
+  git: 
+    repo: 'https://github.com/k8s-community/{{ item }}'
+    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+  when: ansible_user_id != k8s_ssh_user
+  with_items: '{{ k8s_cicd_services }}'
+
+# TODO: uncomment it when tests will be exist
+# - name: test CICD integraton services
+#   command: make test
+#   args:
+#     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+#   environment:
+#     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+#     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+#   when: ansible_user_id != k8s_ssh_user
+#   with_items: '{{ k8s_cicd_services }}'
+
+- name: deploy CICD integraton services
+  shell: >
+    NAMESPACE=default make deploy
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  when: ansible_user_id != k8s_ssh_user
+  with_items: '{{ k8s_cicd_services }}'
