@@ -152,3 +152,9 @@
     dest: "{{ k8s_calico_dir }}/deploy-calico.sh"
     mode: 0755
   when: inventory_hostname in k8s_master_hosts
+
+- name: Awaiting for etcd
+  wait_for:
+    host: 127.0.0.1
+    port: '{{ etcd_client_port }}'
+  when: inventory_hostname in k8s_master_hosts

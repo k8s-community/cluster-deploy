@@ -1,4 +1,8 @@
 ---
+- name: Awaiting for calico loading
+  wait_for:
+    path: '{{ cni_bin_dir }}/calico'
+
 - name: Check addons directories
   file:
     path: '{{ item }}'
@@ -36,3 +40,6 @@
     src: deploy-addons.sh
     dest: "{{ k8s_addons_dir }}/deploy-addons.sh"
     mode: 0755
+
+- name: Run deploy script for addons
+  command: "{{ k8s_addons_dir }}/deploy-addons.sh"

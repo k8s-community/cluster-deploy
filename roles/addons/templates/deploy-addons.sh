@@ -144,6 +144,17 @@ function deploy_helm_tiller {
   echo
 }
 
+function deploy_cockroachdb {
+    if kubectl get statefulset -l app=cockroachdb | grep cockroachdb &> /dev/null; then
+        echo "Cockroach DB already exists"
+    else
+        echo "Creating Cockroach DB"
+        kubectl apply -f {{ k8s_addons_dir }}/cockroachdb.yaml
+    fi
+
+  echo
+}
+
 deploy_admin_cluster_role_binding
 deploy_reader_cluster_role
 deploy_tls_secrets
@@ -158,3 +169,4 @@ deploy_l7_ingress_controller
 {% endif %}
 deploy_kube_registry
 deploy_helm_tiller
+deploy_cockroachdb
