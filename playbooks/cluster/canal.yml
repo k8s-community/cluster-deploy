@@ -11,6 +11,18 @@
 
   tasks:
 
+    - name: Awaiting for k8s API
+      wait_for:
+        host: 127.0.0.1
+        port: 8080
+
+    - name: Awaiting for nodes
+      wait_for:
+        host: '{{ item }}'
+        port: 10250
+        state: drained
+      with_items: '{{ groups["node"] }}'
+
     - name: Start Calico & Flannel
       command: '{{ k8s_calico_dir }}/deploy-calico.sh'
       when: inventory_hostname in groups["master"][0]

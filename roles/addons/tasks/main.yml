@@ -1,4 +1,8 @@
 ---
+- name: Awaiting for calico loading
+  wait_for:
+    path: '{{ cni_bin_dir }}/calico'
+
 - name: Check addons directories
   file:
     path: '{{ item }}'
