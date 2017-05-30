@@ -108,6 +108,17 @@ Nginx stats port
 k8s_nginx_stats_port: 18080
 ```
 
+Cockroach DB data dir
+```yaml
+k8s_cockroachdb_dir: /var/lib/cockroachdb
+```
+
+Cockroach DB volume and cache size
+```yaml
+k8s_cockroachdb_volume_size: 1Gi
+k8s_cockroachdb_cache_size: 250Mb
+```
+
 SSL certificate and private key for running user services into Kubernetes
 ```yaml
 k8s_services_cert: |
