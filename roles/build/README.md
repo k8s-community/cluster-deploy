@@ -100,6 +100,26 @@ Go sources/packages path in home directory
 go_path: 'gocode'
 ```
 
+k8s.community services databases credentials
+```yaml
+k8s_community_db_username: 'k8s-community'
+k8s_community_db_password: 'k8s.community'
+k8s_github_integration_db_username: 'github-integration'
+k8s_github_integration_db_password: 'github.integration'
+```
+
+k8s.community Github integration services secrets
+```yaml
+k8s_github_client_id: 'client id here'
+k8s_github_client_secret: 'client secret here'
+k8s_github_integration_id: 'github integration id here'
+k8s_github_integration_token: 'github integration token here'
+k8s_github_integration_private_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  - Your RSA private key here -
+  -----END RSA PRIVATE KEY-----
+```
+
 
 Example Playbook
 ----------------
