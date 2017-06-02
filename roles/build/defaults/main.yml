@@ -70,3 +70,14 @@ k8s_url_scheme: https
 
 # Kubernetes service API port
 k8s_api_port: 443
+
+# k8s.community services secrets
+k8s_github_client_id: 'client id here'
+k8s_github_client_secret: 'client secret here'
+k8s_community_db_username: 'k8s-community'
+k8s_community_db_password: 'k8s.community'
+k8s_github_integration_db_username: 'github-integration'
+k8s_github_integration_db_password: 'github.integration'
+k8s_github_integration_id: 'github integration id here'
+k8s_github_integration_token: 'github integration token here'
+k8s_github_integration_private_key: 'github integration private key here'
