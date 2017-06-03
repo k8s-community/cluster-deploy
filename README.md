@@ -146,6 +146,11 @@ k8s_guest_username: guest
 k8s_guest_password: 'password'
 ```
 
+k8s.community services exchange token
+```yaml
+k8s_community_token: 'k8s-community-token'
+```
+
 k8s.community services databases credentials
 ```yaml
 k8s_community_db_username: 'k8s-community'
@@ -158,6 +163,7 @@ k8s.community Github integration services secrets
 ```yaml
 k8s_github_client_id: 'client id here'
 k8s_github_client_secret: 'client secret here'
+k8s_github_state: 'state here'
 k8s_github_integration_id: 'github integration id here'
 k8s_github_integration_token: 'github integration token here'
 k8s_github_integration_private_key: |
