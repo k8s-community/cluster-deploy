@@ -161,9 +161,9 @@ k8s_github_integration_db_password: 'github.integration'
 
 k8s.community Github integration services secrets
 ```yaml
-k8s_github_client_id: 'client id here'
-k8s_github_client_secret: 'client secret here'
-k8s_github_state: 'state here'
+k8s_github_client_id: 'github client id here'
+k8s_github_client_secret: 'github client secret here'
+k8s_github_state: 'github state here'
 k8s_github_integration_id: 'github integration id here'
 k8s_github_integration_token: 'github integration token here'
 k8s_github_integration_private_key: |
