@@ -30,7 +30,7 @@
   when: not ca.stat.exists
 
 - name: Generate CA
-  shell: cfssl gencert -initca csr-ca.json | cfssljson -bare ca
+  shell: '{{ ssl_bin_dir }}/cfssl gencert -initca csr-ca.json | {{ ssl_bin_dir }}/cfssljson -bare ca'
   args:
     chdir: '{{ ssl_dir }}'
   when: not ca.stat.exists
@@ -76,13 +76,13 @@
   with_items: '{{ ssl_clients }}'
 
 - name: Generate certificates
-  shell: cfssl gencert -ca ca.pem -ca-key ca-key.pem -config=config.json -profile=kubernetes csr-common.json | cfssljson -bare {{ ssl_name }}
+  shell: '{{ ssl_bin_dir }}/cfssl gencert -ca ca.pem -ca-key ca-key.pem -config=config.json -profile=kubernetes csr-common.json | {{ ssl_bin_dir }}/cfssljson -bare {{ ssl_name }}'
   args:
     chdir: '{{ ssl_dir }}'
   when: not ssl_ca_only
 
 - name: Generate clients certificates
-  shell: cfssl gencert -ca ca.pem -ca-key ca-key.pem -config=config.json -profile=kubernetes csr-{{ item.name }}.json | cfssljson -bare client-{{ item.name }}
+  shell: '{{ ssl_bin_dir }}/cfssl gencert -ca ca.pem -ca-key ca-key.pem -config=config.json -profile=kubernetes csr-{{ item.name }}.json | {{ ssl_bin_dir }}/cfssljson -bare client-{{ item.name }}'
   args:
     chdir: '{{ ssl_dir }}'
   when: not ssl_ca_only
