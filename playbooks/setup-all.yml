@@ -7,5 +7,3 @@
 - include: cluster/node.yml
 - include: cluster/canal.yml
 - include: addons/setup.yml
-# TODO We should wait for Helm Tiller initialization (approx.: 1 Minute)
-- include: cluster/build.yml
