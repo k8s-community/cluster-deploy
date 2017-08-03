@@ -20,14 +20,24 @@ pip install ansible
 
 Before using of the playbooks you should change/enter all required vars in `inventory/group_vars/all.yml`
 
-Prepare GCE components
+Prepare GCE components. This is optional action related to GCE infrastructure. It should not be used with `prepare-vps.yml`
 ```sh
 ansible-playbook playbooks/prepare-gce.yml
+```
+
+Prepare VPS components. This is optional action depend on your provider infrastructure. It should not be used with `prepare-gce.yml`
+```sh
+ansible-playbook playbooks/prepare-vps.yml
 ```
 
 Install Kubernetes cluster all-in-one
 ```sh
 ansible-playbook playbooks/setup-all.yml
+```
+
+Install Build machine
+```sh
+ansible-playbook playbooks/setup-build.yml
 ```
 
 All playbooks may be running separately, e.g. `setup Kubernetes components: dashboard, etc`
