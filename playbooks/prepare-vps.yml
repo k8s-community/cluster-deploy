@@ -1,1 +1,2 @@
-- include: firewall/setup.yml
+- include: system/update.yml
+- include: system/firewall.yml
