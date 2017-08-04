@@ -6,8 +6,11 @@
     "size": {{ ssl_key_size }}
   },
   "names": [
+{% for org in item.org %}
     {
-      "O": "{{ item.org }}"
-    }
+      "O": "{{ org }}"
+    }{% if not loop.last %},{% endif %}
+
+{% endfor %}
   ]
 }
