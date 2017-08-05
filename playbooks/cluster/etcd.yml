@@ -2,7 +2,6 @@
 - hosts: etcd
   remote_user: '{{ k8s_ssh_user }}'
   become: true
-  become_method: sudo
   roles:
     - role: etcd
       etcd_hosts: '{{ groups["etcd"] }}'
