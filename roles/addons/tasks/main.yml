@@ -11,6 +11,7 @@
   with_items:
     - '{{ k8s_policy_dir }}'
     - '{{ k8s_addons_dir }}'
+    - '{{ k8s_kube_registry_dir }}'
 
 - name: Addons
   template:
