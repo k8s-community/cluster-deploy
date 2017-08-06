@@ -1,6 +1,6 @@
 ---
 # Helm package manager version
-helm_version: 2.3.1
+helm_version: 2.5.1
 
 # It will be used as the Internal dns domain name if DNS is enabled.
 # Services will be discoverable under
