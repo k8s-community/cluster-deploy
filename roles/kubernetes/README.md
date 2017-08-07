@@ -19,7 +19,11 @@ Available variables are listed below, along with default values (see `defaults/m
 
 Log level 0 - debug
 ```yaml
-k8s_log_level: 2
+k8s_log_level: 3
+```
+Use to increase verbosity on particular files, e.g. k8s_log_spec: token_controller*=5,other_controller*=4
+```
+k8s_log_spec: ''
 ```
 
 Users access data
@@ -62,11 +66,6 @@ Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/kubernetes
 ```
 
-Flannel backend type (Options: gce, vxlan)
-```yaml
-k8s_flannel_backend: vxlan
-```
-
 ETCD client port, peer port
 ```yaml
 etcd_client_port: 2379
@@ -102,21 +101,16 @@ It should be in range of services subnet
 k8s_cluster_dns: 10.254.0.10
 ```
 
-Flannel internal overlay network. It will assign IP
+Internal overlay network. It will assign IP
 addresses from this range to individual pods.
 This network must be unused block of space.
 ```yaml
-k8s_flannel_network: 10.20.0.0/16
+k8s_cluster_cidr: 10.20.0.0/16
 ```
 
 Kubernetes hyperkube version
 ```yaml
-k8s_version: 1.5.6
-```
-
-Calico version 
-```yaml
-k8s_calico_version: 1.1.1
+k8s_version: 1.7.3
 ```
 
 Container Network Interface (CNI) bin & config path
@@ -130,7 +124,6 @@ Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes
 k8s_manifests_dir: '{{ k8s_conf_dir }}/manifests'
 k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
-k8s_calico_dir: '{{ k8s_conf_dir }}/calico'
 ```
 
 Kubelet data path
