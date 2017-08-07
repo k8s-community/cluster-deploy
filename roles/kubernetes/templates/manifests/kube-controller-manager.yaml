@@ -11,12 +11,21 @@ spec:
     command:
     - /hyperkube
     - controller-manager
+    - --allocate-node-cidrs=true
+    - --cluster-cidr={{ k8s_cluster_cidr }}
+    - --cluster-signing-cert-file={{ ssl_dir }}/ca.pem
+    - --cluster-signing-key-file={{ ssl_dir }}/ca-key.pem
+    - --controllers=*
+    - --feature-gates=AllAlpha=false
     - --master=https://127.0.0.1:{{ k8s_api_port }}
     - --kubeconfig={{ k8s_policy_dir }}/controller.kubeconfig
     - --leader-elect=true
     - --root-ca-file={{ ssl_dir }}/ca.pem
     - --service-account-private-key-file={{ ssl_dir }}/master-key.pem
     - --service-cluster-ip-range={{ k8s_services_network }}
+    - --use-service-account-credentials
+    - --v={{ k8s_log_level }}
+    - --vmodule={{ k8s_log_spec }}
     resources:
       requests:
         cpu: 200m
