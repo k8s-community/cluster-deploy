@@ -11,9 +11,11 @@ spec:
     command:
     - /hyperkube
     - scheduler
+    - --feature-gates=AllAlpha=false
     - --master=https://127.0.0.1:{{ k8s_api_port }}
     - --kubeconfig={{ k8s_policy_dir }}/scheduler.kubeconfig
     - --leader-elect=true
+    - --v={{ k8s_log_level }}
     resources:
       requests:
         cpu: 100m
