@@ -32,7 +32,6 @@ spec:
     - --requestheader-group-headers=X-Remote-Group
     - --requestheader-extra-headers-prefix=X-Remote-Extra-
     - --requestheader-client-ca-file={{ ssl_dir }}/ca.pem
-    - --requestheader-allowed-names=system:auth-proxy
     - --runtime-config=admissionregistration.k8s.io/v1alpha1
     - --secure-port={{ k8s_api_port }}
     - --service-account-key-file={{ ssl_dir }}/master-key.pem
