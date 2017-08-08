@@ -1,0 +1,82 @@
+---
+- hosts:
+    - master
+    - node
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  vars:
+    network_policy: true
+    master_ports:
+      - 2379-2380/tcp # ETCD ports
+      - 443/tcp       # API port
+      - 10250/tcp     # kubelet port
+      - 10255/tcp     # kubelet port
+      - 4194/tcp      # cAdvisor port
+    nodes_ports:
+      - 10250/tcp     # kubelet port
+      - 10255/tcp     # kubelet port
+      - 4194/tcp      # cAdvisor port
+    flannel_ports:
+      - 8472/udp      # flannel network
+ 
+  tasks:
+
+  # Collect Cluster IPs
+  - set_fact:
+      mts_ipv4: "{{ groups['master']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
+      mts_ipv6: "{{ groups['master']|map('extract', hostvars, 'ansible_default_ipv6')|map(attribute='address')|list }}"
+      nds_ipv4: "{{ groups['node']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
+      nds_ipv6: "{{ groups['node']|map('extract', hostvars, 'ansible_default_ipv6')|map(attribute='address')|list }}"
+
+  - name: Setup firewall cluster trusted zone master ports
+    firewalld:
+      zone: trusted
+      port: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ master_ports }}'
+    when: inventory_hostname in groups['master']
+    notify:
+      - reload firewall
+
+  - name: Setup firewall cluster trusted zone node ports
+    firewalld:
+      zone: trusted
+      port: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ nodes_ports }}'
+    when: inventory_hostname in groups['node']
+    notify:
+      - reload firewall
+
+  - name: Setup firewall flannel cluster trusted zone ports
+    firewalld:
+      zone: trusted
+      port: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ flannel_ports }}'
+    notify:
+      - reload firewall
+
+  - name: Setup firewall trusted zone sources
+    firewalld:
+      zone: trusted
+      source: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ mts_ipv4 }}'
+      - '{{ mts_ipv6 }}'
+      - '{{ nds_ipv4 }}'
+      - '{{ nds_ipv6 }}'
+    notify:
+      - reload firewall
+
+  handlers:
+    - name: reload firewall
+      command: firewall-cmd --reload

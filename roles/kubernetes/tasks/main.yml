@@ -16,10 +16,8 @@
     - '{{ cni_conf_dir }}'
     - '{{ k8s_manifests_dir }}'
     - '{{ k8s_policy_dir }}'
-    - '{{ k8s_calico_dir }}'
     - '{{ k8s_svc_conf_dir }}'
     - '{{ k8s_kubelet_dir }}'
-    - '{{ k8s_kube_registry_dir }}'
     - '{{ ansible_env.HOME }}/.kube'
 
 - name: Get kubectl
@@ -33,13 +31,6 @@
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/v{{ k8s_version }}/bin/{{ ansible_system|lower }}/amd64/kubelet"
     dest: "{{ k8s_bin_dir }}/kubelet"
-    mode: 0755
-    force: yes
-
-- name: Get calicoctl
-  get_url:
-    url: "https://github.com/projectcalico/calicoctl/releases/download/v{{ k8s_calico_version }}/calicoctl"
-    dest: "{{ k8s_bin_dir }}/calicoctl"
     mode: 0755
     force: yes
 
@@ -101,6 +92,15 @@
   notify:
     - restart kubelet
 
+- name: Kube Aggregator policy configs
+  template:
+    src: policy/kubeconfig.client
+    dest: "{{ k8s_policy_dir }}/{{ item }}.kubeconfig"
+  with_items:
+    - kube-aggregator
+  notify:
+    - restart kubelet
+
 - name: Default policy config
   template:
     src: policy/kubeconfig.default
@@ -136,22 +136,6 @@
     mode: 0644
   notify:
     - restart kubelet
-
-- name: Register Calico network policy
-  template:
-    src: calico/calico.yaml
-    dest: "{{ k8s_calico_dir }}/calico.yaml"
-    mode: 0644
-  when: inventory_hostname in k8s_master_hosts
-  notify:
-    - restart kubelet
-
-- name: Deploy script for calico
-  template:
-    src: calico/deploy-calico.sh
-    dest: "{{ k8s_calico_dir }}/deploy-calico.sh"
-    mode: 0755
-  when: inventory_hostname in k8s_master_hosts
 
 - name: Awaiting for etcd
   wait_for:

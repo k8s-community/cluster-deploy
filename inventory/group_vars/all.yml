@@ -1,12 +1,17 @@
 ---
+# Log level 0 - debug
+# k8s_log_level: 3
+# Use to increase verbosity on particular files, e.g. k8s_log_spec: 'token_controller*=5,other_controller*=4'
+# k8s_log_spec: ''
+
 # Kubernetes version
-# k8s_version: 1.5.6
+# k8s_version: 1.7.3
 
 # Helm package manager version
-# helm_version: 2.3.1
+# helm_version: 2.5.1
 
 # Golang compiller version
-# go_version: 1.8.1
+# go_version: 1.8.3
 
 # Account name of remote user. Ansible will use this user account to ssh into
 # the managed machines. The user must be able to use sudo without asking
@@ -78,10 +83,10 @@ k8s_cluster_service_ip: 10.254.0.1
 # It should be in range of services subnet
 k8s_cluster_dns: 10.254.0.10
 
-# Flannel internal overlay network. It will assign IP
+# Internal overlay network. It will assign IP
 # addresses from this range to individual pods.
 # This network must be unused block of space.
-# k8s_flannel_network: 10.20.0.0/16
+# k8s_cluster_cidr: 10.20.0.0/16
 
 # It should be an IP addresses range corresponed with zone, e.g.
 # Western Europe Zone has 10.132.0.0/20 IP range
@@ -176,9 +181,6 @@ gce_startup_script: |
 #   - service-management
 #   - storage-full
 #   - useraccounts-ro
-
-# Log level 0 - debug
-# k8s_log_level: 2
 
 # Users access data
 k8s_admin_token: 'Admin user token should be here'

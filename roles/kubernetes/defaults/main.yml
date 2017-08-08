@@ -1,6 +1,8 @@
 ---
 # Log level 0 - debug
-k8s_log_level: 2
+k8s_log_level: 3
+# Use to increase verbosity on particular files, e.g. k8s_log_spec=token_controller*=5,other_controller*=4
+k8s_log_spec: ''
 
 # Users access data
 k8s_admin_token: 'Admin user token should be here'
@@ -32,9 +34,6 @@ ssl_name: kubernetes
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/{{ ssl_name }}
 
-# Flannel backend type (Options: gce, vxlan)
-k8s_flannel_backend: vxlan
-
 # ETCD client port, peer port
 etcd_client_port: 2379
 
@@ -57,29 +56,22 @@ k8s_cluster_service_ip: 10.254.0.1
 # It should be in range of services subnet
 k8s_cluster_dns: 10.254.0.10
 
-# Flannel internal overlay network. It will assign IP
+# Internal overlay network. It will assign IP
 # addresses from this range to individual pods.
 # This network must be unused block of space.
-k8s_flannel_network: 10.20.0.0/16
+k8s_cluster_cidr: 10.20.0.0/16
 
 # Kubernetes hyperkube version
-k8s_version: 1.5.6
-
-# Calico version 
-k8s_calico_version: 1.1.1
-
-# Container Network Interface (CNI) bin & config path
-cni_bin_dir: /opt/cni/bin
-cni_conf_dir: /etc/kubernetes/cni/net.d
+k8s_version: 1.7.3
 
 # Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes
 k8s_manifests_dir: '{{ k8s_conf_dir }}/manifests'
 k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
-k8s_calico_dir: '{{ k8s_conf_dir }}/calico'
 
-# Docker registry path in case of hostPath configuration
-k8s_kube_registry_dir: /var/lib/kube-registry
+# Container Network Interface (CNI) bin & config path
+cni_bin_dir: /opt/cni/bin
+cni_conf_dir: '{{ k8s_conf_dir }}/cni/net.d'
 
 # Kubelet data path
 k8s_kubelet_dir: /var/lib/kubelet
@@ -102,22 +94,6 @@ k8s_node_hosts: {}
 # Hyperkube image
 k8s_hyperkube_image: gcr.io/google_containers/hyperkube
 k8s_hyperkube_image_tag: v{{ k8s_version }}
-
-# Flannel image
-k8s_flannel_image: quay.io/coreos/flannel
-k8s_flannel_image_tag: v0.7.1
-
-# ETCD image for flannel init job
-k8s_etcd_image: quay.io/coreos/etcd
-k8s_etcd_image_tag: v3.1.6
-
-# Calico images
-k8s_calico_node_image: quay.io/calico/node
-k8s_calico_node_image_tag: v{{ k8s_calico_version }}
-k8s_calico_cni_image: quay.io/calico/cni
-k8s_calico_cni_image_tag: v1.6.2
-k8s_calico_kube_policy_controller_image: quay.io/calico/kube-policy-controller
-k8s_calico_kube_policy_controller_image_tag: v0.6.0
 
 # Master servers
 k8s_api_servers: "{% for host in k8s_master_hosts %}{{ k8s_url_scheme }}://{{ host }}:{{ k8s_api_port }}{% if not loop.last %},{% endif %}{% endfor %}"

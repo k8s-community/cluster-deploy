@@ -1,0 +1,4 @@
+# TODO We should wait for Helm Tiller initialization (approx.: 1 Minute)
+- include: toolchain/build.yml
+- include: ssl/build.yml
+- include: cluster/build.yml

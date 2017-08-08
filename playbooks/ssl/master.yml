@@ -3,7 +3,6 @@
     - master
   remote_user: '{{ k8s_ssh_user }}'
   become: true
-  become_method: sudo
   pre_tasks:
     - name: Copy CA
       copy:
@@ -20,10 +19,12 @@
         - 'kubernetes.default'
         - 'kubernetes.default.svc'
         - 'kubernetes.default.svc.{{ k8s_cluster_domain }}'
+        - 'api.kube-public.svc'
         - '{{ k8s_master_name }}'
         - '{{ k8s_services_name }}'
         - '{{ k8s_registry_name }}'
         - '127.0.0.1'
+        - 'localhost'
         - '{{ k8s_cluster_service_ip }}'
       when: inventory_hostname in groups['master'][0]
   # Copy certificates to all masters (we should use the same certificate absolutely identical on all masters)

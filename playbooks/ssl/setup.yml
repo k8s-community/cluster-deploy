@@ -3,7 +3,6 @@
     - master
   remote_user: '{{ k8s_ssh_user }}'
   become: true
-  become_method: sudo
   pre_tasks:
     - name: Check CA 
       stat:
@@ -38,7 +37,6 @@
     - node
   remote_user: '{{ k8s_ssh_user }}'
   become: true
-  become_method: sudo
   pre_tasks:
     - name: Copy CA
       copy:
@@ -61,16 +59,26 @@
       ssl_clients:
         - name: kubelet
           cn: system:node:{{ inventory_hostname }}
-          org: system:nodes
+          org: 
+            - system:nodes
         - name: kube-proxy
           cn: system:kube-proxy
-          org: system:nodes
+          org:
+            - system:nodes
         - name: controller
-          cn: system:controller
-          org: system:masters
+          cn: system:kube-controller-manager
+          org: {}
         - name: scheduler
-          cn: system:scheduler
-          org: system:masters
+          cn: system:kube-scheduler
+          org: {}
         - name: admin
           cn: system:admin
-          org: system:masters
+          org:
+            - system:masters
+        - name: auth-proxy
+          cn: system:auth-proxy
+          org: {}
+        - name: kube-aggregator
+          cn: system:kube-aggregator
+          org:
+            - system:masters

@@ -1,0 +1,31 @@
+---
+- hosts:
+    - master
+    - node
+    - build
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+
+  tasks:
+  - name: Update CentOS packages
+    yum:
+      name: '*'
+      state: latest
+    notify:
+      - reboot vps
+      - wait to come up
+ 
+  handlers:
+
+    - name: reboot vps
+      command: /sbin/shutdown -r +1
+      async: 0
+      poll: 0
+
+    - name: wait to come up
+      wait_for:
+        host: '{{ inventory_hostname }}'
+        port: 22
+        delay: 90
+      delegate_to: localhost
+      become: false

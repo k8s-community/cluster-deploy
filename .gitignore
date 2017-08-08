@@ -1,4 +1,5 @@
 *.retry
 community
 gce
+openprovider
 inventory/cluster

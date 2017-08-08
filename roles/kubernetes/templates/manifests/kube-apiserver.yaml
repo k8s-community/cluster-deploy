@@ -11,29 +11,38 @@ spec:
     command:
     - /hyperkube
     - apiserver
-    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota
+    - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,NodeRestriction,DefaultStorageClass,DefaultTolerationSeconds,ResourceQuota
     - --advertise-address={{ ansible_default_ipv4.address }}
     - --allow-privileged=true
     - --anonymous-auth=false
     - --apiserver-count={{ k8s_master_hosts | length }}
-    - --authorization-mode=RBAC
+    - --authorization-mode=Node,RBAC
     - --basic-auth-file={{ k8s_policy_dir }}/basic-auth.csv
     - --bind-address=0.0.0.0
     - --client-ca-file={{ ssl_dir }}/ca.pem
     - --etcd-servers={{ k8s_etcd_servers }}
     - --etcd-cafile={{ ssl_dir }}/ca.pem
+    - --external-hostname={{ k8s_master_name }}
+    - --feature-gates=AllAlpha=false
     - --insecure-bind-address=0.0.0.0
     - --insecure-port=8080
-    - --kubelet-certificate-authority={{ ssl_dir }}/ca.pem
-    - --runtime-config=extensions/v1beta1/networkpolicies=true
+    - --proxy-client-cert-file={{ ssl_dir }}/client-auth-proxy.pem
+    - --proxy-client-key-file={{ ssl_dir }}/client-auth-proxy-key.pem
+    - --requestheader-username-headers=X-Remote-User
+    - --requestheader-group-headers=X-Remote-Group
+    - --requestheader-extra-headers-prefix=X-Remote-Extra-
+    - --requestheader-client-ca-file={{ ssl_dir }}/ca.pem
+    - --runtime-config=admissionregistration.k8s.io/v1alpha1
     - --secure-port={{ k8s_api_port }}
     - --service-account-key-file={{ ssl_dir }}/master-key.pem
     - --service-account-lookup=true
     - --service-cluster-ip-range={{ k8s_services_network }}
+    - --storage-backend=etcd3
     - --tls-cert-file={{ ssl_dir }}/master.pem
     - --tls-private-key-file={{ ssl_dir }}/master-key.pem
     - --token-auth-file={{ k8s_policy_dir }}/known-tokens.csv
     - --v={{ k8s_log_level }}
+    - --vmodule={{ k8s_log_spec }}
     livenessProbe:
       httpGet:
         path: /healthz
