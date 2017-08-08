@@ -88,13 +88,12 @@
   when: not ssl_ca_only
   with_items: '{{ ssl_clients }}'
 
-- name: Remove CA key and CSR configs
+- name: Remove CSR configs
   file:
     path: '{{ ssl_dir }}/{{ item }}'
     state: absent
   when: not ssl_ca_only
   with_items:
-    - ca-key.pem
     - config.json
     - csr-common.json
     - '{{ ssl_name }}.csr'
