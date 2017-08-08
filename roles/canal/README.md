@@ -1,7 +1,7 @@
 Ansible Role: Canal
 ===================
 
-This role install Canal Network Plugin on Redhat linux based systems.
+This role install Canal Network Plugin on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
