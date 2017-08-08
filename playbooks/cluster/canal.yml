@@ -1,13 +1,21 @@
 ---
+- hosts:
+    - master
+    - node
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  roles:
+    - role: canal
+      k8s_master_hosts: '{{ groups["master"] }}'
+
 - hosts: master
   remote_user: '{{ k8s_ssh_user }}'
   become: true
-  become_method: sudo
 
   vars:
     # Kubernetes configs path
     k8s_conf_dir: /etc/kubernetes
-    k8s_calico_dir: '{{ k8s_conf_dir }}/calico'
+    k8s_canal_dir: '{{ k8s_conf_dir }}/canal'
 
   tasks:
 
@@ -23,6 +31,6 @@
         state: drained
       with_items: '{{ groups["node"] }}'
 
-    - name: Start Calico & Flannel
-      command: '{{ k8s_calico_dir }}/deploy-calico.sh'
+    - name: Start Canal
+      command: '{{ k8s_canal_dir }}/deploy-canal.sh'
       when: inventory_hostname in groups["master"][0]
