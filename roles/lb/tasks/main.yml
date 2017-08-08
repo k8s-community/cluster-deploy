@@ -13,7 +13,7 @@
     project_id: '{{ gce_project_id }}'
 
 # It should be enabled in Ansible version >= 2.3
-# - name: Register Load Balanser external IP
+# - name: Register load balancer external IP
 #   gce_eip:
 #     name: 'kube-services'
 #     region: '{{ gce_instances_region }}'
