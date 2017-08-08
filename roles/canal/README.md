@@ -59,12 +59,6 @@ Master hosts nsmes
 k8s_master_hosts: {}
 ```
 
-Nodes hosts names
-```yaml
-k8s_node_hosts: {}
-```
-
-
 Example Playbook
 ----------------
 
