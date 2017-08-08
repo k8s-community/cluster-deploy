@@ -1,0 +1,31 @@
+---
+- name: Check kubernetes directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ cni_bin_dir }}'
+    - '{{ cni_conf_dir }}'
+    - '{{ k8s_canal_dir }}'
+
+- name: Get calicoctl
+  get_url:
+    url: "https://github.com/projectcalico/calicoctl/releases/download/v{{ k8s_calicoctl_version }}/calicoctl"
+    dest: "{{ k8s_bin_dir }}/calicoctl"
+    mode: 0755
+    force: yes
+
+- name: Register Calico network policy
+  template:
+    src: canal.yaml
+    dest: "{{ k8s_canal_dir }}/canal.yaml"
+    mode: 0644
+  when: inventory_hostname in k8s_master_hosts
+
+- name: Deploy script for canal
+  template:
+    src: deploy-canal.sh
+    dest: "{{ k8s_canal_dir }}/deploy-canal.sh"
+    mode: 0755
+  when: inventory_hostname in k8s_master_hosts
