@@ -29,13 +29,6 @@ k8s_bin_dir: /usr/bin
 # Master hosts nsmes
 k8s_master_hosts: {}
 
-# Nodes hosts names
-k8s_node_hosts: {}
-
-# Hyperkube image
-k8s_hyperkube_image: gcr.io/google_containers/hyperkube
-k8s_hyperkube_image_tag: v{{ k8s_version }}
-
 # Flannel image
 k8s_flannel_image: quay.io/coreos/flannel
 k8s_flannel_image_tag: v0.8.0
