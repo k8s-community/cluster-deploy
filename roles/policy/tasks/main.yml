@@ -1,0 +1,42 @@
+---
+- name: Check kubernetes directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_policy_dir }}'
+
+- name: Policy files and roles
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_policy_dir }}/{{ item }}"
+  with_items:
+    - admin-clusterrolebinding.yaml
+    - cluster-reader-clusterrole.yaml
+    - cluster-reader-clusterrolebinding.yaml
+    - release-role.yaml
+    - release-rolebinding.yaml
+    - namespaces.yaml
+
+- name: TLS Secret
+  template:
+    src: tls_secret.yaml
+    dest: "{{ k8s_policy_dir }}/tls_secret.yaml"
+  when: k8s_services_cert | length > 1000
+
+- name: Deploy script for policy
+  template:
+    src: deploy-policy.sh
+    dest: "{{ k8s_policy_dir }}/deploy-policy.sh"
+    mode: 0755
+
+- name: Awaiting for kubernetes API
+  wait_for:
+    host: 127.0.0.1
+    port: 8080
+  when: inventory_hostname in k8s_master_hosts[0]
+
+- name: Run deploy script for policy
+  command: "{{ k8s_policy_dir }}/deploy-policy.sh"
+  when: inventory_hostname in k8s_master_hosts[0]
