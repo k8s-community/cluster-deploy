@@ -1,5 +1,5 @@
-Ansible Role: Kubernetes
-========================
+Ansible Role: Policy rules
+==========================
 
 This role install Policy rules on Red Hat linux based systems.
 
@@ -63,7 +63,6 @@ Example Playbook
 
     - hosts:
         - master
-        - node
       roles:
         - policy
 
