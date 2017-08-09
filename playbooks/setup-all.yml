@@ -5,4 +5,5 @@
 - include: cluster/master.yml
 - include: cluster/node.yml
 - include: cluster/canal.yml
+- include: cluster/policy.yml
 - include: addons/setup.yml
