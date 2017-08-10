@@ -78,17 +78,6 @@ function deploy_kube_registry {
   echo
 }
 
-function deploy_helm_tiller {
-    if kubectl get deploy -l app=helm,name=tiller --namespace=kube-system | grep tiller-deploy &> /dev/null; then
-        echo "Helm tiller already exists"
-    else
-        echo "Creating Helm tiller"
-        kubectl apply -f {{ k8s_addons_dir }}/helm-tiller.yaml
-    fi
-
-  echo
-}
-
 function deploy_cockroachdb {
     if kubectl get statefulset -l app=cockroachdb | grep cockroachdb &> /dev/null; then
         echo "Cockroach DB already exists"
