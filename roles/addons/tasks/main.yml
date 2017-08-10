@@ -26,7 +26,6 @@
     - l7-ingress-controller.yaml
     - nginx-ingress-controller.yaml
     - kube-registry.yaml
-    - helm-tiller.yaml
     - gce-storage.yaml
     - cockroachdb.yaml
 
