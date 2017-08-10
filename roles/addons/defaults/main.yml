@@ -1,7 +1,4 @@
 ---
-# Helm package manager version
-helm_version: 2.5.1
-
 # It will be used as the Internal dns domain name if DNS is enabled.
 # Services will be discoverable under
 # <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
@@ -46,10 +43,6 @@ gce_storage_size: 100
 k8s_kube_registry_volume_size: '{{ gce_storage_size }}Gi'
 k8s_kube_registry_local_size: '5Gi'
 
-# Kubernetes load balancer type, valid values: `gce`, `nginx`
-# TODO: load balancer `gce`
-k8s_lb_type: nginx 
-
 # Container Network Interface (CNI) bin & config path
 cni_bin_dir: /opt/cni/bin
 cni_conf_dir: /etc/kubernetes/cni/net.d
@@ -69,9 +62,6 @@ k8s_cockroachdb_dir: /var/lib/cockroachdb
 k8s_cockroachdb_volume_size: 1Gi
 k8s_cockroachdb_cache_size: 250Mb
 
-# Nginx stats port
-k8s_nginx_stats_port: 18080
-
 # Dashboard image
 k8s_dashboard_image: gcr.io/google_containers/kubernetes-dashboard-amd64
 k8s_dashboard_image_tag: v1.6.0
@@ -86,14 +76,6 @@ k8s_kubednssidecar_image_tag: 1.14.1
 k8s_cluster_autoscaler_image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64
 k8s_cluster_autoscaler_image_tag: 1.1.1
 
-# Nginx Ingress controller images
-k8s_defaultbackend_image: gcr.io/google_containers/defaultbackend
-k8s_defaultbackend_image_tag: 1.3
-k8s_echoserver_image: gcr.io/google_containers/echoserver
-k8s_echoserver_image_tag: 1.4
-k8s_nginx_ingress_controller_image: takama/nginx-ingress-controller
-k8s_nginx_ingress_controller_image_tag: 0.8.3
-
 # Heapster images
 k8s_heapster_image: gcr.io/google_containers/heapster-amd64
 k8s_heapster_image_tag: v1.3.0
@@ -103,10 +85,6 @@ k8s_heapster_influxdb_image: gcr.io/google_containers/heapster-influxdb-amd64
 k8s_heapster_influxdb_image_tag: v1.1.1
 k8s_heapster_grafana_image: gcr.io/google_containers/heapster-grafana-amd64
 k8s_heapster_grafana_image_tag: v4.0.2
-
-# Helm Tiller image
-k8s_helm_tiller_image: gcr.io/kubernetes-helm/tiller
-k8s_helm_tiller_image_tag: v{{ helm_version }}
 
 # Kube Registry image
 k8s_kube_registry_image: registry

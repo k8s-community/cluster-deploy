@@ -1,0 +1,32 @@
+---
+- name: Awaiting for calico loading
+  wait_for:
+    path: '{{ cni_bin_dir }}/calico'
+
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_addons_dir }}'
+
+- name: Ingress services
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    - nginx-ingress-controller.yaml
+    - haproxy-ingress-controller.yaml
+    - gce-ingress-controller.yaml
+    - echoheaders.yaml
+
+- name: Deploy script for ingress
+  template:
+    src: deploy-ingress.sh
+    dest: "{{ k8s_addons_dir }}/deploy-ingress.sh"
+    mode: 0755
+
+- name: Run deploy script for ingress
+  command: "{{ k8s_addons_dir }}/deploy-ingress.sh"
+  when: inventory_hostname in k8s_master_hosts[0]

@@ -16,11 +16,6 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Helm package manager version
-```yaml
-helm_version: 2.3.1
-```
-
 It will be used as the Internal dns domain name if DNS is enabled.
 Services will be discoverable under
 `<service-name>.<namespace>.svc.<domainname>.<clustername>`, e.g.
@@ -85,12 +80,6 @@ k8s_kube_registry_volume_size: '{{ gce_storage_size }}Gi'
 k8s_kube_registry_local_size: '5Gi'
 ```
 
-Kubernetes load balancer type, valid values: `gce`, `nginx`
-TODO: load balancer `gce`
-```yaml
-k8s_lb_type: nginx 
-```
-
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes
@@ -101,11 +90,6 @@ k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 Docker registry path in case of hostPath configuration
 ```yaml
 k8s_kube_registry_dir: /var/lib/kube-registry
-```
-
-Nginx stats port
-```yaml
-k8s_nginx_stats_port: 18080
 ```
 
 Cockroach DB data dir
