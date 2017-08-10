@@ -22,9 +22,6 @@
     - kubedns.yaml
     - kubedns-autoscaler.yaml
     - heapster.yaml
-    - echoheaders.yaml
-    - l7-ingress-controller.yaml
-    - nginx-ingress-controller.yaml
     - kube-registry.yaml
     - gce-storage.yaml
     - cockroachdb.yaml
