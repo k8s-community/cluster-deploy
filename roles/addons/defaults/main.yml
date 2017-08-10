@@ -72,16 +72,6 @@ k8s_cockroachdb_cache_size: 250Mb
 # Nginx stats port
 k8s_nginx_stats_port: 18080
 
-# SSL certificate and private key for running user services into Kubernetes
-k8s_services_cert: |
-  ----BEGIN CERTIFICATE----
-  - Your certificate here -
-  -----END CERTIFICATE-----
-k8s_services_cert_key: |
-  ----BEGIN PRIVATE KEY----
-  - Your private key here -
-  -----END PRIVATE KEY-----
-
 # Dashboard image
 k8s_dashboard_image: gcr.io/google_containers/kubernetes-dashboard-amd64
 k8s_dashboard_image_tag: v1.6.0

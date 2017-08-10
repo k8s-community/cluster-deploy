@@ -1,60 +1,5 @@
 #!/bin/bash
 
-function deploy_admin_cluster_role_binding {
-    if kubectl get -l basic.auth/user=admin clusterrolebindings | grep admin &> /dev/null; then
-        echo "Admin account already exists"
-    else
-        echo "Creating admin account"
-        kubectl apply -f {{ k8s_policy_dir }}/admin-clusterrolebinding.yaml
-    fi
-
-  echo
-}
-
-function deploy_reader_cluster_role {
-    if kubectl get -l basic.auth/role=cluster-reader clusterrole | grep cluster-reader &> /dev/null; then
-        echo "Cluster reader account already exists"
-    else
-        echo "Creating cluster reader account"
-        kubectl apply -f {{ k8s_policy_dir }}/cluster-reader-clusterrole.yaml
-        kubectl apply -f {{ k8s_policy_dir }}/cluster-reader-clusterrolebinding.yaml
-    fi
-
-  echo
-}
-
-function deploy_tls_secrets {
-    if kubectl get secrets --namespace=kube-system | grep tls-secret &> /dev/null; then
-        echo "tls secret already exists"
-    else
-        echo "Creating tls secret"
-{% if k8s_services_cert | length > 1000 %}
-        kubectl apply -f {{ k8s_policy_dir }}/tls_secret.yaml
-{% else %}
-        echo "
-apiVersion: v1
-kind: Secret
-metadata:
-  name: tls-secret
-data:
-  tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
-  tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: tls-secret
-  namespace: kube-system
-data:
-  tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
-  tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
-" | kubectl apply -f -
-{% endif %}
-    fi
-
-  echo
-}
-
 function deploy_dns {
     if kubectl get deploy -l k8s-app=kube-dns --namespace=kube-system | grep kube-dns &> /dev/null; then
         echo "KubeDNS deployment already exists"
@@ -155,9 +100,6 @@ function deploy_cockroachdb {
   echo
 }
 
-deploy_admin_cluster_role_binding
-deploy_reader_cluster_role
-deploy_tls_secrets
 deploy_dns
 deploy_dns_autoscaler
 deploy_dashboard

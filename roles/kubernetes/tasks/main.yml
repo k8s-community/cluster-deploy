@@ -63,11 +63,6 @@
   with_items:
     - known-tokens.csv
     - basic-auth.csv
-    - admin-clusterrolebinding.yaml
-    - cluster-reader-clusterrole.yaml
-    - cluster-reader-clusterrolebinding.yaml
-    - release-role.yaml
-    - release-rolebinding.yaml
   notify:
     - restart kubelet
 

@@ -30,12 +30,6 @@
     - gce-storage.yaml
     - cockroachdb.yaml
 
-- name: TLS Secret
-  template:
-    src: "tls_secret.yaml"
-    dest: "{{ k8s_policy_dir }}/tls_secret.yaml"
-  when: k8s_services_cert | length > 1000
-
 - name: Deploy script for addons
   template:
     src: deploy-addons.sh

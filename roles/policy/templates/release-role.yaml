@@ -4,6 +4,8 @@ kind: Role
 metadata:
   name: prod-admin
   namespace: prod
+  labels:
+    basic.auth/role: prod-admin
 rules:
 - apiGroups:
   - '*'
@@ -18,6 +20,8 @@ kind: Role
 metadata:
   name: release-admin
   namespace: release
+  labels:
+    basic.auth/role: release-admin
 rules:
 - apiGroups:
   - '*'

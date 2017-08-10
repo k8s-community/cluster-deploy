@@ -99,4 +99,3 @@ k8s_hyperkube_image_tag: v{{ k8s_version }}
 k8s_api_servers: "{% for host in k8s_master_hosts %}{{ k8s_url_scheme }}://{{ host }}:{{ k8s_api_port }}{% if not loop.last %},{% endif %}{% endfor %}"
 # ETCD servers
 k8s_etcd_servers: "{% for host in k8s_master_hosts %}{{ k8s_url_scheme }}://{{ host }}:{{ etcd_client_port }}{% if not loop.last %},{% endif %}{% endfor %}"
-
