@@ -6,5 +6,6 @@
 - include: cluster/node.yml
 - include: cluster/canal.yml
 - include: cluster/policy.yml
+- include: cluster/ingress.yml
 - include: addons/helm.yml
 - include: addons/setup.yml
