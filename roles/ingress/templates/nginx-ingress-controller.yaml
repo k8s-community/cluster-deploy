@@ -10,6 +10,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 data:
   proxy-body-size: "0"
+  use-proxy-protocol: "true"
 
 ---
 apiVersion: v1
@@ -169,7 +170,7 @@ metadata:
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
-  replicas: {{ k8s_node_hosts | count }}
+  replicas: 1
   template:
     metadata:
       labels:
