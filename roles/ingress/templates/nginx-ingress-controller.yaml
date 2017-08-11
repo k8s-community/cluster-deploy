@@ -170,7 +170,7 @@ metadata:
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
-  replicas: 1
+  replicas: {{ k8s_node_hosts | count }}
   template:
     metadata:
       labels:
