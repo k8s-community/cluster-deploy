@@ -284,6 +284,8 @@ spec:
         - name: install-cni
           image: {{ k8s_calico_cni_image }}:{{ k8s_calico_cni_image_tag }}
           command: ["/install-cni.sh"]
+          securityContext:
+            privileged: true
           env:
             # The CNI network config to install on each node.
             - name: CNI_NETWORK_CONFIG
