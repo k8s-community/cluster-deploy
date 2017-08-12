@@ -207,7 +207,7 @@ grab hash in field `data.dockercfg` from output result of the command above
 echo '<hash from data.dockercfg>' | base64 --decode
 ```
 grab `auth code` from output result of the command above
-```
+
 create `.docker/config.json`
 ```json
 {
