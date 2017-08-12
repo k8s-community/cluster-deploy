@@ -42,7 +42,7 @@ ansible-playbook playbooks/setup-build.yml
 
 All playbooks may be running separately, e.g. `setup Kubernetes components: dashboard, etc`
 ```sh
-ansible-playbook playbooks/addons/setup.yml
+ansible-playbook playbooks/addons/dashboard.yml
 ```
 
 
@@ -143,6 +143,8 @@ gce_groups:
       - k8s-build-01
 ```
 
+## Credentials
+
 Kubernetes cluster access data (admin, release and guest)
 ```yaml
 k8s_admin_token: 'Admin user token should be here'
@@ -182,7 +184,9 @@ k8s_github_integration_private_key: |
   -----END RSA PRIVATE KEY-----
 ```
 
-Docker registry secrets. To get it we should do some strange things, but it needs anyway.
+## Docker registry secrets
+
+To get it we should do some strange things, but it needs anyway.
 First of all, we should prepare access token for `Docker Registry`
 ```sh
 docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
@@ -231,7 +235,9 @@ Enter result of `cat .docker/config.json | base64` here
 k8s_docker_registry_auth_token: 'docker registry auth config token'
 ```
 
-SSL certificate and private key for running user services into Kubernetes.
+
+## SSL certificate and private key for running user services into Kubernetes.
+
 You may leave it untouched, in this case SSL certificates will be self-signed. 
 ```yaml
 k8s_services_cert: |
