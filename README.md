@@ -143,7 +143,7 @@ gce_groups:
       - k8s-build-01
 ```
 
-## Credentials
+## Users and services credentials
 
 Kubernetes cluster access data (admin, release and guest)
 ```yaml
@@ -224,6 +224,8 @@ create `.docker/config.json`
 ```sh
 docker login -u=<user> -p=<password> <docker_registry_host:port>
 ```
+
+### Where to put the results?
 
 Enter auth code from `.docker/config.json` here
 ```yaml
