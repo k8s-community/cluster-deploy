@@ -19,6 +19,7 @@
   with_items:
     - kube-registry.yaml
     - gce-storage.yaml
+    - ceph-storage.yaml
 
 - name: Deploy script for kube registry
   template:

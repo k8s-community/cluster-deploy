@@ -55,6 +55,9 @@ k8s_master_hosts: {}
 # Storage hosts names
 k8s_storage_hosts: {}
 
+# Ceph monitor servers
+ceph_monitor_servers: "{% for host in k8s_storage_hosts %}{{ host }}:{{ ceph_monitor_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
 # Kube Registry image
 k8s_kube_registry_image: registry
 k8s_kube_registry_image_tag: 2.6.2
