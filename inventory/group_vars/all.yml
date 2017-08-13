@@ -117,16 +117,20 @@ k8s_cluster_dns: 10.254.0.10
 # If network storage disabled will use local disk for every requested claim 
 # network_storage: false
 
+# Kubernetes network persistent disk type, valid values: `gce`
+# TODO: AWS persistent disk `aws`
+# network_storage_type: gce 
+
+# Size of network persistent disk in Gb
+# network_storage_size: 100
+
 # Name of GCE persistent disk
 # gce_storage_name: pd-std
 
 # Type of GCE storage, options: `slow`, `fast`
 # gce_storage_type: slow
 
-# Size of GCE persistent disk in Gb
-# gce_storage_size: 100
-
-# Kubernetes load balancer type, valid values: `gce`, `nginx`
+# Kubernetes load balancer type, valid values: `nginx`
 # TODO: load balancer `gce`
 k8s_lb_type: nginx 
 
