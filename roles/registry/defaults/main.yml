@@ -16,8 +16,16 @@ k8s_registry_name: registry.your-domain-name
 k8s_kube_registry_network_volume_size: '{{ network_storage_size / 2 }}Gi'
 k8s_kube_registry_local_volume_size: '5Gi'
 
+# A zone is an isolated location within a region.
+# Resources that live in a zone, such as instances,
+# are referred to as zonal resources
+gce_instances_zone: europe-west1-b
+
 # Name of GCE persistent disk
 gce_storage_name: pd-std
+
+# Type of GCE storage, options: `slow`, `fast`
+gce_storage_type: slow
 
 # Container Network Interface (CNI) bin path
 cni_bin_dir: /opt/cni/bin

@@ -18,6 +18,7 @@
     dest: "{{ k8s_addons_dir }}/{{ item }}"
   with_items:
     - kube-registry.yaml
+    - gce-storage.yaml
 
 - name: Deploy script for kube registry
   template:
