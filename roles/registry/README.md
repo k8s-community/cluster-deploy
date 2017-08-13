@@ -44,9 +44,46 @@ k8s_kube_registry_network_volume_size: '{{ network_storage_size / 2 }}Gi'
 k8s_kube_registry_local_volume_size: '5Gi'
 ```
 
+A zone is an isolated location within a region.
+Resources that live in a zone, such as instances,
+are referred to as zonal resources
+```yaml
+gce_instances_zone: europe-west1-b
+```
+
 Name of GCE persistent disk
 ```yaml
 gce_storage_name: pd-std
+```
+
+Type of GCE storage, options: `slow`, `fast`
+```yaml
+gce_storage_type: slow
+```
+
+Ceph monitor port
+```yaml
+ceph_monitor_port: 6789
+
+Ceph pool name
+```yaml
+ceph_pull_name: rbd
+```
+
+Ceph RBD image name
+```yaml
+ceph_rbd_image_name: rbdstore
+```
+
+Ceph user name
+```yaml
+ceph_user_name: 'ceph user name'
+```
+
+Ceph user token
+ceph auth print-key client.admin | base64
+```yaml
+ceph_user_token: 'ceph user token here'
 ```
 
 Kubernetes configs path

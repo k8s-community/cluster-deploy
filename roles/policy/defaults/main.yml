@@ -1,4 +1,12 @@
 ---
+# Using of network storage
+# If network storage disabled will use local disk for every requested claim 
+network_storage: false
+
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
+# TODO: AWS persistent disk `aws`
+network_storage_type: gce 
+
 # Users access data
 k8s_admin_username: admin
 k8s_release_username: release
@@ -17,6 +25,10 @@ ssl_name: kubernetes
 
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/{{ ssl_name }}
+
+# Ceph user token
+# ceph auth print-key client.admin | base64
+ceph_user_token: 'ceph user token here'
 
 # SSL certificate and private key for running user services into Kubernetes
 k8s_services_cert: |

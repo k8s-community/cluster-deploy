@@ -52,7 +52,7 @@ function deploy_tls_secrets {
     else
         echo "Creating tls secret"
 {% if k8s_services_cert | length > 1000 %}
-        kubectl apply -f {{ k8s_policy_dir }}/tls_secret.yaml
+        kubectl apply -f {{ k8s_policy_dir }}/tls-secret.yaml
 {% else %}
         echo "
 apiVersion: v1
@@ -96,9 +96,22 @@ data:
   echo
 }
 
+function deploy_ceph_secret {
+    if kubectl get secrets --namespace=kube-system | grep ceph-secret &> /dev/null; then
+        echo "Ceph secret already exists"
+    else
+        echo "Creating Ceph secret"
+        kubectl apply -f {{ k8s_policy_dir }}/ceph-secret.yaml
+    fi
+
+  echo
+}
 
 deploy_namespaces
 deploy_admin_cluster_role_binding
 deploy_reader_cluster_role
 deploy_release_role
 deploy_tls_secrets
+{% if network_storage and network_storage_type == 'ceph' %}
+deploy_ceph_secret
+{% endif %}

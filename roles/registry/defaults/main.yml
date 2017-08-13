@@ -3,7 +3,7 @@
 # If network storage disabled will use local disk for every requested claim 
 network_storage: false
 
-# Kubernetes network persistent disk type, valid values: `gce`
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
 # TODO: AWS persistent disk `aws`
 network_storage_type: gce 
 
@@ -27,6 +27,18 @@ gce_storage_name: pd-std
 # Type of GCE storage, options: `slow`, `fast`
 gce_storage_type: slow
 
+# Ceph monitor port
+ceph_monitor_port: 6789
+
+# Ceph pool name
+ceph_pull_name: rbd
+
+# Ceph RBD image name
+ceph_rbd_image_name: rbdstore
+
+# Ceph user name
+ceph_user_name: admin
+
 # Container Network Interface (CNI) bin path
 cni_bin_dir: /opt/cni/bin
 
@@ -39,6 +51,9 @@ k8s_kube_registry_dir: /var/lib/kube-registry
 
 # Master hosts nsmes
 k8s_master_hosts: {}
+
+# Storage hosts names
+k8s_storage_hosts: {}
 
 # Kube Registry image
 k8s_kube_registry_image: registry

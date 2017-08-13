@@ -16,7 +16,23 @@ spec:
   gcePersistentDisk:
     fsType: 'xfs'
     pdName: '{{ gce_storage_name }}'
-{% else %}
+{% endif %}
+{% if network_storage and network_storage_type == 'ceph' %}
+  rbd:
+    monitors:
+{% for item in k8s_storage_hosts %}
+      - {{ item }}:{{ ceph_monitor_port }}
+{% endfor %}
+    pool: {{ ceph_pull_name }}
+    image: {{ ceph_rbd_image_name }}
+    user: {{ ceph_user_name }}
+    keyring: /etc/ceph/ceph.client.{{ ceph_user_name }}.keyring
+    secretRef:
+      name: ceph-secret
+    fsType: xfs
+    readOnly: false
+{% endif %}
+{% if not network_storage %}
   hostPath:
     path: {{ k8s_kube_registry_dir }}
 {% endif %}

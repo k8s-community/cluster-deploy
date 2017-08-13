@@ -130,6 +130,22 @@ k8s_cluster_dns: 10.254.0.10
 # Type of GCE storage, options: `slow`, `fast`
 # gce_storage_type: slow
 
+# Ceph monitor port
+# ceph_monitor_port: 6789
+
+# Ceph pool name
+# ceph_pull_name: rbd
+
+# Ceph RBD image name
+# ceph_rbd_image_name: rbdstore
+
+# Ceph user name
+# ceph_user_name: admin
+
+# Ceph user token
+# ceph auth print-key client.admin | base64
+ceph_user_token: 'ceph user token here'
+
 # Kubernetes load balancer type, valid values: `nginx`
 # TODO: load balancer `gce`
 k8s_lb_type: nginx 
