@@ -67,17 +67,6 @@ function deploy_l7_ingress_controller {
   echo
 }
 
-function deploy_kube_registry {
-    if kubectl get deploy -l k8s-app=kube-registry --namespace=kube-system | grep kube-registry &> /dev/null; then
-        echo "Kube Registry already exists"
-    else
-        echo "Creating Kube Registry"
-        kubectl apply -f {{ k8s_addons_dir }}/kube-registry.yaml
-    fi
-
-  echo
-}
-
 function deploy_cockroachdb {
     if kubectl get statefulset -l app=cockroachdb | grep cockroachdb &> /dev/null; then
         echo "Cockroach DB already exists"
@@ -98,6 +87,4 @@ deploy_nginx_ingress_controller
 {% else %}
 deploy_l7_ingress_controller
 {% endif %}
-deploy_kube_registry
-deploy_helm_tiller
 deploy_cockroachdb
