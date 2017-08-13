@@ -5,3 +5,4 @@
   roles:
     - role: registry
       k8s_master_hosts: '{{ groups["master"] }}'
+      k8s_storage_hosts: '{{ groups["storage"] }}'
