@@ -1,0 +1,99 @@
+---
+# Using of network storage
+# If network storage disabled will use local disk for every requested claim 
+network_storage: false
+
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
+# TODO: AWS persistent disk `aws`
+network_storage_type: gce 
+
+# Size of network persistent disk in Gb
+network_storage_size: 100
+
+# Kube registry host name
+k8s_registry_name: registry.your-domain-name
+
+k8s_kube_registry_network_volume_size: '{{ network_storage_size / 2 }}Gi'
+k8s_kube_registry_local_volume_size: '5Gi'
+
+# A zone is an isolated location within a region.
+# Resources that live in a zone, such as instances,
+# are referred to as zonal resources
+gce_instances_zone: europe-west1-b
+
+# Name of GCE persistent disk
+gce_storage_name: pd-std
+
+# Type of GCE storage, options: `slow`, `fast`
+gce_storage_type: slow
+
+# Ceph monitor port
+ceph_monitor_port: 6789
+
+# Ceph pool name
+ceph_pull_name: rbd
+
+# Ceph RBD image name
+ceph_rbd_image_name: rbdstore
+
+# Ceph user name
+ceph_user_name: admin
+
+# Container Network Interface (CNI) bin path
+cni_bin_dir: /opt/cni/bin
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+
+# Docker registry path in case of hostPath configuration
+k8s_kube_registry_dir: /var/lib/kube-registry
+
+# Master hosts nsmes
+k8s_master_hosts: {}
+
+# Storage hosts names
+k8s_storage_hosts: {}
+
+# Ceph monitor servers
+ceph_monitor_servers: "{% for host in k8s_storage_hosts %}{{ host }}:{{ ceph_monitor_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
+# Kube Registry image
+k8s_kube_registry_image: registry
+k8s_kube_registry_image_tag: 2.6.2
+
+# Docker registry secrets. To get it we should do some strange things, but it needs anyway.
+# First of all, we should prepare access token for `Docker Registry`
+# docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
+k8s_docker_registry_token: 'docker registry token here'
+
+# Second, we should create docker config with auth code, auth token and there are two ways:
+#
+# Solution 1:
+# (without login to docker registry)
+# kubectl create secret docker-registry my-secret --docker-username=user --docker-password='password' \
+# --docker-email 'docker@docker.com' --docker-server=<docker_registry_host> --dry-run -o yaml
+#
+# grab hash in field `data.dockercfg` from output result of the command above
+# echo '<hash from data.dockercfg>' | base64 --decode
+#
+# grab `auth code` from output result of the command above
+#
+# create `.docker/config.json`
+# {
+#   "auths": {
+#     "<docker_registry_host>": {
+#       "auth": "<auth_code_from_previous_command>"
+#     }
+#   }
+# }
+#
+# Solution 2:
+# (need real login to docker registry)
+# docker login -u=<user> -p=<password> <docker_registry_host:port>
+
+# Enter auth code from `.docker/config.json` here
+k8s_docker_registry_auth_code: 'docker registry auth code here'
+
+# Enter result of `cat .docker/config.json | base64` here
+k8s_docker_registry_auth_token: 'docker registry auth config token'

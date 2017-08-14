@@ -8,15 +8,31 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   capacity:
-    storage: {% if network_storage %}{{ k8s_kube_registry_volume_size }}{% else %}{{ k8s_kube_registry_local_size }}{% endif %}
+    storage: {% if network_storage %}{{ k8s_kube_registry_network_volume_size }}{% else %}{{ k8s_kube_registry_local_volume_size }}{% endif %}
 
   accessModes:
     - ReadWriteOnce
-{% if network_storage %}
+{% if network_storage and network_storage_type == 'gce' %}
   gcePersistentDisk:
     fsType: 'xfs'
     pdName: '{{ gce_storage_name }}'
-{% else %}
+{% endif %}
+{% if network_storage and network_storage_type == 'ceph' %}
+  rbd:
+    monitors:
+{% for item in k8s_storage_hosts %}
+      - {{ item }}:{{ ceph_monitor_port }}
+{% endfor %}
+    pool: {{ ceph_pull_name }}
+    image: {{ ceph_rbd_image_name }}
+    user: {{ ceph_user_name }}
+    keyring: /etc/ceph/ceph.client.{{ ceph_user_name }}.keyring
+    secretRef:
+      name: ceph-secret
+    fsType: xfs
+    readOnly: false
+{% endif %}
+{% if not network_storage %}
   hostPath:
     path: {{ k8s_kube_registry_dir }}
 {% endif %}
@@ -36,10 +52,9 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {% if network_storage %}{{ k8s_kube_registry_volume_size }}{% else %}{{ k8s_kube_registry_local_size }}{% endif %}
+      storage: {% if network_storage %}{{ k8s_kube_registry_network_volume_size }}{% else %}{{ k8s_kube_registry_local_volume_size }}{% endif %}
 
 ---
-
 apiVersion: v1
 kind: Secret
 metadata:
@@ -48,6 +63,7 @@ metadata:
 type: Opaque
 data:
   htpasswd: {{ k8s_docker_registry_token }}
+
 ---
 apiVersion: v1
 kind: Secret
@@ -57,6 +73,27 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-pull-secret
+  namespace: prod
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-pull-secret
+  namespace: release
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
+
 ---
 apiVersion: v1
 kind: Secret
@@ -67,7 +104,6 @@ data:
   .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
 
 ---
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -131,6 +167,7 @@ spec:
       - name: image-store
         persistentVolumeClaim:
           claimName: kube-registry-claim
+
 ---
 apiVersion: v1
 kind: Service
@@ -149,6 +186,7 @@ spec:
   - name: registry
     port: 5000
     protocol: TCP
+
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

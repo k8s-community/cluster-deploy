@@ -76,6 +76,9 @@ cni_conf_dir: '{{ k8s_conf_dir }}/cni/net.d'
 # Kubelet data path
 k8s_kubelet_dir: /var/lib/kubelet
 
+# Docker registry path in case of hostPath configuration
+k8s_kube_registry_dir: /var/lib/kube-registry
+
 # Executable files path
 k8s_bin_dir: /usr/bin
 

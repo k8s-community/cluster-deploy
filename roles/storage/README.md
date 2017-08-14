@@ -44,6 +44,11 @@ Resources that live in a zone, such as instances, are referred to as zonal resou
 gce_instances_zone: europe-west1-b
 ```
 
+Size of network persistent disk in Gb
+```yaml
+network_storage_size: 100
+```
+
 Name of GCE persistent disk
 ```yaml
 gce_storage_name: pd-std
@@ -52,11 +57,6 @@ gce_storage_name: pd-std
 Type of GCE storage, options: `slow`, `fast`
 ```yaml
 gce_storage_type: slow
-```
-
-Size of GCE persistent disk in Gb
-```yaml
-gce_storage_size: 100
 ```
 
 

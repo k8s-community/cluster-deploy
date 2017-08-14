@@ -21,9 +21,15 @@
 
 - name: TLS Secret
   template:
-    src: tls_secret.yaml
-    dest: "{{ k8s_policy_dir }}/tls_secret.yaml"
+    src: tls-secret.yaml
+    dest: "{{ k8s_policy_dir }}/tls-secret.yaml"
   when: k8s_services_cert | length > 1000
+
+- name: Ceph Secret
+  template:
+    src: ceph-secret.yaml
+    dest: "{{ k8s_policy_dir }}/ceph-secret.yaml"
+  when: network_storage and network_storage_type == 'ceph'
 
 - name: Deploy script for policy
   template:
