@@ -50,7 +50,7 @@
     dest: /etc/pki/ca-trust/source/anchors/ca.pem
     remote_src: true
   notify:
-    - eanble ca certificate
+    - enable ca certificate
     - extract ca certificate
 
 - name: Setup CSR common settings
