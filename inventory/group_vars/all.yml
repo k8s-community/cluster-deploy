@@ -150,6 +150,10 @@ ceph_user_token: 'ceph user token here'
 # TODO: load balancer `gce`
 k8s_lb_type: nginx 
 
+# PROXY protocol for ingress
+# https://www.haproxy.com/blog/haproxy/proxy-protocol/
+# k8s_ingress_proxy_protocol: true
+
 # List of groups with VM instance names and machine types
 # Instance groups let you organize VM instances or use them
 # in a load-balancing backend service
