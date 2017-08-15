@@ -10,7 +10,9 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 data:
   proxy-body-size: "0"
+{% if k8s_ingress_proxy_protocol == true %}
   use-proxy-protocol: "true"
+{% endif %}
 
 ---
 apiVersion: v1
