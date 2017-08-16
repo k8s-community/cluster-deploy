@@ -16,9 +16,9 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Conteiner Network Interface type, valid values: `romana`, `canal`
+Conteiner Network Interface type, valid values: `calico`, `romana`
 ```yaml
-cni_type: romana
+cni_type: calico
 ```
 
 Internal overlay network. It will assign IP
