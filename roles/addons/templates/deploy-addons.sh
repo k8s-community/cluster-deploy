@@ -1,72 +1,5 @@
 #!/bin/bash
 
-function deploy_dns {
-    if kubectl get deploy -l k8s-app=kube-dns --namespace=kube-system | grep kube-dns &> /dev/null; then
-        echo "KubeDNS deployment already exists"
-    else
-        echo "Creating KubeDNS deployment"
-        kubectl apply -f {{ k8s_addons_dir }}/kubedns.yaml
-    fi
-
-  echo
-}
-
-function deploy_dns_autoscaler {
-    if kubectl get deploy -l k8s-app=kube-dns-autoscaler --namespace=kube-system | grep kube-dns-autoscaler &> /dev/null; then
-        echo "KubeDNS Autoscaler deployment already exists"
-    else
-        echo "Creating KubeDNS Autoscaler deployment"
-        kubectl apply -f {{ k8s_addons_dir }}/kubedns-autoscaler.yaml
-    fi
-
-  echo
-}
-
-function deploy_dashboard {
-    if kubectl get deploy -l k8s-app=kubernetes-dashboard --namespace=kube-system | grep kubernetes-dashboard &> /dev/null; then
-        echo "Kubernetes Dashboard deployment already exists"
-    else
-        echo "Creating Kubernetes Dashboard deployment"
-        kubectl apply -f {{ k8s_addons_dir }}/dashboard.yaml
-    fi
-
-  echo
-}
-
-function deploy_heapster {
-    if kubectl get deploy -l k8s-app=heapster --namespace=kube-system | grep heapster &> /dev/null; then
-        echo "Heapster deployment already exists"
-    else
-        echo "Creating Heapster deployment"
-        kubectl apply -f {{ k8s_addons_dir }}/heapster.yaml
-    fi
-
-  echo
-}
-
-function deploy_nginx_ingress_controller {
-    if kubectl get ds -l k8s-app=nginx-ingress-controller --namespace=kube-system | grep nginx-ingress-controller &> /dev/null; then
-        echo "Nginx Ingress controller already exists"
-    else
-        echo "Creating Nginx Ingress controller"
-        kubectl apply -f {{ k8s_addons_dir }}/nginx-ingress-controller.yaml
-    fi
-
-  echo
-}
-
-
-function deploy_l7_ingress_controller {
-    if kubectl get deploy -l k8s-app=glbc --namespace=kube-system | grep l7-ingress-controller &> /dev/null; then
-        echo "L7 Ingress controller already exists"
-    else
-        echo "Creating L7 Ingress controller"
-        kubectl apply -f {{ k8s_addons_dir }}/l7-ingress-controller.yaml
-    fi
-
-  echo
-}
-
 function deploy_cockroachdb {
     if kubectl get statefulset -l app=cockroachdb | grep cockroachdb &> /dev/null; then
         echo "Cockroach DB already exists"
@@ -78,13 +11,4 @@ function deploy_cockroachdb {
   echo
 }
 
-deploy_dns
-deploy_dns_autoscaler
-deploy_dashboard
-deploy_heapster
-{% if k8s_lb_type == 'nginx' %}
-deploy_nginx_ingress_controller
-{% else %}
-deploy_l7_ingress_controller
-{% endif %}
 deploy_cockroachdb

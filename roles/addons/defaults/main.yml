@@ -1,56 +1,12 @@
 ---
-# It will be used as the Internal dns domain name if DNS is enabled.
-# Services will be discoverable under
-# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
-# myservice.default.svc.k8s.cluster
-k8s_domain_name: k8s
-k8s_cluster_name: cluster
-k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+cni_type: calico
 
-# Kubernetes master and services host names
-k8s_master_name: master.your-domain-name
-k8s_services_name: services.your-domain-name
-
-# SSL base certificate name
-# SSL folder and file names will use the same name
-ssl_name: kubernetes
-
-# Path to files with SSL certificates and keys
-ssl_dir: /etc/ssl/kubernetes
-
-# IP address of kubernetes service
-# Usually it's first address in services subnet
-k8s_cluster_service_ip: 10.254.0.1
-
-# A zone is an isolated location within a region.
-# Resources that live in a zone, such as instances,
-# are referred to as zonal resources
-gce_instances_zone: europe-west1-b
-
-# Using of network storage
-# If network storage disabled will use local disk for every requested claim 
-network_storage: false
-
-# Name of GCE persistent disk
-gce_storage_name: pd-std
-
-# Type of GCE storage, options: `slow`, `fast`
-gce_storage_type: slow
-
-# Size of GCE persistent disk in Gb
-gce_storage_size: 100
-
-k8s_kube_registry_volume_size: '{{ gce_storage_size }}Gi'
-k8s_kube_registry_local_size: '5Gi'
-
-# Container Network Interface (CNI) bin & config path
+# Container Network Interface (CNI) bin path
 cni_bin_dir: /opt/cni/bin
-cni_conf_dir: /etc/kubernetes/cni/net.d
 
-# Kubernetes configs path
-k8s_conf_dir: /etc/kubernetes
-k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
-k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+# Kubernetes services host names
+k8s_services_name: services.your-domain-name
 
 # Cockroach DB data dir
 k8s_cockroachdb_dir: /var/lib/cockroachdb
@@ -59,43 +15,14 @@ k8s_cockroachdb_dir: /var/lib/cockroachdb
 k8s_cockroachdb_volume_size: 1Gi
 k8s_cockroachdb_cache_size: 250Mb
 
-# Dashboard image
-k8s_dashboard_image: gcr.io/google_containers/kubernetes-dashboard-amd64
-k8s_dashboard_image_tag: v1.6.0
+# Master hosts nsmes
+k8s_master_hosts: {}
 
-# KubeDNS images
-k8s_kubedns_image: gcr.io/google_containers/k8s-dns-kube-dns-amd64
-k8s_kubedns_image_tag: 1.14.1
-k8s_kubednsmasq_image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64
-k8s_kubednsmasq_image_tag: 1.14.1
-k8s_kubednssidecar_image: gcr.io/google_containers/k8s-dns-sidecar-amd64
-k8s_kubednssidecar_image_tag: 1.14.1
-k8s_cluster_autoscaler_image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64
-k8s_cluster_autoscaler_image_tag: 1.1.1
-
-# Heapster images
-k8s_heapster_image: gcr.io/google_containers/heapster-amd64
-k8s_heapster_image_tag: v1.3.0
-k8s_heapster_addon_resizer_image: gcr.io/google_containers/addon-resizer
-k8s_heapster_addon_resizer_image_tag: 1.7
-k8s_heapster_influxdb_image: gcr.io/google_containers/heapster-influxdb-amd64
-k8s_heapster_influxdb_image_tag: v1.1.1
-k8s_heapster_grafana_image: gcr.io/google_containers/heapster-grafana-amd64
-k8s_heapster_grafana_image_tag: v4.0.2
+# Node hosts names
+k8s_node_hosts: {}
 
 # Cockroach DB images
 k8s_cockroachdb_image: cockroachdb/cockroach
 k8s_cockroachdb_image_tag: v1.0.1
 k8s_cockroachdb_init_image: webdeva/cockroach-init
 k8s_cockroachdb_init_image_tag: 0.0.2
-
-# Heapster parameters
-k8s_heapster_base_metrics_memory: "140Mi"
-k8s_heapster_base_metrics_cpu: "80m"
-k8s_heapster_base_eventer_memory: "190Mi"
-k8s_heapster_metrics_memory_per_node: 4
-k8s_heapster_metrics_cpu_per_node: 0.5
-k8s_heapster_eventer_memory_per_node: 500
-k8s_heapster_num_nodes: 3
-k8s_heapster_nanny_memory_per_node: 200
-k8s_heapster_nanny_memory: '{% if k8s_heapster_num_nodes >= 0 %} {{ (90 * 1024 + k8s_heapster_num_nodes * k8s_heapster_nanny_memory_per_node)|string + "Ki" }} {% else %} "90Mi" {% endif %}'
