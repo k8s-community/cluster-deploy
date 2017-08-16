@@ -11,19 +11,20 @@
   with_items:
     - '{{ k8s_addons_dir }}'
 
-- name: Addons
+- name: Kube DNS
   template:
     src: "{{ item }}"
     dest: "{{ k8s_addons_dir }}/{{ item }}"
   with_items:
-    - cockroachdb.yaml
+    - kubedns.yaml
+    - kubedns-autoscaler.yaml
 
-- name: Deploy script for addons
+- name: Deploy script for Kube DNS
   template:
-    src: deploy-addons.sh
-    dest: "{{ k8s_addons_dir }}/deploy-addons.sh"
+    src: deploy-kubedns.sh
+    dest: "{{ k8s_addons_dir }}/deploy-kubedns.sh"
     mode: 0755
 
-- name: Run deploy script for addons
-  command: "{{ k8s_addons_dir }}/deploy-addons.sh"
+- name: Run deploy script for Kube DNS
+  command: "{{ k8s_addons_dir }}/deploy-kubedns.sh"
   when: inventory_hostname in k8s_master_hosts[0]

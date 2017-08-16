@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_romana {
-    if kubectl get daemonset -l k8s-app=romana --namespace=kube-system | grep romana-agent &> /dev/null; then
+    if kubectl get daemonset -l k8s-app=romana --namespace=kube-system | grep romana-agent > /dev/null 2>&1; then
         echo "Romana daemonset already exists"
     else
         echo "Creating romana daemonset"
@@ -12,7 +12,7 @@ function deploy_romana {
 }
 
 function deploy_canal {
-    if kubectl get daemonset -l k8s-app=canal --namespace=kube-system | grep canal &> /dev/null; then
+    if kubectl get daemonset -l k8s-app=canal --namespace=kube-system | grep canal > /dev/null 2>&1; then
         echo "Canal network policy daemonset already exists"
     else
         echo "Creating canal network policy daemonset"
