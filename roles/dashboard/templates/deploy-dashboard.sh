@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_dashboard {
-    if kubectl get deploy -l k8s-app=kubernetes-dashboard --namespace=kube-system | grep kubernetes-dashboard &> /dev/null; then
+    if kubectl get deploy -l k8s-app=kubernetes-dashboard --namespace=kube-system | grep kubernetes-dashboard > /dev/null 2>&1; then
         echo "Kubernetes Dashboard deployment already exists"
     else
         echo "Creating Kubernetes Dashboard deployment"

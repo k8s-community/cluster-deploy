@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_dns {
-    if kubectl get deploy -l k8s-app=kube-dns --namespace=kube-system | grep kube-dns &> /dev/null; then
+    if kubectl get deploy -l k8s-app=kube-dns --namespace=kube-system | grep kube-dns > /dev/null 2>&1; then
         echo "KubeDNS deployment already exists"
     else
         echo "Creating KubeDNS deployment"
@@ -12,7 +12,7 @@ function deploy_dns {
 }
 
 function deploy_dns_autoscaler {
-    if kubectl get deploy -l k8s-app=kube-dns-autoscaler --namespace=kube-system | grep kube-dns-autoscaler &> /dev/null; then
+    if kubectl get deploy -l k8s-app=kube-dns-autoscaler --namespace=kube-system | grep kube-dns-autoscaler > /dev/null 2>&1; then
         echo "KubeDNS Autoscaler deployment already exists"
     else
         echo "Creating KubeDNS Autoscaler deployment"

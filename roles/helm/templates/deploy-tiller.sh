@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_helm_tiller {
-    if kubectl get deploy -l app=helm,name=tiller --namespace=kube-system | grep tiller-deploy &> /dev/null; then
+    if kubectl get deploy -l app=helm,name=tiller --namespace=kube-system | grep tiller-deploy > /dev/null 2>&1; then
         echo "Helm tiller already exists"
     else
         echo "Creating Helm tiller"

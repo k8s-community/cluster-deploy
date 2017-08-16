@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_kube_registry {
-    if kubectl get deploy -l k8s-app=kube-registry --namespace=kube-system | grep kube-registry &> /dev/null; then
+    if kubectl get deploy -l k8s-app=kube-registry --namespace=kube-system | grep kube-registry > /dev/null 2>&1; then
         echo "Kube Registry already exists"
     else
         echo "Creating Kube Registry"
