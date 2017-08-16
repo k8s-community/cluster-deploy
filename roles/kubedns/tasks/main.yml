@@ -1,0 +1,30 @@
+---
+- name: Awaiting for CNI loading
+  wait_for:
+    path: '{{ cni_bin_dir }}/{{ cni_type }}'
+
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_addons_dir }}'
+
+- name: Kube DNS
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    - kubedns.yaml
+    - kubedns-autoscaler.yaml
+
+- name: Deploy script for Kube DNS
+  template:
+    src: deploy-kubedns.sh
+    dest: "{{ k8s_addons_dir }}/deploy-kubedns.sh"
+    mode: 0755
+
+- name: Run deploy script for Kube DNS
+  command: "{{ k8s_addons_dir }}/deploy-kubedns.sh"
+  when: inventory_hostname in k8s_master_hosts[0]
