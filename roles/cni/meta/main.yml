@@ -1,6 +1,6 @@
 galaxy_info:
   author: Igor Dolzhikov
-  description: Setup Kubernetes common services
+  description: Setup Container Network Interface plugin
   company: Kubernetes Community
 
   # If the issue tracker for your role is not on github, uncomment the

@@ -1,4 +1,7 @@
 ---
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+cni_type: calico
+
 # Using of network storage
 # If network storage disabled will use local disk for every requested claim 
 network_storage: false

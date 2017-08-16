@@ -4,7 +4,7 @@
 - include: cluster/etcd.yml
 - include: cluster/master.yml
 - include: cluster/node.yml
-- include: cluster/canal.yml
+- include: cluster/cni.yml
 - include: cluster/policy.yml
 - include: cluster/ingress.yml
 - include: cluster/registry.yml
