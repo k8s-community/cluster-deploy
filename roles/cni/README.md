@@ -1,7 +1,7 @@
-Ansible Role: Canal
-===================
+Ansible Role: Container Network Interface plugin
+================================================
 
-This role install Canal Network Plugin on Red Hat linux based systems.
+This role install Container Network Interface plugin on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
@@ -16,9 +16,9 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Flannel backend type (Options: gce, vxlan)
+Conteiner Network Interface type, valid values: `romana`, `canal`
 ```yaml
-k8s_flannel_backend: vxlan
+cni_type: romana
 ```
 
 Internal overlay network. It will assign IP
@@ -28,19 +28,14 @@ This network must be unused block of space.
 k8s_cluster_cidr: 10.20.0.0/16
 ```
 
-Calico version 
-```yaml
-k8s_calico_version: 2.4.1
-```
-
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes
 ```
 
-Canal configs path
+CNI configs path
 ```
-k8s_canal_dir: '{{ k8s_conf_dir }}/canal'
+k8s_cni_dir: '{{ k8s_conf_dir }}/cni'
 ```
 
 Container Network Interface (CNI) bin & config path
@@ -59,6 +54,27 @@ Master hosts nsmes
 k8s_master_hosts: {}
 ```
 
+Romana version 
+```yaml
+k8s_romana_version: 2.0-preview.1
+```
+
+Calico version 
+```yaml
+k8s_calico_version: 2.4.1
+```
+
+Calico CTL version 
+```yaml
+k8s_calicoctl_version: 1.4.0
+```
+
+Flannel backend type (Options: gce, vxlan)
+```yaml
+k8s_flannel_backend: vxlan
+```
+
+
 Example Playbook
 ----------------
 
@@ -66,7 +82,7 @@ Example Playbook
         - master
         - node
       roles:
-        - canal
+        - cni
 
 License
 -------

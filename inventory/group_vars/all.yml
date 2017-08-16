@@ -113,6 +113,9 @@ k8s_cluster_dns: 10.254.0.10
 # are referred to as zonal resources
 # gce_instances_zone: europe-west1-b
 
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+# cni_type: calico
+
 # Using of network storage
 # If network storage disabled will use local disk for every requested claim 
 # network_storage: false
@@ -152,7 +155,7 @@ k8s_lb_type: nginx
 
 # PROXY protocol for ingress
 # https://www.haproxy.com/blog/haproxy/proxy-protocol/
-# k8s_ingress_proxy_protocol: true
+# k8s_ingress_proxy_protocol: false
 
 # List of groups with VM instance names and machine types
 # Instance groups let you organize VM instances or use them

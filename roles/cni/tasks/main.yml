@@ -7,7 +7,8 @@
   with_items:
     - '{{ cni_bin_dir }}'
     - '{{ cni_conf_dir }}'
-    - '{{ k8s_canal_dir }}'
+    - '{{ k8s_cni_dir }}'
+    - '{{ k8s_romana_etcd_dir }}'
 
 - name: Get calicoctl
   get_url:
@@ -15,17 +16,21 @@
     dest: "{{ k8s_bin_dir }}/calicoctl"
     mode: 0755
     force: yes
+  when: cni_type == 'calico'
 
-- name: Register Calico network policy
+- name: CNI types
   template:
-    src: canal.yaml
-    dest: "{{ k8s_canal_dir }}/canal.yaml"
+    src: "{{ item }}"
+    dest: "{{ k8s_cni_dir }}/{{ item }}"
     mode: 0644
+  with_items:
+    - romana.yaml
+    - canal.yaml
   when: inventory_hostname in k8s_master_hosts
 
-- name: Deploy script for canal
+- name: Deploy script for CNI
   template:
-    src: deploy-canal.sh
-    dest: "{{ k8s_canal_dir }}/deploy-canal.sh"
+    src: deploy-cni.sh
+    dest: "{{ k8s_cni_dir }}/deploy-cni.sh"
     mode: 0755
   when: inventory_hostname in k8s_master_hosts

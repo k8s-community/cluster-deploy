@@ -1,0 +1,73 @@
+---
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+cni_type: calico
+
+# Kubernetes internal network for services.
+# Kubernetes services will get fake IP addresses from this range.
+# This range must not conflict with anything in your infrastructure. These
+# addresses do not need to be routable and must just be an unused block of space.
+k8s_services_network: 10.254.0.0/16
+
+# IP address of Romana ETCD
+# It should be in range of services subnet
+k8s_service_romana_etcd: 10.254.0.88
+
+# IP address of Romana Daemon
+# It should be in range of services subnet
+k8s_service_romana_daemon: 10.254.0.99
+
+# Internal overlay network. It will assign IP
+# addresses from this range to individual pods.
+# This network must be unused block of space.
+k8s_cluster_cidr: 10.20.0.0/16
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+
+# CNI configs path
+k8s_cni_dir: '{{ k8s_conf_dir }}/cni'
+
+# Container Network Interface (CNI) bin & config path
+cni_bin_dir: /opt/cni/bin
+cni_conf_dir: '{{ k8s_conf_dir }}/cni/net.d'
+
+# Executable files path
+k8s_bin_dir: /usr/bin
+
+# Master hosts nsmes
+k8s_master_hosts: {}
+
+# Romana version 
+k8s_romana_version: 2.0-preview.1
+
+# Romana etcd data path
+k8s_romana_etcd_dir: /var/lib/romana/etcd
+
+# Calico version 
+k8s_calico_version: 2.4.1
+
+# Calico CTL version 
+k8s_calicoctl_version: 1.4.0
+
+# Flannel backend type (Options: gce, vxlan)
+k8s_flannel_backend: vxlan
+
+# Flannel image
+k8s_flannel_image: quay.io/coreos/flannel
+k8s_flannel_image_tag: v0.8.0
+
+# Calico images
+k8s_calico_node_image: quay.io/calico/node
+k8s_calico_node_image_tag: v{{ k8s_calico_version }}
+k8s_calico_cni_image: quay.io/calico/cni
+k8s_calico_cni_image_tag: v1.10.0
+
+# Romana images
+k8s_romana_agent: quay.io/romana/agent
+k8s_romana_agent_tag: v{{ k8s_romana_version }}
+k8s_romana_daemon: quay.io/romana/daemon
+k8s_romana_daemon_tag: v{{ k8s_romana_version }}
+k8s_romana_listener: quay.io/romana/listener
+k8s_romana_listener_tag: v{{ k8s_romana_version }}
+k8s_romana_etcd: gcr.io/google_containers/etcd-amd64
+k8s_romana_etcd_tag: 3.0.17
