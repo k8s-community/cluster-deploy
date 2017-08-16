@@ -2,7 +2,6 @@
 - hosts: addons
   remote_user: '{{ k8s_ssh_user }}'
   become: true
-  become_method: sudo
   roles:
     - role: addons
       k8s_master_hosts: '{{ groups["master"] }}'
