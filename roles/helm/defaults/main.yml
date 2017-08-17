@@ -1,6 +1,6 @@
 ---
 # Helm package manager version
-helm_version: 2.5.1
+helm_version: 2.6.0
 
 # Conteiner Network Interface type, valid values: `calico`, `romana`
 cni_type: calico
