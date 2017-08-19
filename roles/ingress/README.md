@@ -18,12 +18,23 @@ Available variables are listed below, along with default values (see `defaults/m
 
 Kubernetes load balancer type, valid values: `nginx`
 TODO: load balancer `gce`, `haproxy`
-```
+```yaml
 k8s_lb_type: nginx 
 ```
 
-Container Network Interface (CNI) bin path
+PROXY protocol for ingress
+https://www.haproxy.com/blog/haproxy/proxy-protocol/
+```yaml
+k8s_ingress_proxy_protocol: false
 ```
+
+Conteiner Network Interface type, valid values: `calico`, `romana`
+```yaml
+cni_type: calico
+```
+
+Container Network Interface (CNI) bin path
+```yaml
 cni_bin_dir: /opt/cni/bin
 ```
 
@@ -34,7 +45,7 @@ k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 ```
 
 Master hosts nsmes
-```
+```yaml
 k8s_master_hosts: {}
 ```
 
