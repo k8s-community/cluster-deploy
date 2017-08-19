@@ -20,7 +20,6 @@ Helm package manager version
 ```yaml
 helm_version: 2.6.0
 ```
-```
 
 Kubernetes configs path
 ```yaml
