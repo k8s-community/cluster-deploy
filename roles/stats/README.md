@@ -33,7 +33,7 @@ k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 ```
 
 Master hosts nsmes
-```
+```yaml
 k8s_master_hosts: {}
 ```
 
