@@ -1,4 +1,5 @@
 ---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -23,7 +24,9 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 10
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -38,7 +41,9 @@ spec:
     name: http
   selector:
     app: echoheaders
+
 ---
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -49,7 +54,7 @@ spec:
   tls:
   - hosts:
     - {{ k8s_services_name }}
-    secretName: tls-secret
+    secretName: services-secret
   rules:
   - host: {{ k8s_services_name }}
     http:
