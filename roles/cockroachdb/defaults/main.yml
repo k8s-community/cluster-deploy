@@ -1,0 +1,40 @@
+---
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+cni_type: calico
+
+# It will be used as the Internal dns domain name if DNS is enabled.
+# Services will be discoverable under
+# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
+# myservice.default.svc.k8s.cluster
+k8s_domain_name: k8s
+k8s_cluster_name: cluster
+k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
+
+# Kubernetes services host names
+k8s_services_name: services.your-domain-name
+
+# Container Network Interface (CNI) bin path
+cni_bin_dir: /opt/cni/bin
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+
+# Cockroach DB data dir
+k8s_cockroachdb_dir: /var/lib/cockroachdb
+
+# Master hosts nsmes
+k8s_master_hosts: {}
+
+# Nodes hosts names
+k8s_node_hosts: {}
+
+# Cockroach DB volume and cache size
+k8s_cockroachdb_volume_size: 1Gi
+k8s_cockroachdb_cache_size: 250Mb
+
+# Cockroach DB images
+k8s_cockroachdb_image: cockroachdb/cockroach
+k8s_cockroachdb_image_tag: v1.0.4
+k8s_cockroachdb_init_image: cockroachdb/cockroach-k8s-init
+k8s_cockroachdb_init_image_tag: 0.2
