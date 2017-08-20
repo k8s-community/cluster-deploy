@@ -49,6 +49,17 @@
     src: kubeconfig.j2
     dest: "{{ ansible_env.HOME }}/.kube/config"
 
+- name: Deploy script for cockroach databases/users
+  template:
+    src: deploy-k8s-community-user-db.sh
+    dest: "{{ tmp_dir }}/deploy-k8s-community-user-db.sh"
+    mode: 0755
+  when: ansible_user_id != k8s_ssh_user
+
+- name: Run deploy script for cockroach databases/users
+  command: "{{ tmp_dir }}/deploy-k8s-community-user-db.sh"
+  when: ansible_user_id != k8s_ssh_user
+
 - name: Get Golang
   unarchive:
     src: 'https://storage.googleapis.com/golang/go{{ go_version }}.{{ ansible_system|lower }}-amd64.tar.gz'
