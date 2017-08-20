@@ -11,6 +11,3 @@
 - include: cluster/stats.yml
 - include: cluster/registry.yml
 - include: cluster/dashboard.yml
-- include: addons/helm.yml
-- include: addons/kubelego.yml
-- include: addons/setup.yml

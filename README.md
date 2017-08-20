@@ -30,9 +30,14 @@ Prepare VPS components. This is optional action depend on your provider infrastr
 ansible-playbook playbooks/prepare-vps.yml
 ```
 
-Install Kubernetes cluster all-in-one
+Install Kubernetes cluster base components
 ```sh
-ansible-playbook playbooks/setup-all.yml
+ansible-playbook playbooks/setup-base.yml
+```
+
+Install Kubernetes additional components
+```sh
+ansible-playbook playbooks/setup-addons.yml
 ```
 
 Install Build machine
@@ -42,7 +47,7 @@ ansible-playbook playbooks/setup-build.yml
 
 All playbooks may be running separately, e.g. `setup Kubernetes components: dashboard, etc`
 ```sh
-ansible-playbook playbooks/addons/dashboard.yml
+ansible-playbook playbooks/cluster/dashboard.yml
 ```
 
 

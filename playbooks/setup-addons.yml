@@ -1,0 +1,3 @@
+- include: addons/helm.yml
+- include: addons/kubelego.yml
+- include: addons/cockroachdb.yml
