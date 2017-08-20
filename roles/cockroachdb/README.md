@@ -32,6 +32,16 @@ k8s_conf_dir: /etc/kubernetes
 k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 ```
 
+Secure deployment (recommended for production)
+```yaml
+k8s_cockroachdb_secure: false
+```
+
+Namespace for Cocroach DB
+```yaml
+k8s_cockroachdb_namespace: default
+```
+
 Cockroach DB data dir
 ```yaml
 k8s_cockroachdb_dir: /var/lib/cockroachdb

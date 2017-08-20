@@ -20,6 +20,12 @@ cni_bin_dir: /opt/cni/bin
 k8s_conf_dir: /etc/kubernetes
 k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 
+# Secure deployment (recommended for production)
+k8s_cockroachdb_secure: false
+
+# Namespace for Cocroach DB
+k8s_cockroachdb_namespace: default
+
 # Cockroach DB data dir
 k8s_cockroachdb_dir: /var/lib/cockroachdb
 
@@ -38,3 +44,5 @@ k8s_cockroachdb_image: cockroachdb/cockroach
 k8s_cockroachdb_image_tag: v1.0.4
 k8s_cockroachdb_init_image: cockroachdb/cockroach-k8s-init
 k8s_cockroachdb_init_image_tag: 0.2
+k8s_cockroachdb_request_cert_image: cockroachdb/cockroach-k8s-request-cert
+k8s_cockroachdb_request_cert_image_tag: 0.2
