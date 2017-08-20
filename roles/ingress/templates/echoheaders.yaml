@@ -54,7 +54,7 @@ spec:
   tls:
   - hosts:
     - {{ k8s_services_name }}
-    secretName: services-secret
+    secretName: tls-secret
   rules:
   - host: {{ k8s_services_name }}
     http:
