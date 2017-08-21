@@ -16,6 +16,22 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
+
+Kubernetes hyperkube version
+```yaml
+k8s_version: 1.7.3
+```
+
+Helm package manager version
+```yaml
+helm_version: 2.6.0
+```
+
+Golang compiller version
+```yaml
+go_version: 1.8.3
+```
+
 Account name of remote user. Ansible will use this user account to ssh into
 the managed machines. The user must be able to use sudo without asking for password
 ```yaml
@@ -59,24 +75,8 @@ k8s_api_port: 443
 ```
 
 IP address of kubernetes service
-Usually it's first address in services subnet
 ```yaml
-k8s_cluster_service_ip: 10.254.0.1
-```
-
-Kubernetes hyperkube version
-```yaml
-k8s_version: 1.5.6
-```
-
-Helm package manager version
-```yaml
-helm_version: 2.3.1
-```
-
-Golang compiller version
-```yaml
-go_version: 1.8.1
+k8s_master_ip: 10.254.0.1
 ```
 
 Kubernetes configs path
@@ -126,14 +126,6 @@ Example Playbook
 ----------------
 
 	- hosts: build
-	  remote_user: dev
-	  become: true
-	  become_method: sudo
-	  roles:
-	    - build
-
-	- hosts: build
-	  remote_user: dev
 	  roles:
 	    - build
 
