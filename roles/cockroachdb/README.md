@@ -1,7 +1,7 @@
-Ansible Role: Addons
-====================
+Ansible Role: Cockroach DB
+==========================
 
-This role install Kubernetes services on Redhat linux based systems.
+This role install Cockroach DB on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
@@ -26,9 +26,20 @@ Container Network Interface (CNI) bin path
 cni_bin_dir: /opt/cni/bin
 ```
 
-Kubernetes master and services host names
+Kubernetes configs path
 ```yaml
-k8s_services_name: services.your-domain-name
+k8s_conf_dir: /etc/kubernetes
+k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+```
+
+Secure deployment (recommended for production)
+```yaml
+k8s_cockroachdb_secure: false
+```
+
+Namespace for Cocroach DB
+```yaml
+k8s_cockroachdb_namespace: default
 ```
 
 Cockroach DB data dir
@@ -42,13 +53,22 @@ k8s_cockroachdb_volume_size: 1Gi
 k8s_cockroachdb_cache_size: 250Mb
 ```
 
+Master hosts nsmes
+```yaml
+k8s_master_hosts: {}
+```
+
+Node hosts nsmes
+```yaml
+k8s_node_hosts: {}
+```
 
 Example Playbook
 ----------------
 
     - hosts: addons
       roles:
-        - addons
+        - cockroachdb
 
 License
 -------
