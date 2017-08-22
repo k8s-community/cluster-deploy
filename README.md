@@ -45,6 +45,11 @@ Install Build machine
 ansible-playbook playbooks/setup-build.yml
 ```
 
+Install CICD
+```sh
+ansible-playbook playbooks/setup-cicd.yml
+```
+
 All playbooks may be running separately, e.g. `setup Kubernetes components: dashboard, etc`
 ```sh
 ansible-playbook playbooks/cluster/dashboard.yml
