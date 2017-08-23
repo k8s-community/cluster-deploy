@@ -9,9 +9,9 @@ helm_version: 2.6.0
 go_version: 1.8.3
 
 # Account name of remote user. Ansible will use this user account to ssh into
-# the managed machines. The user must be able to use sudo without asking
-# for password
-k8s_ssh_user: dev
+# the build machines. The user must be able to use sudo without asking
+# for password for build components
+k8s_build_ssh_user: dev
 
 # URL scheme for kubernetes services
 k8s_url_scheme: https
