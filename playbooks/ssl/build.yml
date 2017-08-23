@@ -18,4 +18,5 @@
       ssl_clients:
         - name: admin
           cn: system:admin
-          org: system:masters
+          org:
+            - system:masters
