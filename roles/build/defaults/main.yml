@@ -13,6 +13,12 @@ go_version: 1.8.3
 # for password
 k8s_ssh_user: dev
 
+# URL scheme for kubernetes services
+k8s_url_scheme: https
+
+# Kubernetes service API port
+k8s_api_port: 443
+
 # IP address of kubernetes service
 k8s_master_ip: 10.254.0.1
 
@@ -24,34 +30,14 @@ k8s_domain_name: k8s
 k8s_cluster_name: cluster
 k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
-# Kubernetes master and services host names
-k8s_master_name: master.your-domain-name
-k8s_services_name: services.your-domain-name
-
 # Docker registry host name
 k8s_registry_name: registry.your-domain-name
 
 # Docker registry auth code
 k8s_docker_registry_auth_code: 'docker-registry-auth-code'
 
-# Charts server repository
-k8s_charts_repo: github.com/k8s-community/charts
-
-# CICD integration services
-k8s_cicd_services:
-  - github-integration
-  - user-manager
-  - k8s-community
-
-# CICD repository
-k8s_cicd_repo: github.com/k8s-community/cicd
-
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/kubernetes
-
-# Kubernetes configs path
-k8s_conf_dir: /etc/kubernetes
-k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
 
 # Executable files path
 k8s_bin_dir: /usr/bin
@@ -63,29 +49,3 @@ go_dir: /usr/local
 go_path: 'gocode'
 
 tmp_dir: /tmp
-
-# URL scheme for kubernetes services
-k8s_url_scheme: https
-
-# Kubernetes service API port
-k8s_api_port: 443
-
-# k8s.community services exchange token
-k8s_community_token: 'k8s-community-token'
-
-# k8s.community services databases credentials
-k8s_community_db_username: 'k8s-community'
-k8s_community_db_password: 'k8s.community'
-k8s_github_integration_db_username: 'github-integration'
-k8s_github_integration_db_password: 'github.integration'
-
-# k8s.community Github integration services secrets
-k8s_github_client_id: 'github client id here'
-k8s_github_client_secret: 'github client secret here'
-k8s_github_state: 'github state here'
-k8s_github_integration_id: 'github integration id here'
-k8s_github_integration_token: 'github integration token here'
-k8s_github_integration_private_key: |
-  -----BEGIN RSA PRIVATE KEY-----
-  - Your RSA private key here -
-  -----END RSA PRIVATE KEY-----
