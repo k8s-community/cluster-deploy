@@ -1,0 +1,44 @@
+---
+# Charts server repository
+k8s_charts_repo: github.com/k8s-community/charts
+
+# CICD integration services
+k8s_cicd_services:
+  - github-integration
+  - user-manager
+  - k8s-community
+
+# CICD repository
+k8s_cicd_repo: github.com/k8s-community/cicd
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_policy_dir: '{{ k8s_conf_dir }}/policy'
+
+# Go tools path
+go_dir: /usr/local
+
+# Go sources/packages path in home directory
+go_path: 'gocode'
+
+tmp_dir: /tmp
+
+# k8s.community services exchange token
+k8s_community_token: 'k8s-community-token'
+
+# k8s.community services databases credentials
+k8s_community_db_username: 'k8s-community'
+k8s_community_db_password: 'k8s.community'
+k8s_github_integration_db_username: 'github-integration'
+k8s_github_integration_db_password: 'github.integration'
+
+# k8s.community Github integration services secrets
+k8s_github_client_id: 'github client id here'
+k8s_github_client_secret: 'github client secret here'
+k8s_github_state: 'github state here'
+k8s_github_integration_id: 'github integration id here'
+k8s_github_integration_token: 'github integration token here'
+k8s_github_integration_private_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  - Your RSA private key here -
+  -----END RSA PRIVATE KEY-----
