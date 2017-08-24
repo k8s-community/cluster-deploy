@@ -2,6 +2,7 @@
 - hosts:
     - master
     - node
+    - build
     - master_lb
     - node_lb
   remote_user: '{{ k8s_ssh_user }}'
@@ -32,6 +33,7 @@
   - set_fact:
       mts_ipv4: "{{ groups['master']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
       nds_ipv4: "{{ groups['node']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
+      build_ipv4: "{{ groups['build']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
       mts_lb_ipv4: "{{ groups['master_lb']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
       nds_lb_ipv4: "{{ groups['node_lb']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
 
@@ -117,6 +119,7 @@
     with_items:
       - '{{ mts_lb_ipv4 }}'
       - '{{ nds_lb_ipv4 }}'
+      - '{{ build_ipv4 }}'
     when: inventory_hostname in groups['master'] or inventory_hostname in groups['node']
     notify:
       - reload firewall

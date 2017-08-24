@@ -1,0 +1,6 @@
+---
+- hosts: build
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  roles:
+    - role: cicd

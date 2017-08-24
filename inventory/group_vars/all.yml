@@ -18,6 +18,11 @@
 # for password
 k8s_ssh_user: dev
 
+# Account name of remote user. Ansible will use this user account to ssh into
+# the build machines. The user must be able to use sudo without asking
+# for password for build components
+k8s_build_ssh_user: dev
+
 # SSH key that will be used to connect your VM instances
 # Use this default value if you won't use special separate key for this purposes
 # k8s_ssh_key: '{{ lookup("file", "{{ ansible_env.HOME }}/.ssh/id_rsa.pub") }}'

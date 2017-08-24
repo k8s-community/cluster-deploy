@@ -12,6 +12,6 @@
     - build
 
 - hosts: build
-  remote_user: '{{ k8s_ssh_user }}'
+  remote_user: '{{ k8s_build_ssh_user }}'
   roles:
     - build

@@ -1,0 +1,139 @@
+---
+- name: Check kubernetes directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_policy_dir }}'
+
+- name: k8s.community secrets
+  template:
+    src: k8s-community-secrets.yaml.j2
+    dest: "{{ k8s_policy_dir }}/k8s-community-secrets.yaml"
+
+- name: Deploy script for k8s community secrets
+  template:
+    src: deploy-k8s-community-secrets.sh.j2
+    dest: "{{ k8s_policy_dir }}/deploy-k8s-community-secrets.sh"
+    mode: 0755
+
+- name: Run deploy script script for k8s community secrets
+  command: "{{ k8s_policy_dir }}/deploy-k8s-community-secrets.sh"
+
+- name: Deploy script for cockroach databases/users
+  template:
+    src: deploy-k8s-community-user-db.sh
+    dest: "{{ tmp_dir }}/deploy-k8s-community-user-db.sh"
+    mode: 0755
+
+- name: Run deploy script for cockroach databases/users
+  command: "{{ tmp_dir }}/deploy-k8s-community-user-db.sh"
+
+- name: get charts repository
+  git: 
+    repo: 'https://{{ k8s_charts_repo }}'
+    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+    force: yes
+
+- name: test charts
+  command: make test
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: push charts
+  shell: >
+    NAMESPACE=default make push
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: deploy charts
+  shell: >
+    helm upgrade charts {{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}/charts -i --wait
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: get CICD integraton services
+  git: 
+    repo: 'https://github.com/k8s-community/{{ item }}'
+    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+    force: yes
+  with_items: '{{ k8s_cicd_services }}'
+
+# TODO: uncomment it when tests will be exist
+# - name: test CICD integraton services
+#   command: make test
+#   args:
+#     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+#   environment:
+#     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+#     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+#   with_items: '{{ k8s_cicd_services }}'
+
+- name: deploy CICD integraton services
+  shell: >
+    NAMESPACE=default make deploy
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+  with_items: '{{ k8s_cicd_services }}'
+
+- name: get CICD service
+  git: 
+    repo: 'https://{{ k8s_cicd_repo }}'
+    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+    force: yes
+
+# TODO: uncomment it when tests will be exist
+# - name: test CICD service
+#   command: make test
+#   args:
+#     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+#   environment:
+#     GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+#     PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: Stop CICD service
+  shell: >
+    make stop >/dev/null 2>&1 || true
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: Remove CICD service
+  shell: >
+    make remove >/dev/null 2>&1 || true
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: install CICD service
+  command: make install
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
+
+- name: start CICD service
+  command: make start
+  args:
+    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_cicd_repo }}'
+  environment:
+    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
+    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
