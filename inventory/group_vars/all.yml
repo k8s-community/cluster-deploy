@@ -5,10 +5,10 @@
 # k8s_log_spec: ''
 
 # Kubernetes version
-# k8s_version: 1.7.3
+# k8s_version: 1.7.4
 
 # Helm package manager version
-# helm_version: 2.5.1
+# helm_version: 2.6.0
 
 # Golang compiller version
 # go_version: 1.8.3

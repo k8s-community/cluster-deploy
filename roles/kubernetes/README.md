@@ -110,7 +110,7 @@ k8s_cluster_cidr: 10.20.0.0/16
 
 Kubernetes hyperkube version
 ```yaml
-k8s_version: 1.7.3
+k8s_version: 1.7.4
 ```
 
 Container Network Interface (CNI) bin & config path

@@ -19,7 +19,7 @@ Available variables are listed below, along with default values (see `defaults/m
 
 Kubernetes hyperkube version
 ```yaml
-k8s_version: 1.7.3
+k8s_version: 1.7.4
 ```
 
 Helm package manager version
