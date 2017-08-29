@@ -1,0 +1,41 @@
+---
+
+# Zipkin tracking service
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+  namespace: {{ k8s_istio_namespace }}
+spec:
+  ports:
+  - name: http
+    port: 9411
+  selector:
+    app: zipkin
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zipkin
+  namespace: {{ k8s_istio_namespace }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        alpha.istio.io/sidecar: ignore
+      labels:
+        app: zipkin
+    spec:
+      containers:
+      - name: zipkin
+        image: {{ k8s_istio_zipkin_image }}:{{ k8s_istio_zipkin_image_tag }}
+        ports:
+        - containerPort: 9411
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace

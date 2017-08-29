@@ -50,6 +50,11 @@ Install CICD
 ansible-playbook playbooks/setup-cicd.yml
 ```
 
+Install Gateway (Istio, optional)
+```sh
+ansible-playbook playbooks/setup-gateway.yml
+```
+
 All playbooks may be running separately, e.g. `setup Kubernetes components: dashboard, etc`
 ```sh
 ansible-playbook playbooks/cluster/dashboard.yml

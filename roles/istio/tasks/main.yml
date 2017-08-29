@@ -1,0 +1,47 @@
+---
+- name: Awaiting for CNI loading
+  wait_for:
+    path: '{{ cni_bin_dir }}/{{ cni_type }}'
+
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_istio_dir }}'
+
+- name: Get Istio
+  unarchive:
+    src: 'https://github.com/istio/istio/releases/download/{{ istio_version }}/istio-{{ istio_version }}-{{ ansible_system|lower }}.tar.gz'
+    dest: '{{ tmp_dir }}'
+    remote_src: true
+
+- name: Setup istio
+  copy:
+    src: '{{ tmp_dir }}/istio-{{ istio_version }}/bin/istioctl'
+    dest: '{{ k8s_bin_dir }}/istioctl'
+    mode: 0755
+    remote_src: true
+
+- name: Istio
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_istio_dir }}/{{ item }}"
+  with_items:
+    - accounts.yaml
+    - istio.yaml
+    - zipkin.yaml
+    - grafana.yaml
+    - servicegraph.yaml
+    - prometheus.yaml
+
+- name: Deploy script for istio
+  template:
+    src: deploy-istio.sh
+    dest: "{{ k8s_istio_dir }}/deploy-istio.sh"
+    mode: 0755
+
+- name: Run deploy script for istio
+  command: "{{ k8s_istio_dir }}/deploy-istio.sh"
+  when: inventory_hostname in k8s_master_hosts[0]

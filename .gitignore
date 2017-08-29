@@ -1,6 +1,5 @@
 *.retry
 community
-gce
 dev
-prod
+stable
 inventory/cluster

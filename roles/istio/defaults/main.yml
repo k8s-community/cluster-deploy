@@ -1,0 +1,59 @@
+---
+# Log level 0 - debug
+k8s_log_level: 3
+# Use to increase verbosity on particular files, e.g. k8s_log_spec=token_controller*=5,other_controller*=4
+k8s_log_spec: ''
+
+# Istio version
+istio_version: 0.2.0
+
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+cni_type: calico
+
+# Container Network Interface (CNI) bin path
+cni_bin_dir: /opt/cni/bin
+
+# Namespace for Istio
+k8s_istio_namespace: istio-system
+
+# It will be used as the Internal dns domain name if DNS is enabled.
+# Services will be discoverable under
+# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
+# myservice.default.svc.k8s.cluster
+k8s_domain_name: k8s
+k8s_cluster_name: cluster
+k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_istio_dir: '{{ k8s_conf_dir }}/istio'
+
+# Executable files path
+k8s_bin_dir: /usr/local/bin
+
+tmp_dir: /tmp
+
+# Master hosts nsmes
+k8s_master_hosts: {}
+
+# Istio images
+k8s_istio_pilot_image: gcr.io/istio-io/pilot
+k8s_istio_pilot_image_tag: '{{ istio_version }}'
+k8s_istio_mixer_image: gcr.io/istio-io/mixer
+k8s_istio_mixer_image_tag: '{{ istio_version }}'
+k8s_istio_proxy_image: gcr.io/istio-io/proxy
+k8s_istio_proxy_image_tag: '{{ istio_version }}'
+k8s_istio_ca_image: gcr.io/istio-io/istio-ca
+k8s_istio_ca_image_tag: '{{ istio_version }}'
+
+# Additional istio images
+k8s_istio_prometheus_image: quay.io/coreos/prometheus
+k8s_istio_prometheus_image_tag: v1.1.1
+k8s_istio_prometheus_statsd_exporter_image: prom/statsd-exporter
+k8s_istio_prometheus_statsd_exporter_image_tag: v0.4.0
+k8s_istio_zipkin_image: docker.io/openzipkin/zipkin
+k8s_istio_zipkin_image_tag: 1.30
+k8s_istio_grafana_image: gcr.io/istio-io/grafana
+k8s_istio_grafana_image_tag: '{{ istio_version }}'
+k8s_istio_servicegraph_image: gcr.io/istio-testing/servicegraph
+k8s_istio_servicegraph_image_tag: latest
