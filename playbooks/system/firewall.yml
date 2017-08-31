@@ -118,9 +118,21 @@
       permanent: true
     with_items:
       - '{{ mts_lb_ipv4 }}'
+      - '{{ build_ipv4 }}'
+    when: inventory_hostname in groups['master']
+    notify:
+      - reload firewall
+
+  - name: Setup firewall external zone sources
+    firewalld:
+      zone: external
+      source: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
       - '{{ nds_lb_ipv4 }}'
       - '{{ build_ipv4 }}'
-    when: inventory_hostname in groups['master'] or inventory_hostname in groups['node']
+    when: inventory_hostname in groups['node']
     notify:
       - reload firewall
 
