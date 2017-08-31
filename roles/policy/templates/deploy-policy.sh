@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_namespaces {
-    if kubectl get namespaces | grep release &> /dev/null; then
+    if kubectl get namespaces | grep {{ k8s_namespaces[0] }} &> /dev/null; then
         echo "Namespaces already exist"
     else
         echo "Creating namespaces"
@@ -35,7 +35,7 @@ function deploy_reader_cluster_role {
 }
 
 function deploy_release_role {
-    if kubectl get -l basic.auth/role=release-admin role --namespace=release | grep release-admin > /dev/null 2>&1; then
+    if kubectl get -l basic.auth/role={{ k8s_namespaces[0] }}-admin role --namespace={{ k8s_namespaces[0] }} | grep {{ k8s_namespaces[0] }}-admin > /dev/null 2>&1; then
         echo "Release role already exists"
     else
         echo "Creating release role and binding"
@@ -55,14 +55,8 @@ function deploy_tls_secrets {
         kubectl apply -f {{ k8s_policy_dir }}/tls-secret.yaml
 {% else %}
         echo "
-apiVersion: v1
-kind: Secret
-metadata:
-  name: tls-secret
-data:
-  tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
-  tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -71,12 +65,14 @@ metadata:
 data:
   tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
   tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
+
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
   name: tls-secret
-  namespace: prod
+  namespace: kube-public
 data:
   tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
   tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
@@ -85,11 +81,26 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: tls-secret
-  namespace: release
+  namespace: default
 data:
   tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
   tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
 " | kubectl apply -f -
+
+{% for namespace in k8s_namespaces %}
+        echo "
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-secret
+  namespace: {{ namespace }}
+data:
+  tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
+  tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
+" | kubectl apply -f -
+
+{% endfor %}
 {% endif %}
     fi
 

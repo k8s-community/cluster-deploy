@@ -7,6 +7,10 @@ network_storage: false
 # TODO: AWS persistent disk `aws`
 network_storage_type: gce 
 
+# Additional Kubernetes namespaces
+k8s_namespaces:
+  - dev
+
 # Users access data
 k8s_admin_username: admin
 k8s_release_username: release

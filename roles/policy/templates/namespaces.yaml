@@ -1,9 +1,9 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: release
+{% for namespace in k8s_namespaces %}
 ---
+
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: prod
+  name: {{ namespace }}
+
+{% endfor %}
