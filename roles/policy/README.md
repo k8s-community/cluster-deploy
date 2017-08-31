@@ -16,6 +16,12 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
+Additional Kubernetes namespaces
+```yaml
+k8s_namespaces:
+  - dev
+```
+
 Users access data
 ```yaml
 k8s_admin_username: admin

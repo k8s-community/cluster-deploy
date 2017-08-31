@@ -35,6 +35,10 @@ k8s_domain_name: k8s
 k8s_cluster_name: cluster
 k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
+# Additional Kubernetes namespaces
+k8s_namespaces:
+  - dev
+
 # Path to the Inventory hosts file
 # It should be auto generated during the crating of VM inctances
 k8s_inventory_file: '{{ inventory_dir }}/{{ k8s_cluster_name }}'

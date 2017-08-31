@@ -1,4 +1,5 @@
 ---
+
 kind: PersistentVolume
 apiVersion: v1
 metadata:
@@ -39,6 +40,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
 
 ---
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -55,6 +57,7 @@ spec:
       storage: {% if network_storage %}{{ k8s_kube_registry_network_volume_size }}{% else %}{{ k8s_kube_registry_local_volume_size }}{% endif %}
 
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -65,6 +68,7 @@ data:
   htpasswd: {{ k8s_docker_registry_token }}
 
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -75,35 +79,42 @@ data:
   .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
 
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
   name: registry-pull-secret
-  namespace: prod
+  namespace: kube-public
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
 
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
   name: registry-pull-secret
-  namespace: release
+  namespace: default
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
 
+{% for namespace in k8s_namespaces %}
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
   name: registry-pull-secret
+  namespace: {{ namespace }}
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
 
+{% endfor %}
 ---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -169,6 +180,7 @@ spec:
           claimName: kube-registry-claim
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -188,6 +200,7 @@ spec:
     protocol: TCP
 
 ---
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

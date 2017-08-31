@@ -39,6 +39,12 @@ Size of network persistent disk in Gb
 network_storage_size: 100
 ```
 
+Additional Kubernetes namespaces
+```yaml
+k8s_namespaces:
+  - dev
+```
+
 Kube registry host name
 ```yaml
 k8s_registry_name: registry.your-domain-name

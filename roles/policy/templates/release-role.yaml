@@ -1,11 +1,13 @@
+{% for namespace in k8s_namespaces %}
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
-  name: prod-admin
-  namespace: prod
+  name: {{ namespace }}-admin
+  namespace: {{ namespace }}
   labels:
-    basic.auth/role: prod-admin
+    basic.auth/role: {{ namespace }}-admin
 rules:
 - apiGroups:
   - '*'
@@ -14,18 +16,4 @@ rules:
   verbs:
   - '*'
 
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: Role
-metadata:
-  name: release-admin
-  namespace: release
-  labels:
-    basic.auth/role: release-admin
-rules:
-- apiGroups:
-  - '*'
-  resources:
-  - '*'
-  verbs:
-  - '*'
+{% endfor %}
