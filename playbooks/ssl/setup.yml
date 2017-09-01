@@ -22,13 +22,13 @@
     - name: Get CA locally
       fetch:
         src: '{{ ssl_dir }}/ca.pem'
-        dest: ca/
+        dest: '{{ inventory_dir }}/.certs/ca/'
         flat: yes
       when: inventory_hostname in groups['master'][0] and not cakey.stat.exists
     - name: Get CA key locally
       fetch:
         src: '{{ ssl_dir }}/ca-key.pem'
-        dest: ca/
+        dest: '{{ inventory_dir }}/.certs/ca/'
         flat: yes
       when: inventory_hostname in groups['master'][0] and not cakey.stat.exists
 
@@ -40,7 +40,7 @@
   pre_tasks:
     - name: Copy CA
       copy:
-        src: ca/
+        src: '{{ inventory_dir }}/.certs/ca/'
         dest: '{{ ssl_dir }}'
   roles:
     - role: ssl

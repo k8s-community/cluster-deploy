@@ -6,7 +6,7 @@
   pre_tasks:
     - name: Copy CA
       copy:
-        src: ca/
+        src: '{{ inventory_dir }}/.certs/ca/'
         dest: '{{ ssl_dir }}'
       when: inventory_hostname in groups['master'][0]
   roles:
@@ -32,19 +32,19 @@
     - name: Get master certificate locally
       fetch:
         src: '{{ ssl_dir }}/master.pem'
-        dest: master/
+        dest: '{{ inventory_dir }}/.certs/master/'
         flat: yes
       when: inventory_hostname in groups['master'][0]
 
     - name: Get master key locally
       fetch:
         src: '{{ ssl_dir }}/master-key.pem'
-        dest: master/
+        dest: '{{ inventory_dir }}/.certs/master/'
         flat: yes
       when: inventory_hostname in groups['master'][0]
 
     - name: Copy master certificate and key on all masters
       copy:
-        src: master/
+        src: '{{ inventory_dir }}/.certs/master/'
         dest: '{{ ssl_dir }}'
       when: inventory_hostname not in groups['master'][0]
