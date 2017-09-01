@@ -53,12 +53,12 @@
 
 - name: register Go environment
   lineinfile:
-    dest: '{{ ansible_env.HOME }}/.bash_profile'
+    dest: '{{ ansible_env.HOME }}/.bashrc'
     line: 'export GOPATH=$HOME/{{ go_path }}'
 
 - name: register PATH environment
   lineinfile:
-    dest: '{{ ansible_env.HOME }}/.bash_profile'
+    dest: '{{ ansible_env.HOME }}/.bashrc'
     line: 'export PATH=$PATH:{{ go_dir }}/go/bin:$GOPATH/bin'
 
 - name: Get helm
