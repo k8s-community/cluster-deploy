@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_nginx_ingress_controller {
-    if kubectl get ds -l k8s-app=nginx-ingress-controller --namespace=kube-system | grep nginx-ingress-controller > /dev/null 2>&1; then
+    if kubectl get ds -l k8s-app=nginx-ingress-controller --namespace=kube-system | grep nginx-ingress-controller &> /dev/null; then
         echo "Nginx Ingress controller already exists"
     else
         echo "Creating Nginx Ingress controller"
@@ -12,7 +12,7 @@ function deploy_nginx_ingress_controller {
 }
 
 function deploy_haproxy_ingress_controller {
-    if kubectl get deploy -l k8s-app=haproxy-ingress-controller --namespace=kube-system | grep haproxy-ingress-controller > /dev/null 2>&1; then
+    if kubectl get deploy -l k8s-app=haproxy-ingress-controller --namespace=kube-system | grep haproxy-ingress-controller &> /dev/null; then
         echo "HAProxy Ingress controller already exists"
     else
         echo "Creating HAProxy Ingress controller"
@@ -23,7 +23,7 @@ function deploy_haproxy_ingress_controller {
 }
 
 function deploy_gce_ingress_controller {
-    if kubectl get deploy -l k8s-app=gce-ingress-controller --namespace=kube-system | grep gce-ingress-controller > /dev/null 2>&1; then
+    if kubectl get deploy -l k8s-app=gce-ingress-controller --namespace=kube-system | grep gce-ingress-controller &> /dev/null; then
         echo "Google L7 Ingress controller already exists"
     else
         echo "Creating Google L7 Ingress controller"

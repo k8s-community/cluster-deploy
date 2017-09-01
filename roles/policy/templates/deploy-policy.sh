@@ -12,7 +12,7 @@ function deploy_namespaces {
 }
 
 function deploy_admin_cluster_role_binding {
-    if kubectl get -l basic.auth/user=admin clusterrolebindings | grep admin > /dev/null 2>&1; then
+    if kubectl get -l basic.auth/user=admin clusterrolebindings | grep admin &> /dev/null; then
         echo "Admin role already exists"
     else
         echo "Creating admin role and binding"
@@ -23,7 +23,7 @@ function deploy_admin_cluster_role_binding {
 }
 
 function deploy_reader_cluster_role {
-    if kubectl get -l basic.auth/role=cluster-reader clusterrole | grep cluster-reader > /dev/null 2>&1; then
+    if kubectl get -l basic.auth/role=cluster-reader clusterrole | grep cluster-reader &> /dev/null; then
         echo "Cluster reader role already exists"
     else
         echo "Creating cluster reader role and binding"
@@ -35,7 +35,7 @@ function deploy_reader_cluster_role {
 }
 
 function deploy_release_role {
-    if kubectl get -l basic.auth/role={{ k8s_namespaces[0] }}-admin role --namespace={{ k8s_namespaces[0] }} | grep {{ k8s_namespaces[0] }}-admin > /dev/null 2>&1; then
+    if kubectl get -l basic.auth/role={{ k8s_namespaces[0] }}-admin role --namespace={{ k8s_namespaces[0] }} | grep {{ k8s_namespaces[0] }}-admin &> /dev/null; then
         echo "Release role already exists"
     else
         echo "Creating release role and binding"
@@ -47,7 +47,7 @@ function deploy_release_role {
 }
 
 function deploy_tls_secrets {
-    if kubectl get secrets --namespace=kube-system | grep tls-secret > /dev/null 2>&1; then
+    if kubectl get secrets --namespace=kube-system | grep tls-secret &> /dev/null; then
         echo "tls secret already exists"
     else
         echo "Creating tls secret"
@@ -108,7 +108,7 @@ data:
 }
 
 function deploy_ceph_secret {
-    if kubectl get secrets --namespace=kube-system | grep ceph-secret > /dev/null 2>&1; then
+    if kubectl get secrets --namespace=kube-system | grep ceph-secret &> /dev/null; then
         echo "Ceph secret already exists"
     else
         echo "Creating Ceph secret"

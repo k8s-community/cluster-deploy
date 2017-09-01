@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_accounts {
-    if kubectl get deploy -l istio=istio-ca --namespace={{ k8s_istio_namespace }} | grep istio-ca > /dev/null 2>&1; then
+    if kubectl get deploy -l istio=istio-ca --namespace={{ k8s_istio_namespace }} | grep istio-ca &> /dev/null; then
         echo "Istio accounts already exists"
     else
         echo "Creating Istio accounts"
@@ -12,7 +12,7 @@ function deploy_accounts {
 }
 
 function deploy_zipkin {
-    if kubectl get deploy -l app=zipkin --namespace={{ k8s_istio_namespace }} | grep zipkin > /dev/null 2>&1; then
+    if kubectl get deploy -l app=zipkin --namespace={{ k8s_istio_namespace }} | grep zipkin &> /dev/null; then
         echo "Zipkin already exists"
     else
         echo "Creating zipkin"
@@ -23,7 +23,7 @@ function deploy_zipkin {
 }
 
 function deploy_grafana {
-    if kubectl get deploy -l app=grafana --namespace={{ k8s_istio_namespace }} | grep grafana > /dev/null 2>&1; then
+    if kubectl get deploy -l app=grafana --namespace={{ k8s_istio_namespace }} | grep grafana &> /dev/null; then
         echo "Grafana already exists"
     else
         echo "Creating grafana"
@@ -34,7 +34,7 @@ function deploy_grafana {
 }
 
 function deploy_servicegraph {
-    if kubectl get deploy -l app=servicegraph --namespace={{ k8s_istio_namespace }} | grep servicegraph > /dev/null 2>&1; then
+    if kubectl get deploy -l app=servicegraph --namespace={{ k8s_istio_namespace }} | grep servicegraph &> /dev/null; then
         echo "Servicegraph already exists"
     else
         echo "Creating servicegraph"
@@ -45,7 +45,7 @@ function deploy_servicegraph {
 }
 
 function deploy_prometheus {
-    if kubectl get deploy -l app=prometheus --namespace={{ k8s_istio_namespace }} | grep prometheus > /dev/null 2>&1; then
+    if kubectl get deploy -l app=prometheus --namespace={{ k8s_istio_namespace }} | grep prometheus &> /dev/null; then
         echo "Prometheus already exists"
     else
         echo "Creating prometheus"
@@ -60,12 +60,12 @@ function deploy_istio {
 
     echo "Wait for istio.default secret"
     for n in $(seq 1 $times); do
-    	if kubectl get secret --namespace={{ k8s_istio_namespace }} | grep istio.default > /dev/null 2>&1; then
+    	if kubectl get secret --namespace={{ k8s_istio_namespace }} | grep istio.default &> /dev/null; then
     	    break
     	fi
         sleep 1
     done
-    if kubectl get deploy -l istio=pilot --namespace={{ k8s_istio_namespace }} | grep istio-pilot > /dev/null 2>&1; then
+    if kubectl get deploy -l istio=pilot --namespace={{ k8s_istio_namespace }} | grep istio-pilot &> /dev/null; then
         echo "Istio already exists"
     else
         echo "Creating Istio"

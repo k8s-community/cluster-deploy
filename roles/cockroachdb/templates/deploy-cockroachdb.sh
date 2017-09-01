@@ -3,7 +3,7 @@
 function deploy_cockroachdb {
     local times=300
 
-    if kubectl get statefulset -l app=cockroachdb | grep cockroachdb > /dev/null 2>&1; then
+    if kubectl get statefulset -l app=cockroachdb | grep cockroachdb &> /dev/null; then
         echo "Cockroach DB already exists"
     else
         echo "Creating Cockroach DB"
@@ -12,7 +12,7 @@ function deploy_cockroachdb {
         echo "Wait for CSR"
         for i in $(seq 0 {{ (k8s_node_hosts | count) - 1 }}); do
             for n in $(seq 1 $times); do
-                if kubectl get csr | grep default.node.cockroachdb-${i} > /dev/null 2>&1; then
+                if kubectl get csr | grep default.node.cockroachdb-${i} &> /dev/null; then
                     kubectl certificate approve default.node.cockroachdb-${i}
                     break
                 fi

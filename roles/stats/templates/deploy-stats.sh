@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function deploy_heapster {
-    if kubectl get deploy -l k8s-app=heapster --namespace=kube-system | grep heapster > /dev/null 2>&1; then
+    if kubectl get deploy -l k8s-app=heapster --namespace=kube-system | grep heapster &> /dev/null; then
         echo "Heapster deployment already exists"
     else
         echo "Creating Heapster deployment"
