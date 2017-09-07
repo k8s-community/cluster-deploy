@@ -1,0 +1,37 @@
+---
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_addons_dir }}'
+
+- name: Prometheus
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    # TODO: merge manifests
+    - alert-manager-configmap.yaml
+    - alert-manager-deployment.yaml
+    - alert-manager-pvc.yaml
+    - alert-manager-service.yaml
+    - kube-state-metrics-svc.yaml
+    - kube-state-metrics-deployment.yaml
+    - node-exporter-daemonset.yaml
+    - node-exporter-service.yaml
+    - server-configmap.yaml
+    - server-deployment.yaml
+    - server-pvc.yaml
+    - server-service.yaml
+
+- name: Deploy script for Prometheus
+  template:
+    src: deploy-prometheus.sh
+    dest: "{{ k8s_addons_dir }}/deploy-prometheus.sh"
+    mode: 0755
+
+- name: Run deploy script for Prometheus
+  command: "{{ k8s_addons_dir }}/deploy-prometheus.sh"
+  when: inventory_hostname in k8s_master_hosts[0]
