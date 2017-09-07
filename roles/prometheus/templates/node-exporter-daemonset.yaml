@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: prometheus
+    chart: prometheus-3.1.0
+    component: "node-exporter"
+    heritage: Tiller
+    release: my-release
+  name: my-release-prometheus-node-exporter
+spec:
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "node-exporter"
+        release: my-release
+    spec:
+      containers:
+        - name: prometheus-node-exporter
+          image: "prom/node-exporter:v0.13.0"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --collector.procfs=/host/proc
+            - --collector.sysfs=/host/sys
+          ports:
+            - name: metrics
+              containerPort: 9100
+              hostPort: 9100
+          resources:
+            {}
+
+          volumeMounts:
+            - name: proc
+              mountPath: /host/proc
+              readOnly:  true
+            - name: sys
+              mountPath: /host/sys
+              readOnly: true
+      hostNetwork: true
+      hostPID: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys

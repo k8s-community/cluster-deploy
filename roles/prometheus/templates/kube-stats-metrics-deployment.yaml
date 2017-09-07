@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    chart: prometheus-3.1.0
+    component: "kube-state-metrics"
+    heritage: Tiller
+    release: my-release
+  name: my-release-prometheus-kube-state-metrics
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "kube-state-metrics"
+        release: my-release
+    spec:
+      containers:
+        - name: prometheus-kube-state-metrics
+          image: "gcr.io/google_containers/kube-state-metrics:v0.4.1"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8080
+          resources:
+            {}

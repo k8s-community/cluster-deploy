@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    chart: prometheus-3.1.0
+    component: "server"
+    heritage: Tiller
+    release: my-release
+  name: my-release-prometheus-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "server"
+        release: my-release
+    spec:
+      containers:
+        - name: prometheus-server-configmap-reload
+          image: "jimmidyson/configmap-reload:v0.1"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://localhost:9090/-/reload
+          resources:
+            {}
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+
+        - name: prometheus-server
+          image: "prom/prometheus:v1.5.2"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --alertmanager.url=http://my-release-prometheus-alertmanager:80
+            - --config.file=/etc/config/prometheus.yml
+            - --storage.local.path=/data
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --web.console.templates=/etc/prometheus/consoles
+          ports:
+            - containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 9090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            {}
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: /data
+              subPath: ""
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: config-volume
+          configMap:
+            name: my-release-prometheus-server
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: my-release-prometheus-server
