@@ -86,6 +86,43 @@
     notify:
       - reload firewall
 
+  - name: Disable firewall master lb external zone services
+    firewalld:
+      zone: external
+      service: "{{ item }}"
+      state: disabled
+      permanent: true
+    with_items:
+      - '{{ disabled_services }}'
+    when: inventory_hostname in groups['master_lb']
+    notify:
+      - reload firewall
+
+  - name: Enable firewall master lb external zone services
+    firewalld:
+      zone: external
+      service: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ enabled_services }}'
+    when: inventory_hostname in groups['master_lb']
+    notify:
+      - reload firewall
+
+  - name: Setup firewall master lb external zone sources
+    firewalld:
+      zone: external
+      source: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ nds_ipv4 }}'
+      - '{{ build_ipv4 }}'
+    when: inventory_hostname in groups['master_lb']
+    notify:
+      - reload firewall
+
   - name: Enable firewall external zone services
     firewalld:
       zone: external
@@ -110,7 +147,7 @@
     notify:
       - reload firewall
 
-  - name: Setup firewall external zone sources
+  - name: Setup firewall master external zone sources
     firewalld:
       zone: external
       source: "{{ item }}"
@@ -118,12 +155,11 @@
       permanent: true
     with_items:
       - '{{ mts_lb_ipv4 }}'
-      - '{{ build_ipv4 }}'
     when: inventory_hostname in groups['master']
     notify:
       - reload firewall
 
-  - name: Setup firewall external zone sources
+  - name: Setup firewall node external zone sources
     firewalld:
       zone: external
       source: "{{ item }}"
@@ -131,7 +167,6 @@
       permanent: true
     with_items:
       - '{{ nds_lb_ipv4 }}'
-      - '{{ build_ipv4 }}'
     when: inventory_hostname in groups['node']
     notify:
       - reload firewall

@@ -1,0 +1,26 @@
+---
+- hosts:
+    - master
+    - node
+    - build
+    - master_lb
+    - node_lb
+  remote_user: root
+
+  tasks:
+
+  - name: Added ssh permissions for allowed hosts
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^AllowUsers {{ k8s_ssh_user }}@{{ item }}"
+      line: "AllowUsers {{ k8s_ssh_user }}@{{ item }}"
+    with_items:
+      - "{{ k8s_ssh_allowed_ips }}"
+    notify:
+      - restart sshd
+
+  handlers:
+    - name: restart sshd
+      service:
+        name: sshd
+        state: restarted

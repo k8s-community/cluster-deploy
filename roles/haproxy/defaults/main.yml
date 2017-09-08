@@ -1,0 +1,29 @@
+---
+
+# Redirect HTTP to HTTPS
+haproxy_redirect_http: true
+
+# HAProxy ports which allow network traffic
+haproxy_http_port: 80
+haproxy_https_port: 443
+haproxy_stats_port: 7111
+
+# HTTP and HTTPS check statuses
+haproxy_http_check_status: 200
+haproxy_https_check_status: 401
+
+# Master hosts nsmes
+k8s_master_hosts: {}
+
+# SSL dir for haproxy 
+haproxy_ssl_dir: /etc/haproxy/ssl
+
+# SSL certificate and private key for running user services into Kubernetes
+k8s_services_cert: |
+  ----BEGIN CERTIFICATE----
+  - Your certificate here -
+  -----END CERTIFICATE-----
+k8s_services_cert_key: |
+  ----BEGIN PRIVATE KEY----
+  - Your private key here -
+  -----END PRIVATE KEY-----

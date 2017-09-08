@@ -23,6 +23,9 @@ k8s_ssh_user: dev
 # for password for build components
 k8s_build_ssh_user: dev
 
+# List of IPs which allowed to connect via ssh by `k8s_ssh_user`
+k8s_ssh_allowed_ips:
+
 # SSH key that will be used to connect your VM instances
 # Use this default value if you won't use special separate key for this purposes
 # k8s_ssh_key: '{{ lookup("file", "{{ ansible_env.HOME }}/.ssh/id_rsa.pub") }}'
