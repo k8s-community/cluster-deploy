@@ -31,16 +31,6 @@ Istio version
 istio_version: 0.2.0
 ```
 
-Conteiner Network Interface type, valid values: `calico`, `romana`
-```yaml
-cni_type: calico
-```
-
-Container Network Interface (CNI) bin path
-```yaml
-cni_bin_dir: /opt/cni/bin
-```
-
 Namespace for Istio
 ```yaml
 k8s_istio_namespace: istio-system

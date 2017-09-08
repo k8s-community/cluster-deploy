@@ -1,7 +1,4 @@
 ---
-# Conteiner Network Interface type, valid values: `calico`, `romana`
-cni_type: calico
-
 # Using of network storage
 # If network storage disabled will use local disk for every requested claim 
 network_storage: false
@@ -45,9 +42,6 @@ ceph_rbd_image_name: rbdstore
 
 # Ceph user name
 ceph_user_name: admin
-
-# Container Network Interface (CNI) bin path
-cni_bin_dir: /opt/cni/bin
 
 # Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes

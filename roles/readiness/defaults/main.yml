@@ -1,0 +1,6 @@
+---
+# Conteiner Network Interface type, valid values: `calico`, `romana`
+cni_type: calico
+
+# Container Network Interface (CNI) bin path
+cni_bin_dir: /opt/cni/bin

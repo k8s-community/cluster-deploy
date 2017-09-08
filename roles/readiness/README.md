@@ -1,7 +1,7 @@
-Ansible Role: Statistics services
-=================================
+Ansible Role: Check readiness
+=============================
 
-This role install Statistics services on Red Hat linux based systems.
+This role install Helm tiller on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
@@ -16,24 +16,22 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Kubernetes configs path
+Conteiner Network Interface type, valid values: `calico`, `romana`
 ```yaml
-k8s_conf_dir: /etc/kubernetes
-k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+cni_type: calico
 ```
 
-Master hosts nsmes
+Container Network Interface (CNI) bin path
 ```yaml
-k8s_master_hosts: {}
+cni_bin_dir: /opt/cni/bin
 ```
-
 
 Example Playbook
 ----------------
 
-    - hosts: master
+    - hosts: addons
       roles:
-        - stats
+        - readiness
 
 License
 -------

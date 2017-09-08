@@ -1,7 +1,4 @@
 ---
-# Conteiner Network Interface type, valid values: `calico`, `romana`
-cni_type: calico
-
 # It will be used as the Internal dns domain name if DNS is enabled.
 # Services will be discoverable under
 # <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
@@ -12,9 +9,6 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
 # Kubernetes services host names
 k8s_services_name: services.your-domain-name
-
-# Container Network Interface (CNI) bin path
-cni_bin_dir: /opt/cni/bin
 
 # Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes

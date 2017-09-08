@@ -17,11 +17,6 @@ Role Variables
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 
-Conteiner Network Interface type, valid values: `calico`, `romana`
-```yaml
-cni_type: calico
-```
-
 Using of network storage
 If network storage disabled will use local disk for every requested claim 
 ```yaml
@@ -96,11 +91,6 @@ Ceph user token
 ceph auth print-key client.admin | base64
 ```yaml
 ceph_user_token: 'ceph user token here'
-```
-
-Container Network Interface (CNI) bin path
-```yaml
-cni_bin_dir: /opt/cni/bin
 ```
 
 Kubernetes configs path
