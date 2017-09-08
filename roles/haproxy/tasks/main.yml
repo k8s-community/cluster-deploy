@@ -1,0 +1,30 @@
+---
+- name: Install HAProxy and dependencies
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - haproxy
+  notify:
+    - enable haproxy
+    - restart haproxy
+
+- name: Check directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ haproxy_ssl_dir }}'
+
+- name: Create SSL certificate
+  copy:
+    content: '{{ k8s_services_cert }}{{ k8s_services_cert_key }}'
+    dest: '{{ haproxy_ssl_dir }}/certs.pem'
+
+- name: Configure balancer
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify:
+    - reload haproxy

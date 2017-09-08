@@ -1,0 +1,56 @@
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    tune.ssl.default-dh-param 2048
+    stats socket /var/run/haproxy.sock mode 666 level user
+    maxconn 8192
+    user haproxy
+    group haproxy
+    daemon
+ 
+defaults
+    log global
+    mode tcp
+    option tcpka
+    option tcplog
+    option dontlognull
+    option redispatch
+    option log-health-checks
+    retries 3
+    maxconn 2000
+    timeout check 5s
+    timeout queue 5s
+    timeout connect 5s
+    timeout client 50s
+    timeout server 50s
+    timeout tunnel 1h        # to use with WebSocket
+
+listen kubernetes-80
+    bind *:{{ haproxy_http_port }}
+{% if haproxy_redirect_http %}
+    mode http
+    redirect scheme https
+{% else %}
+    option httpchk GET /healthz
+    http-check expect status {{ haproxy_http_check_status }}
+    default-server inter 5000 rise 3 fall 2
+{% for host in k8s_master_hosts %}
+    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_http_port }} check
+{% endfor %}
+{% endif %}
+
+listen kubernetes-443
+    bind *:{{ haproxy_https_port }}
+    option httpchk GET /healthz
+    http-check expect status {{ haproxy_https_check_status }}
+    default-server inter 5000 rise 3 fall 2
+{% for host in k8s_master_hosts %}
+    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_https_port }} verify none check check-ssl
+{% endfor %}
+
+listen stats 
+    bind *:{{ haproxy_stats_port }} ssl crt {{ haproxy_ssl_dir }}/certs.pem no-sslv3
+    mode http
+    option forwardfor
+    stats enable
+    stats uri /
