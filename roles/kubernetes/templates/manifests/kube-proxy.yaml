@@ -12,7 +12,7 @@ spec:
     - /hyperkube
     - proxy
     - --feature-gates=AllAlpha=false
-    - --master={{ k8s_url_scheme }}://{% if inventory_hostname in k8s_master_hosts %}127.0.0.1{% else %}{{ k8s_master_hosts[0] }}{% endif %}:{{ k8s_api_port }}
+    - --master={{ k8s_url_scheme }}://{% if inventory_hostname in k8s_master_hosts %}127.0.0.1{% else %}{{ k8s_master_name }}{% endif %}:{{ k8s_api_port }}
     - --hostname-override={{ inventory_hostname }}
     - --kubeconfig={{ k8s_policy_dir }}/kube-proxy.kubeconfig
     - --v={{ k8s_log_level }}
