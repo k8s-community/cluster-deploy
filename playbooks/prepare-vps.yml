@@ -1,2 +1,5 @@
 - include: system/update.yml
 - include: system/firewall.yml
+- include: system/permissions.yml
+- include: system/master-lb.yml
+- include: system/node-lb.yml
