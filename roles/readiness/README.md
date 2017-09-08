@@ -1,7 +1,7 @@
 Ansible Role: Check readiness
 =============================
 
-This role install Helm tiller on Red Hat linux based systems.
+This role install Readiness checking on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
