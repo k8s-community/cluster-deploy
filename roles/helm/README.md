@@ -21,16 +21,6 @@ Helm package manager version
 helm_version: 2.6.0
 ```
 
-Conteiner Network Interface type, valid values: `calico`, `romana`
-```yaml
-cni_type: calico
-```
-
-Container Network Interface (CNI) bin path
-```yaml
-cni_bin_dir: /opt/cni/bin
-```
-
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes

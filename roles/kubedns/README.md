@@ -21,11 +21,6 @@ Log level 0 - debug
 k8s_log_level: 3
 ```
 
-Conteiner Network Interface type, valid values: `calico`, `romana`
-```yaml
-cni_type: calico
-```
-
 It will be used as the Internal dns domain name if DNS is enabled.
 Services will be discoverable under
 `<service-name>.<namespace>.svc.<domainname>.<clustername>`, e.g.
@@ -40,11 +35,6 @@ IP address of Kube DNS
 It should be in range of services subnet
 ```yaml
 k8s_cluster_dns: 10.254.0.10
-```
-
-Container Network Interface (CNI) bin path
-```yaml
-cni_bin_dir: /opt/cni/bin
 ```
 
 Kubernetes configs path

@@ -16,17 +16,6 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-
-Conteiner Network Interface type, valid values: `calico`, `romana`
-```yaml
-cni_type: calico
-```
-
-Container Network Interface (CNI) bin path
-```
-cni_bin_dir: /opt/cni/bin
-```
-
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes

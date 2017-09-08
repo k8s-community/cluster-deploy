@@ -28,16 +28,6 @@ https://www.haproxy.com/blog/haproxy/proxy-protocol/
 k8s_ingress_proxy_protocol: false
 ```
 
-Conteiner Network Interface type, valid values: `calico`, `romana`
-```yaml
-cni_type: calico
-```
-
-Container Network Interface (CNI) bin path
-```yaml
-cni_bin_dir: /opt/cni/bin
-```
-
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes

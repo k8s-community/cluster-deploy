@@ -1,0 +1,4 @@
+---
+- name: Awaiting for CNI loading
+  wait_for:
+    path: '{{ cni_bin_dir }}/{{ cni_type }}'
