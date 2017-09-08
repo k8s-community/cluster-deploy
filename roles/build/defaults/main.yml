@@ -30,6 +30,9 @@ k8s_domain_name: k8s
 k8s_cluster_name: cluster
 k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
+# Kubernetes master host names
+k8s_master_name: master.your-domain-name
+
 # Docker registry host name
 k8s_registry_name: registry.your-domain-name
 
