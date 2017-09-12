@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   labels:
     app: prometheus
-    chart: prometheus-3.1.0
+    chart: prometheus-4.5.0
     component: "server"
     heritage: Tiller
     release: my-release
@@ -146,6 +146,17 @@ data:
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
             target_label: kubernetes_name
+
+      - job_name: 'prometheus-pushgateway'
+        honor_labels: true
+
+        kubernetes_sd_configs:
+          - role: service
+
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
+            action: keep
+            regex: pushgateway
 
       # Example scrape config for probing services via the Blackbox Exporter.
       #

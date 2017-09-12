@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: prometheus
-    chart: prometheus-3.1.0
+    chart: prometheus-4.5.0
     component: "server"
     heritage: Tiller
     release: my-release
@@ -17,6 +17,7 @@ spec:
         component: "server"
         release: my-release
     spec:
+      serviceAccountName: "default"
       containers:
         - name: prometheus-server-configmap-reload
           image: "jimmidyson/configmap-reload:v0.1"
@@ -36,7 +37,6 @@ spec:
           image: "prom/prometheus:v1.5.2"
           imagePullPolicy: "IfNotPresent"
           args:
-            - --alertmanager.url=http://my-release-prometheus-alertmanager:80
             - --config.file=/etc/config/prometheus.yml
             - --storage.local.path=/data
             - --web.console.libraries=/etc/prometheus/console_libraries
@@ -64,5 +64,4 @@ spec:
           configMap:
             name: my-release-prometheus-server
         - name: storage-volume
-          persistentVolumeClaim:
-            claimName: my-release-prometheus-server
+          emptyDir: {}
