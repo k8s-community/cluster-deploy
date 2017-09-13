@@ -34,7 +34,7 @@ listen kubernetes-80
     option httpchk GET /healthz
     http-check expect status {{ haproxy_http_check_status }}
     default-server inter 5000 rise 3 fall 2
-{% for host in k8s_master_hosts %}
+{% for host in k8s_hosts %}
     server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_http_port }} check
 {% endfor %}
 {% endif %}
@@ -44,7 +44,7 @@ listen kubernetes-443
     option httpchk GET /healthz
     http-check expect status {{ haproxy_https_check_status }}
     default-server inter 5000 rise 3 fall 2
-{% for host in k8s_master_hosts %}
+{% for host in k8s_hosts %}
     server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_https_port }} verify none check check-ssl
 {% endfor %}
 

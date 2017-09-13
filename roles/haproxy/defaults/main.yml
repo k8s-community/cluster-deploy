@@ -10,10 +10,10 @@ haproxy_stats_port: 7111
 
 # HTTP and HTTPS check statuses
 haproxy_http_check_status: 200
-haproxy_https_check_status: 401
+haproxy_https_check_status: 200
 
-# Master hosts nsmes
-k8s_master_hosts: {}
+# Hosts names
+k8s_hosts: {}
 
 # SSL dir for haproxy 
 haproxy_ssl_dir: /etc/haproxy/ssl
