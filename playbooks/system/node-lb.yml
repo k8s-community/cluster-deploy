@@ -8,5 +8,5 @@
   become: true
   roles:
     - role: haproxy
-      k8s_node_hosts: '{{ groups["node"] }}'
+      k8s_hosts: '{{ groups["node"] }}'
       haproxy_redirect_http: false

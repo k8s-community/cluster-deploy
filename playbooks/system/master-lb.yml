@@ -8,4 +8,5 @@
   become: true
   roles:
     - role: haproxy
-      k8s_master_hosts: '{{ groups["master"] }}'
+      k8s_hosts: '{{ groups["master"] }}'
+      haproxy_https_check_status: 401

@@ -35,9 +35,9 @@ haproxy_http_check_status: 200
 haproxy_https_check_status: 401
 ```
 
-Master hosts nsmes
+Hosts names
 ```yaml
-k8s_master_hosts: {}
+k8s_hosts: {}
 ```
 
 SSL dir for haproxy 

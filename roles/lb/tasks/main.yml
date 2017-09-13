@@ -22,6 +22,30 @@
 #     project_id: '{{ gce_project_id }}'
 #   register: ip
 
+- name: Create Kubernetes masters load balancer
+  gce_lb:
+    name: 'kube-master'
+    region: '{{ gce_instances_region }}'
+    port_range: '{{ k8s_services_port }}'
+    # external_ip: '{{ ip.address }}'
+    httphealthcheck_name: kube-master-health-check
+    httphealthcheck_port: '{{ k8s_health_check_port }}'
+    httphealthcheck_path: /healthz
+    members: "{{ gce_groups | selectattr('name', 'equalto', 'master') | map(attribute='nodes') | first | map('regex_replace','(.*)', 'europe-west1-b/\\1') | list  }}"
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'
+  register: lb_master
+
+- name: Load balancer details
+  debug:
+    msg: '{{ lb_master }}'
+
+- lineinfile:
+    dest: '{{ k8s_inventory_file }}'
+    insertafter: "^\\[master:vars\\]" 
+    line: 'k8s_master_external_ip={{ lb_master.external_ip }}'
+
 - name: Create Kubernetes services load balancer
   gce_lb:
     name: 'kube-services'
@@ -35,13 +59,13 @@
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
-  register: lb
+  register: lb_nodes
 
 - name: Load balancer details
   debug:
-    msg: '{{ lb }}'
+    msg: '{{ lb_nodes }}'
 
 - lineinfile:
     dest: '{{ k8s_inventory_file }}'
     insertafter: "^\\[master:vars\\]" 
-    line: 'k8s_services_external_ip={{ lb.external_ip }}'
+    line: 'k8s_services_external_ip={{ lb_nodes.external_ip }}'
