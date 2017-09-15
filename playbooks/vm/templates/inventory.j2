@@ -4,10 +4,8 @@
 {% for item in gce_groups %}
 [{{ item.name }}]
 
-{% if item.name == 'master' %}
-[master:vars]
-
-[node:vars]
+{% if item.name == 'build' %}
+[all:vars]
 
 [etcd:children]
 master

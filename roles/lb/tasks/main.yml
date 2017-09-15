@@ -1,5 +1,5 @@
 ---
-# Create load balancer
+# Create load balancers
 - name: Firewall - allow internal health
   gce_net:
     name: '{{ gce_network_name }}'
@@ -12,22 +12,25 @@
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
 
-# It should be enabled in Ansible version >= 2.3
-# - name: Register Load Balanser external IP
+# - name: Register Master Load Balanser external IP
 #   gce_eip:
-#     name: 'kube-services'
+#     name: 'kube-master'
 #     region: '{{ gce_instances_region }}'
 #     service_account_email: '{{ gce_service_account_email }}'
 #     credentials_file: '{{ gce_credentials_file }}'
 #     project_id: '{{ gce_project_id }}'
-#   register: ip
+#   register: ip_master
+
+# - name: Master IP details
+#   debug:
+#     msg: '{{ ip_master }}'
 
 - name: Create Kubernetes masters load balancer
   gce_lb:
     name: 'kube-master'
     region: '{{ gce_instances_region }}'
     port_range: '{{ k8s_services_port }}'
-    # external_ip: '{{ ip.address }}'
+    # external_ip: '{{ ip_master.address }}'
     httphealthcheck_name: kube-master-health-check
     httphealthcheck_port: '{{ k8s_health_check_port }}'
     httphealthcheck_path: /healthz
@@ -43,12 +46,7 @@
 
 - lineinfile:
     dest: '{{ k8s_inventory_file }}'
-    insertafter: "^\\[master:vars\\]" 
-    line: 'k8s_master_external_ip={{ lb_master.external_ip }}'
-
-- lineinfile:
-    dest: '{{ k8s_inventory_file }}'
-    insertafter: "^\\[node:vars\\]" 
+    insertafter: "^\\[all:vars\\]" 
     line: 'k8s_master_external_ip={{ lb_master.external_ip }}'
 
 - name: Create Kubernetes services load balancer
@@ -72,10 +70,5 @@
 
 - lineinfile:
     dest: '{{ k8s_inventory_file }}'
-    insertafter: "^\\[master:vars\\]" 
-    line: 'k8s_services_external_ip={{ lb_nodes.external_ip }}'
-
-- lineinfile:
-    dest: '{{ k8s_inventory_file }}'
-    insertafter: "^\\[node:vars\\]" 
+    insertafter: "^\\[all:vars\\]" 
     line: 'k8s_services_external_ip={{ lb_nodes.external_ip }}'
