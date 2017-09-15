@@ -19,17 +19,17 @@ Available variables are listed below, along with default values (see `defaults/m
 
 Kubernetes hyperkube version
 ```yaml
-k8s_version: 1.7.4
+k8s_version: 1.7.6
 ```
 
 Helm package manager version
 ```yaml
-helm_version: 2.6.0
+helm_version: 2.6.1
 ```
 
 Golang compiller version
 ```yaml
-go_version: 1.8.3
+go_version: 1.9
 ```
 
 Account name of remote user. Ansible will use this user account to ssh into

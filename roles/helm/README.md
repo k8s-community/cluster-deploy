@@ -18,7 +18,7 @@ Available variables are listed below, along with default values (see `defaults/m
 
 Helm package manager version
 ```yaml
-helm_version: 2.6.0
+helm_version: 2.6.1
 ```
 
 Kubernetes configs path

@@ -29,4 +29,4 @@ k8s_kubednsmasq_image_tag: 1.14.4
 k8s_kubednssidecar_image: gcr.io/google_containers/k8s-dns-sidecar-amd64
 k8s_kubednssidecar_image_tag: 1.14.4
 k8s_cluster_autoscaler_image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64
-k8s_cluster_autoscaler_image_tag: 1.1.1
+k8s_cluster_autoscaler_image_tag: 1.1.2

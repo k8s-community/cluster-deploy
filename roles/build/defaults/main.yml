@@ -1,12 +1,12 @@
 ---
 # Kubernetes version
-k8s_version: 1.7.4
+k8s_version: 1.7.6
 
 # Helm package manager version
-helm_version: 2.6.0
+helm_version: 2.6.1
 
 # Golang compiller version
-go_version: 1.8.3
+go_version: 1.9
 
 # Account name of remote user. Ansible will use this user account to ssh into
 # the build machines. The user must be able to use sudo without asking
