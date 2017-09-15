@@ -35,7 +35,7 @@ k8s_cockroachdb_cache_size: 250Mb
 
 # Cockroach DB images
 k8s_cockroachdb_image: cockroachdb/cockroach
-k8s_cockroachdb_image_tag: v1.0.4
+k8s_cockroachdb_image_tag: v1.0.6
 k8s_cockroachdb_init_image: cockroachdb/cockroach-k8s-init
 k8s_cockroachdb_init_image_tag: 0.2
 k8s_cockroachdb_request_cert_image: cockroachdb/cockroach-k8s-request-cert
