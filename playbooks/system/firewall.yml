@@ -123,6 +123,19 @@
     notify:
       - reload firewall
 
+  - name: Setup firewall node lb external zone sources
+    firewalld:
+      zone: external
+      source: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ nds_ipv4 }}'
+      - '{{ build_ipv4 }}'
+    when: inventory_hostname in groups['node_lb']
+    notify:
+      - reload firewall
+
   - name: Enable firewall external zone services
     firewalld:
       zone: external
