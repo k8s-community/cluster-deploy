@@ -182,14 +182,14 @@ gce_groups:
     type: n1-standard-1
     nodes:
       - k8s-master-01
+      - k8s-master-02
   - name: node
     type: n1-standard-2
     nodes:
       - k8s-node-01
       - k8s-node-02
-      - k8s-node-03
   - name: build
-    type: n1-standard-1
+    type: n1-standard-2
     nodes:
       - k8s-build-01
 
