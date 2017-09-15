@@ -78,6 +78,14 @@ ssl_name: kubernetes
 # Path to files with SSL certificates and keys
 ssl_dir: /etc/ssl/kubernetes
 
+# Kubernetes service API port and health check port
+# k8s_api_port: 443
+# k8s_api_health_check_port: 8080
+
+# User services port and health check port
+# k8s_services_port: 443
+# k8s_health_check_port: 80
+
 # Flannel backend type (Options: gce, vxlan)
 # k8s_flannel_backend: vxlan
 

@@ -14,7 +14,7 @@
   gce_net:
     name: '{{ gce_network_name }}'
     fwname: k8s-allow-internal-health
-    allowed: tcp:8080,80
+    allowed: tcp:{{ k8s_api_health_check_port }},{{ k8s_health_check_port }}
     src_range:
       - '{{ k8s_lb_network }}'
       - '{{ k8s_health_checker_network }}'
@@ -25,7 +25,7 @@
   gce_net:
     name: '{{ gce_network_name }}'
     fwname: k8s-allow-internal-https-health
-    allowed: tcp:443,8080
+    allowed: tcp:{{ k8s_api_port }},{{ k8s_api_health_check_port }}
     src_range:
       - '{{ gce_instances_ip_range }}'
       - '{{ k8s_flannel_network }}'
@@ -69,7 +69,7 @@
   gce_net:
     name: '{{ gce_network_name }}'
     fwname: k8s-allow-external-https-ssh
-    allowed: tcp:443,22
+    allowed: tcp:{{ k8s_services_port }},22
     src_range: 
       - 0.0.0.0/0
     service_account_email: '{{ gce_service_account_email }}'
