@@ -56,6 +56,8 @@
         - '{{ k8s_registry_name }}'
         - '127.0.0.1'
         - '{{ k8s_cluster_service_ip }}'
+        - '{{ k8s_master_external_ip | default("master") }}'
+        - '{{ k8s_services_external_ip | default("services") }}'
       ssl_clients:
         - name: kubelet
           cn: system:node:{{ inventory_hostname }}
