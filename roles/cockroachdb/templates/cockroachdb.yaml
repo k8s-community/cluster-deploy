@@ -363,6 +363,6 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: cockroachdb
+          serviceName: cockroachdb-public
           servicePort: 8080
 {% endif %}
