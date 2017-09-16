@@ -1,0 +1,27 @@
+---
+# It will be used as the Internal dns domain name if DNS is enabled.
+# Services will be discoverable under
+# <service-name>.<namespace>.svc.<domainname>.<clustername>, e.g.
+# myservice.default.svc.k8s.cluster
+k8s_domain_name: k8s
+k8s_cluster_name: cluster
+k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
+
+# Kubernetes master and services host names
+k8s_master_name: master.your-domain-name
+
+# SSL base certificate name
+# SSL folder and file names will use the same name
+ssl_name: kubernetes
+
+# Path to files with SSL certificates and keys
+ssl_dir: /etc/ssl/{{ ssl_name }}
+
+# URL scheme for kubernetes services
+k8s_url_scheme: https
+# Kubernetes service API port
+k8s_api_port: 443
+
+# Master hosts nsmes
+k8s_master_hosts: {}
+

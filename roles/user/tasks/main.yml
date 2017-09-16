@@ -1,0 +1,13 @@
+---
+- name: Check config directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ ansible_env.HOME }}/.kube'
+
+- name: Default user config
+  template:
+    src: kubeconfig.default
+    dest: "{{ ansible_env.HOME }}/.kube/config"
