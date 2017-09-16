@@ -1,6 +1,6 @@
 ---
 # Calico Roles
-# Pulled from https://docs.projectcalico.org/v2.4/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+# Pulled from https://docs.projectcalico.org/v2.5/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -36,50 +36,23 @@ rules:
       - watch
   - apiGroups: ["extensions"]
     resources:
-      - thirdpartyresources
-    verbs:
-      - create
-      - get
-      - list
-      - watch
-  - apiGroups: ["extensions"]
-    resources:
       - networkpolicies
     verbs:
       - get
       - list
       - watch
-  - apiGroups: ["projectcalico.org"]
+  - apiGroups: ["crd.projectcalico.org"]
     resources:
-      - globalbgppeers
-    verbs:
-      - get
-      - list
-  - apiGroups: ["projectcalico.org"]
-    resources:
-      - globalconfigs
+      - globalfelixconfigs
+      - bgppeers
       - globalbgpconfigs
-    verbs:
-      - create
-      - get
-      - list
-      - update
-      - watch
-  - apiGroups: ["projectcalico.org"]
-    resources:
       - ippools
+      - globalnetworkpolicies
     verbs:
       - create
       - get
       - list
       - update
-      - watch
-  - apiGroups: ["alpha.projectcalico.org"]
-    resources:
-      - systemnetworkpolicies
-    verbs:
-      - get
-      - list
       - watch
 
 ---
@@ -149,6 +122,72 @@ kind: ServiceAccount
 metadata:
   name: canal
   namespace: kube-system
+
+---
+
+# Create all the CustomResourceDefinitions needed for
+# Calico policy-only mode.
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico Global Felix Configuration
+kind: CustomResourceDefinition
+metadata:
+   name: globalfelixconfigs.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: GlobalFelixConfig
+    plural: globalfelixconfigs
+    singular: globalfelixconfig
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico Global BGP Configuration
+kind: CustomResourceDefinition
+metadata:
+  name: globalbgpconfigs.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: GlobalBGPConfig
+    plural: globalbgpconfigs
+    singular: globalbgpconfig
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico IP Pools
+kind: CustomResourceDefinition
+metadata:
+  name: ippools.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: IPPool
+    plural: ippools
+    singular: ippool
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+description: Calico Global Network Policies
+kind: CustomResourceDefinition
+metadata:
+  name: globalnetworkpolicies.crd.projectcalico.org
+spec:
+  scope: Cluster
+  group: crd.projectcalico.org
+  version: v1
+  names:
+    kind: GlobalNetworkPolicy
+    plural: globalnetworkpolicies
+    singular: globalnetworkpolicy
 
 ---
 
@@ -258,12 +297,6 @@ spec:
             # Enable felix logging.
             - name: FELIX_LOGSEVERITYSYS
               value: "info"
-            # Period, in seconds, at which felix re-applies all iptables state
-            - name: FELIX_IPTABLESREFRESHINTERVAL
-              value: "60"
-            # Disable IPV6 support in Felix.
-            - name: FELIX_IPV6SUPPORT
-              value: "false"
             # Don't enable BGP.
             - name: CALICO_NETWORKING_BACKEND
               value: "none"
@@ -273,6 +306,13 @@ spec:
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
+            # Period, in seconds, at which felix re-applies all iptables state
+            - name: FELIX_IPTABLESREFRESHINTERVAL
+              value: "60"
+            # Disable IPV6 support in Felix.
+            - name: FELIX_IPV6SUPPORT
+              value: "false"
+            # Wait for the datastore.
             - name: WAIT_FOR_DATASTORE
               value: "true"
             # No IP address needed.
@@ -285,9 +325,23 @@ spec:
             # Set Felix endpoint to host default action to ACCEPT.
             - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
               value: "ACCEPT"
+            - name: FELIX_HEALTHENABLED
+              value: "true"
           resources:
             requests:
               cpu: 250m
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 9099
+            periodSeconds: 10
+            initialDelaySeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 9099
+            periodSeconds: 10
           volumeMounts:
             - mountPath: /lib/modules
               name: lib-modules

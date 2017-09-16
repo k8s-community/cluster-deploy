@@ -44,10 +44,10 @@ k8s_romana_version: 2.0-preview.1
 k8s_romana_etcd_dir: /var/lib/romana/etcd
 
 # Calico version 
-k8s_calico_version: 2.4.1
+k8s_calico_version: 2.5.1
 
 # Calico CTL version 
-k8s_calicoctl_version: 1.4.0
+k8s_calicoctl_version: 1.5.0
 
 # Flannel backend type (Options: gce, vxlan)
 k8s_flannel_backend: vxlan
