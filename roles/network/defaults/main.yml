@@ -39,6 +39,14 @@ gce_instances_region: europe-west1
 # are referred to as zonal resources
 gce_instances_zone: europe-west1-b
 
+# Kubernetes service API port and health check port
+k8s_api_port: 443
+k8s_api_health_check_port: 8080
+
+# User services port and health check port
+k8s_services_port: 443
+k8s_health_check_port: 80
+
 # It should be an IP addresses range corresponed with zone, e.g.
 # Western Europe Zone has 10.132.0.0/20 IP range
 # Use default IP range for determined zone in most of all cases

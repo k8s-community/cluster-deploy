@@ -34,7 +34,7 @@ gce_instances_zone: europe-west1-b
 # Use auto generated network name in most of all cases
 gce_network_name: '{{ k8s_domain_name }}'
 
-# Kubernetes service API port
+# Kubernetes service API port and health check port
 k8s_api_port: 443
 k8s_api_health_check_port: 8080
 
