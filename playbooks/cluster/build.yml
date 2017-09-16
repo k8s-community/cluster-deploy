@@ -9,9 +9,11 @@
   - set_fact:
       k8s_master_ip: "{{ groups['master']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list|first }}"
   roles:
+    - user
     - build
 
 - hosts: build
   remote_user: '{{ k8s_build_ssh_user }}'
   roles:
+    - user
     - build
