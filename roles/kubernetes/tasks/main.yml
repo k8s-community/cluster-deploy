@@ -97,11 +97,6 @@
   notify:
     - restart kubelet
 
-- name: Default policy config
-  template:
-    src: policy/kubeconfig.default
-    dest: "{{ ansible_env.HOME }}/.kube/config"
-
 - name: Kubernetes configs
   template:
     src: "{{ item }}"
