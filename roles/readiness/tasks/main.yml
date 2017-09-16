@@ -2,3 +2,11 @@
 - name: Awaiting for CNI loading
   wait_for:
     path: '{{ cni_bin_dir }}/{{ cni_type }}'
+
+# There is not possible to wait /readiness
+# TODO: we should replace it for real URL, not only TCP
+- name: Awaiting for Calico readiness
+  wait_for:
+    host: 127.0.0.1
+    port: 9099
+  when: cni_type == 'calico'
