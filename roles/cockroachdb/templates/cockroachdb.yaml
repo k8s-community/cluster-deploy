@@ -221,6 +221,10 @@ spec:
       - name: bootstrap
         image: "{{ k8s_cockroachdb_init_image }}:{{ k8s_cockroachdb_init_image_tag }}"
         imagePullPolicy: "IfNotPresent"
+{% if k8s_cockroachdb_privileged %}
+        securityContext:
+          privileged: true
+{% endif %}
         args:
         - "-on-start=/on-start.sh"
         - "-service=cockroachdb"
@@ -246,6 +250,10 @@ spec:
       - name: init-certs
         image: {{ k8s_cockroachdb_request_cert_image }}:{{ k8s_cockroachdb_request_cert_image_tag }}
         imagePullPolicy: IfNotPresent
+{% if k8s_cockroachdb_privileged %}
+        securityContext:
+          privileged: true
+{% endif %}
         command:
         - "/bin/ash"
         - "-ecx"
@@ -279,6 +287,10 @@ spec:
       - name: cockroachdb
         image: {{ k8s_cockroachdb_image }}:{{ k8s_cockroachdb_image_tag }}
         imagePullPolicy: IfNotPresent
+{% if k8s_cockroachdb_privileged %}
+        securityContext:
+          privileged: true
+{% endif %}
         ports:
         - containerPort: 26257
           name: grpc

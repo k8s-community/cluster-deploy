@@ -27,6 +27,12 @@ Secure deployment (recommended for production)
 k8s_cockroachdb_secure: false
 ```
 
+Enable/Disable privileged mode
+It's useful if linux running with enforsing selinux mode
+```yaml
+k8s_cockroachdb_privileged: false
+```
+
 Namespace for Cocroach DB
 ```yaml
 k8s_cockroachdb_namespace: default
