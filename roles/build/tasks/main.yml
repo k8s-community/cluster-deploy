@@ -13,7 +13,6 @@
     state: directory
     mode: 0755
   with_items:
-    - '{{ ansible_env.HOME }}/.kube'
     - '{{ ansible_env.HOME }}/.docker'
 
 - name: Default docker auth
@@ -28,11 +27,6 @@
     mode: 0755
     force: yes
   when: ansible_user_id != k8s_build_ssh_user
-
-- name: Default policy config
-  template:
-    src: kubeconfig.j2
-    dest: "{{ ansible_env.HOME }}/.kube/config"
 
 - name: Get Golang
   unarchive:

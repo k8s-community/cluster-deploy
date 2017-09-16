@@ -39,36 +39,6 @@ for password for build components
 k8s_build_ssh_user: dev
 ```
 
-URL scheme for kubernetes services
-```yaml
-k8s_url_scheme: https
-```
-
-Kubernetes service API port
-```yaml
-k8s_api_port: 443
-```
-
-IP address of kubernetes service
-```yaml
-k8s_master_ip: 10.254.0.1
-```
-
-It will be used as the Internal dns domain name if DNS is enabled.
-Services will be discoverable under
-`<service-name>.<namespace>.svc.<domainname>.<clustername>`, e.g.
-`myservice.default.svc.k8s.cluster`
-```yaml
-k8s_domain_name: k8s
-k8s_cluster_name: cluster
-k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
-```
-
-Kubernetes master and services host names
-```yaml
-k8s_master_name: master.your-domain-name
-```
-
 Docker registry host name
 ```yaml
 k8s_registry_name: registry.your-domain-name
@@ -77,11 +47,6 @@ k8s_registry_name: registry.your-domain-name
 Docker registry auth code
 ```yaml
 k8s_docker_registry_auth_code: 'docker-registry-auth-code'
-```
-
-Path to files with SSL certificates and keys
-```yaml
-ssl_dir: /etc/ssl/kubernetes
 ```
 
 Executable files path
