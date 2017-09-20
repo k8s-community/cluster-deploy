@@ -48,6 +48,15 @@ listen kubernetes-443
     server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_https_port }} verify none check check-ssl
 {% endfor %}
 
+{% for item in tcp_services %}
+listen kubernetes-{{ item.name }}
+    bind *:{{ item.port }}
+    default-server inter 5000 rise 3 fall 2
+{% for host in k8s_hosts %}
+    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ item.nodePort }} check
+{% endfor %}
+
+{% endfor %}
 listen stats 
     bind *:{{ haproxy_stats_port }} ssl crt {{ haproxy_ssl_dir }}/certs.pem no-sslv3
     mode http

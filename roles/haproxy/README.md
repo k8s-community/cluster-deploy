@@ -29,6 +29,20 @@ haproxy_https_port: 443
 haproxy_stats_port: 7111
 ```
 
+TCP services
+List of services which use TCP connections on k8s nodes and LB
+```yaml
+tcp_services: {}
+```
+
+Example
+```yaml
+tcp_services:
+  - name: whoisd
+    port: 43
+    nodePort: 30043
+```
+
 HTTP and HTTPS check statuses
 ```yaml
 haproxy_http_check_status: 200

@@ -42,6 +42,16 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 k8s_namespaces:
   - dev
 
+# TCP services
+# List of services which use TCP connections on k8s nodes and LB
+# tcp_services: {}
+#
+# Example
+# tcp_services:
+#   - name: whoisd
+#     port: 43
+#     nodePort: 30043
+
 # Path to the Inventory hosts file
 # It should be auto generated during the crating of VM inctances
 k8s_inventory_file: '{{ inventory_dir }}/{{ k8s_cluster_name }}'
