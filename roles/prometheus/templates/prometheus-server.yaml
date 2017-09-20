@@ -1,3 +1,5 @@
+--
+# Source: prometheus/templates/server-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,8 +8,8 @@ metadata:
     chart: prometheus-4.5.0
     component: "server"
     heritage: Tiller
-    release: my-release
-  name: my-release-prometheus-server
+    release: yummy-crab
+  name: yummy-crab-prometheus-server
 data:
   alerts: ""
   prometheus.yml: |-
@@ -225,3 +227,122 @@ data:
             action: replace
             target_label: kubernetes_pod_name
   rules: ""
+---
+# Source: prometheus/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+    chart: prometheus-4.5.0
+    component: "server"
+    heritage: Tiller
+    release: yummy-crab
+  name: yummy-crab-prometheus-server
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9090
+  selector:
+    app: prometheus
+    component: "server"
+    release: yummy-crab
+  type: "ClusterIP"
+---
+# Source: prometheus/templates/server-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    chart: prometheus-4.5.0
+    component: "server"
+    heritage: Tiller
+    release: yummy-crab
+  name: yummy-crab-prometheus-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "server"
+        release: yummy-crab
+    spec:
+      serviceAccountName: "default"
+      containers:
+        - name: prometheus-server-configmap-reload
+          image: "jimmidyson/configmap-reload:v0.1"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://localhost:9090/-/reload
+          resources:
+            {}
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+
+        - name: prometheus-server
+          image: "prom/prometheus:v1.5.2"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --config.file=/etc/config/prometheus.yml
+            - --storage.local.path=/data
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --web.console.templates=/etc/prometheus/consoles
+          ports:
+            - containerPort: 9090
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 9090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            {}
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: /data
+              subPath: ""
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: config-volume
+          configMap:
+            name: yummy-crab-prometheus-server
+        - name: storage-volume
+          emptyDir: {}
+---
+# Source: prometheus/templates/server-ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app: prometheus
+    chart: prometheus-4.5.0
+    component: "server"
+    heritage: Tiller
+    release: yummy-crab
+  name: yummy-crab-prometheus-server
+spec:
+  tls:
+  - hosts:
+    - pr.vsaveliev.com
+    secretName: tls-secret
+  rules:
+  - host: pr.vsaveliev.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: yummy-crab-prometheus-server
+          servicePort: 80
