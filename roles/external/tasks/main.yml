@@ -1,0 +1,31 @@
+---
+- name: Check kubernetes directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_addons_dir }}'
+
+- name: External services
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    - external-services.yaml
+
+- name: Deploy script for external services
+  template:
+    src: deploy-external-services.sh
+    dest: "{{ k8s_addons_dir }}/deploy-external-services.sh"
+    mode: 0755
+
+- name: Awaiting for kubernetes API
+  wait_for:
+    host: 127.0.0.1
+    port: 8080
+  when: inventory_hostname in k8s_master_hosts[0]
+
+- name: Run deploy script for external services
+  command: "{{ k8s_addons_dir }}/deploy-external-services.sh"
+  when: inventory_hostname in k8s_master_hosts[0]

@@ -11,4 +11,5 @@
 - include: cluster/ingress.yml
 - include: cluster/stats.yml
 - include: cluster/registry.yml
+- include: cluster/external.yml
 - include: cluster/dashboard.yml

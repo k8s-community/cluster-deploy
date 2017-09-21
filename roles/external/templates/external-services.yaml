@@ -1,0 +1,18 @@
+{% for namespace in k8s_namespaces %}
+{% for service in external_services %}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ service.name }}
+  namespace: {{ namespace }}
+spec:
+  externalName: {{ service.host }}
+  ports:
+  - port: {{ service.port }}
+    protocol: TCP
+  type: ExternalName
+
+{% endfor %}
+{% endfor %}

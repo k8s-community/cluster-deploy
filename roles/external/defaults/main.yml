@@ -1,0 +1,14 @@
+---
+# External services which can be outside of k8s cluster
+external_services: {}
+
+# Additional Kubernetes namespaces
+k8s_namespaces:
+  - dev
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+
+# Master hosts nsmes
+k8s_master_hosts: {}

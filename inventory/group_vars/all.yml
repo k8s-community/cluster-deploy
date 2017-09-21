@@ -52,6 +52,15 @@ k8s_namespaces:
 #     port: 43
 #     nodePort: 30043
 
+# External services which can be outside of k8s cluster
+# external_services: {}
+#
+# Example
+# external_services:
+#   - name: elastic
+#     host: elastic.your-domain-name
+#     port: 9200
+
 # Path to the Inventory hosts file
 # It should be auto generated during the crating of VM inctances
 k8s_inventory_file: '{{ inventory_dir }}/{{ k8s_cluster_name }}'
