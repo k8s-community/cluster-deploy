@@ -30,38 +30,6 @@
 - name: Run deploy script for cockroach databases/users
   command: "{{ tmp_dir }}/deploy-k8s-community-user-db.sh"
 
-- name: get charts repository
-  git: 
-    repo: 'https://{{ k8s_charts_repo }}'
-    dest: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
-    force: yes
-
-- name: test charts
-  command: make test
-  args:
-    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
-  environment:
-    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
-    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
-
-- name: push charts
-  shell: >
-    NAMESPACE=default make push
-  args:
-    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
-  environment:
-    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
-    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
-
-- name: deploy charts
-  shell: >
-    helm upgrade charts {{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}/charts -i --wait
-  args:
-    chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/{{ k8s_charts_repo }}'
-  environment:
-    GOPATH: '{{ ansible_env.HOME }}/{{ go_path }}'
-    PATH: $PATH:/usr/bin:{{ go_dir }}/go/bin:{{ ansible_env.HOME }}/{{ go_path }}/bin
-
 - name: get CICD integraton services
   git: 
     repo: 'https://github.com/k8s-community/{{ item }}'
@@ -81,7 +49,7 @@
 
 - name: deploy CICD integraton services
   shell: >
-    NAMESPACE=default make deploy
+    INFRASCTRUCTURE={{ inventory_dir.split('/') | last }} make deploy
   args:
     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
   environment:

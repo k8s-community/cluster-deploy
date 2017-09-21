@@ -1,12 +1,9 @@
 ---
-# Charts server repository
-k8s_charts_repo: github.com/k8s-community/charts
-
 # CICD integration services
 k8s_cicd_services:
   - github-integration
   - user-manager
-  - k8s-community
+  - ui
 
 # CICD repository
 k8s_cicd_repo: github.com/k8s-community/cicd
