@@ -49,3 +49,13 @@ k8s_community_key: |
   -----BEGIN RSA PRIVATE KEY-----
   - Your RSA private key here -
   -----END RSA PRIVATE KEY-----
+
+# SSL certificate and private key for k8s-community code generator
+k8s_codegen_cert: |
+  -----BEGIN CERTIFICATE-----
+  - Your CERTIFICATE here -
+  ------END CERTIFICATE------
+k8s_codegen_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  - Your RSA private key here -
+  -----END RSA PRIVATE KEY-----
