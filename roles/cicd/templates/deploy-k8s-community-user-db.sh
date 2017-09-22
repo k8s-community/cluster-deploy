@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Drop users if they already exist
 function user_rm() {
-  kubectl exec "cockroachdb-${1}" -- /cockroach/cockroach user rm ${2} \
+  kubectl exec -n k8s-community "cockroachdb-${1}" -- /cockroach/cockroach user rm ${2} \
       --host "cockroachdb-${1}.cockroachdb" \
       --insecure
 }
@@ -14,7 +14,7 @@ user_rm 0 {{ k8s_github_integration_db_username }}
 
 # Create database and user with priveleges.
 function sql() {
-  kubectl exec "cockroachdb-${1}" -- /cockroach/cockroach sql \
+  kubectl exec -n k8s-community "cockroachdb-${1}" -- /cockroach/cockroach sql \
       --host "cockroachdb-${1}.cockroachdb" \
       --insecure \
       -e "$(cat /dev/stdin)"
