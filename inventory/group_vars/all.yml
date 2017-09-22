@@ -279,6 +279,16 @@ k8s_github_integration_private_key: |
   - Your RSA private key here -
   -----END RSA PRIVATE KEY-----
 
+# SSL certificate and private key for k8s-community services
+k8s_community_cert: |
+  -----BEGIN CERTIFICATE-----
+  - Your CERTIFICATE here -
+  ------END CERTIFICATE------
+k8s_community_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  - Your RSA private key here -
+  -----END RSA PRIVATE KEY-----
+
 # Docker registry secrets. To get it we should do some strange things, but it needs anyway.
 # First of all, we should prepare access token for `Docker Registry`
 # docker run --rm --entrypoint htpasswd registry:2 -Bbn <user> <password> | base64
