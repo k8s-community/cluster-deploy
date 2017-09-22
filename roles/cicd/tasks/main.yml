@@ -49,7 +49,7 @@
 
 - name: deploy CICD integraton services
   shell: >
-    INFRASёTRUCTURE={{ inventory_dir.split('/') | last }} make deploy
+    INFRASTRUCTURE={{ inventory_dir.split('/') | last }} make deploy
   args:
     chdir: '{{ ansible_env.HOME }}/{{ go_path }}/src/github.com/k8s-community/{{ item }}'
   environment:
