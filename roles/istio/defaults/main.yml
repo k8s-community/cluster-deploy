@@ -5,7 +5,7 @@ k8s_log_level: 3
 k8s_log_spec: ''
 
 # Istio version
-istio_version: 0.2.0
+istio_version: 0.2.5
 
 # Namespace for Istio
 k8s_istio_namespace: istio-system
@@ -30,6 +30,9 @@ tmp_dir: /tmp
 # Master hosts nsmes
 k8s_master_hosts: {}
 
+# Nodes hosts names
+k8s_node_hosts: {}
+
 # Istio images
 k8s_istio_pilot_image: gcr.io/istio-io/pilot
 k8s_istio_pilot_image_tag: '{{ istio_version }}'
@@ -37,6 +40,10 @@ k8s_istio_mixer_image: gcr.io/istio-io/mixer
 k8s_istio_mixer_image_tag: '{{ istio_version }}'
 k8s_istio_proxy_image: gcr.io/istio-io/proxy
 k8s_istio_proxy_image_tag: '{{ istio_version }}'
+k8s_istio_proxy_init_image: gcr.io/istio-io/proxy_init
+k8s_istio_proxy_init_image_tag: '{{ istio_version }}'
+k8s_istio_sidecar_initializer_image: gcr.io/istio-io/sidecar_initializer
+k8s_istio_sidecar_initializer_image_tag: '{{ istio_version }}'
 k8s_istio_ca_image: gcr.io/istio-io/istio-ca
 k8s_istio_ca_image_tag: '{{ istio_version }}'
 
@@ -45,9 +52,9 @@ k8s_istio_prometheus_image: quay.io/coreos/prometheus
 k8s_istio_prometheus_image_tag: v1.1.1
 k8s_istio_prometheus_statsd_exporter_image: prom/statsd-exporter
 k8s_istio_prometheus_statsd_exporter_image_tag: v0.4.0
-k8s_istio_zipkin_image: docker.io/openzipkin/zipkin
-k8s_istio_zipkin_image_tag: 1.30
+k8s_istio_zipkin_image: openzipkin/zipkin
+k8s_istio_zipkin_image_tag: 2.0.1
 k8s_istio_grafana_image: gcr.io/istio-io/grafana
 k8s_istio_grafana_image_tag: '{{ istio_version }}'
-k8s_istio_servicegraph_image: gcr.io/istio-testing/servicegraph
-k8s_istio_servicegraph_image_tag: latest
+k8s_istio_servicegraph_image: gcr.io/istio-io/servicegraph
+k8s_istio_servicegraph_image_tag: '{{ istio_version }}'
