@@ -20,12 +20,12 @@ kind: Deployment
 metadata:
   name: grafana
   namespace: {{ k8s_istio_namespace }}
+  annotations:
+    sidecar.istio.io/inject: "false"
 spec:
   replicas: 1
   template:
     metadata:
-      annotations:
-        alpha.istio.io/sidecar: ignore
       labels:
         app: grafana
     spec:
