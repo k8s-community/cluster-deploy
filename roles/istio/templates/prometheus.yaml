@@ -17,7 +17,7 @@ data:
       # metrics_path defaults to '/metrics'
       # scheme defaults to 'http'.
       static_configs:
-      - targets: ['istio-mixer:42422']
+      - targets: ['istio-mixer.{{ k8s_istio_namespace }}:42422']
 
     - job_name: 'envoy'
       # Override the global default and scrape targets from this job every 5 seconds.
@@ -25,7 +25,7 @@ data:
       # metrics_path defaults to '/metrics'
       # scheme defaults to 'http'.
       static_configs:
-      - targets: ['istio-mixer:9102']
+      - targets: ['istio-mixer.{{ k8s_istio_namespace }}:9102']
 
     - job_name: 'mixer'
       # Override the global default and scrape targets from this job every 5 seconds.
@@ -33,7 +33,7 @@ data:
       # metrics_path defaults to '/metrics'
       # scheme defaults to 'http'.
       static_configs:
-      - targets: ['istio-mixer:9093']
+      - targets: ['istio-mixer.{{ k8s_istio_namespace }}:9093']
 
 ---
 
@@ -61,6 +61,8 @@ kind: Deployment
 metadata:
   name: prometheus
   namespace: {{ k8s_istio_namespace }}
+  annotations:
+    sidecar.istio.io/inject: "false"
 spec:
   replicas: 1
   selector:
@@ -68,8 +70,6 @@ spec:
       app: prometheus
   template:
     metadata:
-      annotations:
-        alpha.istio.io/sidecar: ignore
       name: prometheus
       labels:
         app: prometheus
