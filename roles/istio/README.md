@@ -57,9 +57,14 @@ Executable files path
 k8s_bin_dir: /usr/local/bin
 ```
 
-Master hosts nsmes
+Master hosts names
 ```yaml
 k8s_master_hosts: {}
+```
+
+Node hosts names
+```yaml
+k8s_node_hosts: {}
 ```
 
 Example Playbook

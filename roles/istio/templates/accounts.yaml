@@ -1,13 +1,5 @@
 ---
 
-# istio-system namespace for Istio CA.
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ k8s_istio_namespace }}
-
----
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -48,6 +40,14 @@ metadata:
 
 ---
 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-initializer
+  namespace: {{ k8s_istio_namespace }}
+
+---
+
 # Permissions and roles for istio
 # To debug: start the cluster with -vmodule=rbac,3 to enable verbose logging on RBAC DENY
 # Also helps to enable logging on apiserver 'wrap' to see the URLs.
@@ -75,6 +75,43 @@ rules:
   verbs: ["*"]
 - apiGroups: [""]
   resources: ["namespaces", "nodes", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["externaladmissionhookconfigurations"]
+  verbs: ["create", "update", "delete"]
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: istio-initializer
+rules:
+- apiGroups: ["*"]
+  resources: ["deployments", "statefulsets", "jobs", "cronjobs", "daemonsets", "replicasets", "replicationcontrollers"]
+  verbs: ["initialize", "patch", "watch", "list"]
+- apiGroups: ["*"]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch"]
+
+---
+
+# Mixer CRD needs to watch and list CRDs
+# It also uses discovery API to discover Kinds of config.istio.io
+# K8s adapter needs to list pods, services etc.
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: istio-mixer
+rules:
+- apiGroups: ["config.istio.io"] # Istio CRD watcher
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps", "endpoints", "pods", "services", "namespaces", "secrets"]
   verbs: ["get", "list", "watch"]
 
 ---
@@ -127,15 +164,31 @@ subjects:
 
 ---
 
+# Grant permissions to the Sidecar initializer
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: istio-initializer-admin-role-binding
+roleRef:
+  kind: ClusterRole
+  name: istio-initializer
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: istio-initializer
+  namespace: {{ k8s_istio_namespace }}
+
+---
+
 # Grant permissions to mixer.
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: istio-mixer-role-binding
+  name: istio-mixer-admin-role-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: istio-pilot
+  name: istio-mixer
 subjects:
 - kind: ServiceAccount
   name: istio-mixer
@@ -215,6 +268,8 @@ kind: Deployment
 metadata:
   name: istio-ca
   namespace: {{ k8s_istio_namespace }}
+  annotations:
+    sidecar.istio.io/inject: "false"
 spec:
   replicas: 1
   template:
