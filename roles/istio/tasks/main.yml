@@ -1,5 +1,5 @@
 ---
-- name: Check addons directories
+- name: Check istio directories
   file:
     path: '{{ item }}'
     state: directory
@@ -13,7 +13,7 @@
     dest: '{{ tmp_dir }}'
     remote_src: true
 
-- name: Setup istio
+- name: Setup istio Control
   copy:
     src: '{{ tmp_dir }}/istio-{{ istio_version }}/bin/istioctl'
     dest: '{{ k8s_bin_dir }}/istioctl'
@@ -25,7 +25,9 @@
     src: "{{ item }}"
     dest: "{{ k8s_istio_dir }}/{{ item }}"
   with_items:
+    - config.yaml
     - accounts.yaml
+    - initializer.yaml
     - istio.yaml
     - zipkin.yaml
     - grafana.yaml
