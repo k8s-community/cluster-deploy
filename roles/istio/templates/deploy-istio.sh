@@ -1,11 +1,22 @@
 #!/bin/bash
 
+function deploy_config {
+    if kubectl get namespaces | grep {{ k8s_istio_namespace }} &> /dev/null; then
+        echo "Istio config already exists"
+    else
+        echo "Creating Istio config"
+        kubectl apply -f {{ k8s_istio_dir }}/config.yaml
+    fi
+
+  echo
+}
+
 function deploy_accounts {
     if kubectl get deploy -l istio=istio-ca --namespace={{ k8s_istio_namespace }} | grep istio-ca &> /dev/null; then
         echo "Istio accounts already exists"
     else
         echo "Creating Istio accounts"
-        kubectl apply -f {{ k8s_addons_dir }}/accounts.yaml
+        kubectl apply -f {{ k8s_istio_dir }}/accounts.yaml
     fi
 
   echo
@@ -16,7 +27,7 @@ function deploy_zipkin {
         echo "Zipkin already exists"
     else
         echo "Creating zipkin"
-        kubectl apply -f {{ k8s_addons_dir }}/zipkin.yaml
+        kubectl apply -f {{ k8s_istio_dir }}/zipkin.yaml
     fi
 
   echo
@@ -27,7 +38,7 @@ function deploy_grafana {
         echo "Grafana already exists"
     else
         echo "Creating grafana"
-        kubectl apply -f {{ k8s_addons_dir }}/grafana.yaml
+        kubectl apply -f {{ k8s_istio_dir }}/grafana.yaml
     fi
 
   echo
@@ -38,7 +49,7 @@ function deploy_servicegraph {
         echo "Servicegraph already exists"
     else
         echo "Creating servicegraph"
-        kubectl apply -f {{ k8s_addons_dir }}/servicegraph.yaml
+        kubectl apply -f {{ k8s_istio_dir }}/servicegraph.yaml
     fi
 
   echo
@@ -49,7 +60,7 @@ function deploy_prometheus {
         echo "Prometheus already exists"
     else
         echo "Creating prometheus"
-        kubectl apply -f {{ k8s_addons_dir }}/prometheus.yaml
+        kubectl apply -f {{ k8s_istio_dir }}/prometheus.yaml
     fi
 
   echo
@@ -69,15 +80,28 @@ function deploy_istio {
         echo "Istio already exists"
     else
         echo "Creating Istio"
-        kubectl apply -f {{ k8s_addons_dir }}/istio.yaml
+        kubectl apply -f {{ k8s_istio_dir }}/istio.yaml
     fi
 
   echo
 }
 
+function deploy_initializer {
+    if kubectl get deploy -l istio=istio-initializer --namespace={{ k8s_istio_namespace }} | grep istio-initializer &> /dev/null; then
+        echo "Istio initializer already exists"
+    else
+        echo "Creating Istio initializer"
+        kubectl apply -f {{ k8s_istio_dir }}/initializer.yaml
+    fi
+
+  echo
+}
+
+deploy_config
 deploy_accounts
 deploy_zipkin
 deploy_grafana
 deploy_servicegraph
 deploy_prometheus
 deploy_istio
+deploy_initializer
