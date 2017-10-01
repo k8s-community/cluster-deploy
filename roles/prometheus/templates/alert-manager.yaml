@@ -1,0 +1,168 @@
+---
+# Source: prometheus/templates/alertmanager-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+data:
+  alertmanager.yml: |-
+    global:
+       slack_api_url: '{{ prometheus_slack_api_url }}'
+
+    receivers:
+      - name: default-receiver
+        slack_configs:
+          - channel: '{{ prometheus_slack_channel }}'
+            send_resolved: true
+
+    route:
+      group_wait: 10s
+      group_interval: 5m
+      receiver: default-receiver
+      repeat_interval: 3h
+---
+# Source: prometheus/templates/alertmanager-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+---
+# Source: prometheus/templates/alertmanager-clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-alertmanager
+    namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+---
+# Source: prometheus/templates/alertmanager-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9093
+  selector:
+    app: prometheus
+    component: "alertmanager"
+  type: "ClusterIP"
+---
+# Source: prometheus/templates/alertmanager-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "alertmanager"
+    spec:
+      serviceAccountName: prometheus-alertmanager
+      containers:
+        - name: prometheus-alertmanager
+          image: "{{ k8s_prometheus_alertmanager_image }}:{{ k8s_prometheus_alertmanager_image_tag }}"
+          imagePullPolicy: "IfNotPresent"
+          env:
+          args:
+            - --config.file=/etc/config/alertmanager.yml
+            - --storage.path=/data
+          ports:
+            - containerPort: 9093
+          readinessProbe:
+            httpGet:
+              path: /#/status
+              port: 9093
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            {}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: "/data"
+              subPath: ""
+        - name: prometheus-alertmanager-configmap-reload
+          image: "{{ k8s_prometheus_configreload_image }}:{{ k8s_prometheus_configreload_image_tag }}"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://localhost:9093/-/reload
+          resources:
+            {}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-alertmanager
+        - name: storage-volume
+          emptyDir: {}
+{% if k8s_prometheus_alertmanager_name is defined %}
+---
+# Source: prometheus/templates/alertmanager-ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+spec:
+  rules:
+    - host: {{ k8s_prometheus_alertmanager_name }}
+      http:
+        paths:
+          - backend:
+              serviceName: prometheus-alertmanager
+              servicePort: 80
+  tls:
+    - hosts:
+      - {{ k8s_prometheus_alertmanager_name }}
+      secretName: tls-secret
+{% endif %}
+

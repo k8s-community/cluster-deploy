@@ -1,0 +1,116 @@
+---
+# Source: prometheus/templates/kube-state-metrics-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "kube-state-metrics"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-kube-state-metrics
+---
+# Source: prometheus/templates/kube-state-metrics-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "kube-state-metrics"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-kube-state-metrics
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - pods
+      - services
+      - resourcequotas
+      - replicationcontrollers
+      - limitranges
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+      - deployments
+      - replicasets
+    verbs:
+      - list
+      - watch
+---
+# Source: prometheus/templates/kube-state-metrics-clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "kube-state-metrics"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-kube-state-metrics
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-state-metrics
+    namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-state-metrics
+---
+# Source: prometheus/templates/kube-state-metrics-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "kube-state-metrics"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-kube-state-metrics
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: prometheus
+    component: "kube-state-metrics"
+  type: "ClusterIP"
+---
+# Source: prometheus/templates/kube-state-metrics-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    release: prometheus-{{ k8s_prometheus_image_tag }}
+    component: "kube-state-metrics"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-kube-state-metrics
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "kube-state-metrics"
+    spec:
+      serviceAccountName: prometheus-kube-state-metrics
+      containers:
+        - name: prometheus-kube-state-metrics
+          image: "{{ k8s_prometheus_ksm_image }}:{{ k8s_prometheus_ksm_image_tag }}"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - name: metrics
+              containerPort: 8080
+          resources:
+            {}

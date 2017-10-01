@@ -1,23 +1,35 @@
---
-# Source: prometheus/templates/server-configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app: prometheus
-    chart: prometheus-4.5.0
-    component: "server"
-    heritage: Tiller
-    release: yummy-crab
-  name: yummy-crab-prometheus-server
-data:
-  alerts: ""
-  prometheus.yml: |-
-    rule_files:
-      - /etc/config/rules
-      - /etc/config/alerts
+      - job_name: kubernetes-nodes-cadvisor
+        scrape_interval: 10s
+        scrape_timeout: 10s
+        scheme: https  # remove if you want to scrape metrics on insecure port
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          # Only for Kubernetes ^1.7.3.
+          # See: https://github.com/prometheus/prometheus/issues/2916
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+        metric_relabel_configs:
+          - action: replace
+            source_labels: [id]
+            regex: '^/machine\.slice/machine-rkt\\x2d([^\\]+)\\.+/([^/]+)\.service$'
+            target_label: rkt_container_name
+            replacement: '${2}-${1}'
+          - action: replace
+            source_labels: [id]
+            regex: '^/system\.slice/(.+)\.service$'
+            target_label: systemd_service_name
+            replacement: '${1}'
 
-    scrape_configs:
       - job_name: prometheus
         static_configs:
           - targets:
@@ -149,17 +161,6 @@ data:
             action: replace
             target_label: kubernetes_name
 
-      - job_name: 'prometheus-pushgateway'
-        honor_labels: true
-
-        kubernetes_sd_configs:
-          - role: service
-
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
-            action: keep
-            regex: pushgateway
-
       # Example scrape config for probing services via the Blackbox Exporter.
       #
       # The relabeling allows the actual service scrape endpoint to be configured
@@ -226,123 +227,14 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
-  rules: ""
----
-# Source: prometheus/templates/server-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: prometheus
-    chart: prometheus-4.5.0
-    component: "server"
-    heritage: Tiller
-    release: yummy-crab
-  name: yummy-crab-prometheus-server
-spec:
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: 9090
-  selector:
-    app: prometheus
-    component: "server"
-    release: yummy-crab
-  type: "ClusterIP"
----
-# Source: prometheus/templates/server-deployment.yaml
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  labels:
-    app: prometheus
-    chart: prometheus-4.5.0
-    component: "server"
-    heritage: Tiller
-    release: yummy-crab
-  name: yummy-crab-prometheus-server
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: prometheus
-        component: "server"
-        release: yummy-crab
-    spec:
-      serviceAccountName: "default"
-      containers:
-        - name: prometheus-server-configmap-reload
-          image: "jimmidyson/configmap-reload:v0.1"
-          imagePullPolicy: "IfNotPresent"
-          args:
-            - --volume-dir=/etc/config
-            - --webhook-url=http://localhost:9090/-/reload
-          resources:
-            {}
 
-          volumeMounts:
-            - name: config-volume
-              mountPath: /etc/config
-              readOnly: true
+      - job_name: 'prometheus-pushgateway'
+        honor_labels: true
 
-        - name: prometheus-server
-          image: "prom/prometheus:v1.5.2"
-          imagePullPolicy: "IfNotPresent"
-          args:
-            - --config.file=/etc/config/prometheus.yml
-            - --storage.local.path=/data
-            - --web.console.libraries=/etc/prometheus/console_libraries
-            - --web.console.templates=/etc/prometheus/consoles
-          ports:
-            - containerPort: 9090
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 9090
-            initialDelaySeconds: 30
-            timeoutSeconds: 30
-          resources:
-            {}
+        kubernetes_sd_configs:
+          - role: service
 
-          volumeMounts:
-            - name: config-volume
-              mountPath: /etc/config
-            - name: storage-volume
-              mountPath: /data
-              subPath: ""
-      terminationGracePeriodSeconds: 300
-      volumes:
-        - name: config-volume
-          configMap:
-            name: yummy-crab-prometheus-server
-        - name: storage-volume
-          emptyDir: {}
----
-# Source: prometheus/templates/server-ingress.yaml
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  labels:
-    app: prometheus
-    chart: prometheus-4.5.0
-    component: "server"
-    heritage: Tiller
-    release: yummy-crab
-  name: yummy-crab-prometheus-server
-spec:
-  tls:
-  - hosts:
-    - pr.vsaveliev.com
-    secretName: tls-secret
-  rules:
-  - host: pr.vsaveliev.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: yummy-crab-prometheus-server
-          servicePort: 80
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
+            action: keep
+            regex: pushgateway
