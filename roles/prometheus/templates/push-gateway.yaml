@@ -55,7 +55,7 @@ spec:
             timeoutSeconds: 10
           resources:
             {}
-{% if k8s_prometheus_pushgateway_name is defined %}
+{% if k8s_prometheus_pushgateway_name is defined and k8s_prometheus_pushgateway_name != '' %}
 ---
 # Source: prometheus/templates/pushgateway-ingress.yaml
 apiVersion: extensions/v1beta1

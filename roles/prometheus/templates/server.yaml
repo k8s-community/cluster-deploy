@@ -177,7 +177,7 @@ spec:
             name: prometheus-server
         - name: storage-volume
           emptyDir: {}
-{% if k8s_prometheus_name is defined %}
+{% if k8s_prometheus_name is defined and k8s_prometheus_name != '' %}
 ---
 # Source: prometheus/templates/server-ingress.yaml
 apiVersion: extensions/v1beta1
