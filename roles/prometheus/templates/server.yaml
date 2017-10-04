@@ -21,7 +21,7 @@ data:
 
     # A list of scrape configurations.
     scrape_configs:
-{% include 'scrape_configs/common.yml' %}
+{% include 'scrape_configs/kubernetes.yml' %}
 
 ---
 # Source: prometheus/templates/server-serviceaccount.yaml
