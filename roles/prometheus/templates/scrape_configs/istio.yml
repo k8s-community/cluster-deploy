@@ -1,4 +1,5 @@
       # Scrape configuration for istio services - mesh, envoy, mixer
+      #
       - job_name: 'istio-mesh'
         # Override the global default and scrape targets from this job every 5 seconds.
         scrape_interval: 5s

@@ -154,7 +154,7 @@
             action: replace
             target_label: kubernetes_name
 
-      # Example scrape config for pods
+      # Scrape config for pods
       #
       # The relabeling allows the actual pod scrape endpoint to be configured via the
       # following annotations:

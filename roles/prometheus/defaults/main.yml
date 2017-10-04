@@ -6,7 +6,7 @@ k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 # Master hosts names
 k8s_master_hosts: {}
 
-# Prometheus domains (for Prometheus, AlertManager, PushGateway)
+# Prometheus host names (for Prometheus, AlertManager, PushGateway)
 k8s_prometheus_name: ''
 k8s_prometheus_alertmanager_name: ''
 k8s_prometheus_pushgateway_name: ''

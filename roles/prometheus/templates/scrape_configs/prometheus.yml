@@ -1,4 +1,5 @@
       # A scrape configuration for monitoring itself
+      #
       - job_name: prometheus
         static_configs:
           - targets:
