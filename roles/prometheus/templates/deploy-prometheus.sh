@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: add deploy function(-s)
-
 function deploy_prometheus {
    if kubectl get deploy -l k8s-app=prometheus | grep prometheus &> /dev/null; then
        echo "Prometheus already exists"
