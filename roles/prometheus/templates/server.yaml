@@ -21,6 +21,8 @@ data:
 
     # A list of scrape configurations.
     scrape_configs:
+{% include 'scrape_configs/prometheus.yml' %}
+
 {% include 'scrape_configs/kubernetes.yml' %}
 
 ---

@@ -30,11 +30,6 @@
             target_label: systemd_service_name
             replacement: '${1}'
 
-      - job_name: prometheus
-        static_configs:
-          - targets:
-            - localhost:9090
-
       # A scrape configuration for running Prometheus on a Kubernetes cluster.
       # This uses separate scrape configs for cluster components (i.e. API server, node)
       # and services to allow each to use different authentication configs.
@@ -227,14 +222,3 @@
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
-
-      - job_name: 'prometheus-pushgateway'
-        honor_labels: true
-
-        kubernetes_sd_configs:
-          - role: service
-
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
-            action: keep
-            regex: pushgateway
