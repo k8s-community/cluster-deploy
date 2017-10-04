@@ -1,3 +1,6 @@
+      # A scrape configuration for running Kubernetes pods.
+      #
+      # cAdvisor collects metrics from running pods in Prometheus format
       - job_name: kubernetes-nodes-cadvisor
         scrape_interval: 10s
         scrape_timeout: 10s
@@ -29,13 +32,6 @@
             regex: '^/system\.slice/(.+)\.service$'
             target_label: systemd_service_name
             replacement: '${1}'
-
-      # A scrape configuration for running Prometheus on a Kubernetes cluster.
-      # This uses separate scrape configs for cluster components (i.e. API server, node)
-      # and services to allow each to use different authentication configs.
-      #
-      # Kubernetes labels will be added as Prometheus labels on metrics via the
-      # `labelmap` relabeling action.
 
       # Scrape config for API servers.
       #
@@ -78,6 +74,8 @@
             action: keep
             regex: default;kubernetes;https
 
+      # A scrape configuration for running Kubernetes nodes.
+      #
       - job_name: 'kubernetes-nodes'
 
         # Default to scraping over https. If required, just disable this or change to
@@ -154,38 +152,6 @@
             target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: kubernetes_name
-
-      # Example scrape config for probing services via the Blackbox Exporter.
-      #
-      # The relabeling allows the actual service scrape endpoint to be configured
-      # via the following annotations:
-      #
-      # * `prometheus.io/probe`: Only probe services that have a value of `true`
-      - job_name: 'kubernetes-services'
-
-        metrics_path: /probe
-        params:
-          module: [http_2xx]
-
-        kubernetes_sd_configs:
-          - role: service
-
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
-            action: keep
-            regex: true
-          - source_labels: [__address__]
-            target_label: __param_target
-          - target_label: __address__
-            replacement: blackbox
-          - source_labels: [__param_target]
-            target_label: instance
-          - action: labelmap
-            regex: __meta_kubernetes_service_label_(.+)
-          - source_labels: [__meta_kubernetes_namespace]
-            target_label: kubernetes_namespace
-          - source_labels: [__meta_kubernetes_service_name]
             target_label: kubernetes_name
 
       # Example scrape config for pods
