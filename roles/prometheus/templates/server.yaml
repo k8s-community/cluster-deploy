@@ -25,6 +25,8 @@ data:
 
 {% include 'scrape_configs/kubernetes.yml' %}
 
+{% include 'scrape_configs/istio.yml' %}
+
 ---
 # Source: prometheus/templates/server-serviceaccount.yaml
 apiVersion: v1
