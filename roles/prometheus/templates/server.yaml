@@ -152,7 +152,6 @@ spec:
           image: "{{ k8s_prometheus_image }}:{{ k8s_prometheus_image_tag }}"
           imagePullPolicy: "IfNotPresent"
           args:
-# TODO: DNS name
             - --alertmanager.url=http://prometheus-alertmanager:80
             - --config.file=/etc/config/prometheus.yml
             - --storage.local.path=/data

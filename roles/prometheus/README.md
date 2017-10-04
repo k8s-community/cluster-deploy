@@ -1,38 +1,62 @@
-Role Name
+Prometheus role
 =========
 
-A brief description of the role goes here.
+This role installs Prometheus for Kubernetes cluster (endpoints, pods, nodes, istio, ...)
+
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+No special requirements.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Dependencies
-------------
+Prometheus version:
+```yaml
+k8s_prometheus_image_tag: v1.5.1
+```
+Domain name for prometheus (if it's empty so ingress object isn't created):
+```yaml
+k8s_prometheus_name: ''
+```
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Domain name for prometheus alert manager (if it's empty so ingress isn't created):
+```yaml
+k8s_prometheus_alertmanager_name: ''
+```
+
+Domain name for prometheus push gateway (if it's empty so ingress isn't created):
+```yaml
+k8s_prometheus_pushgateway_name: ''
+```
+
+New alerts
+--------------
+
+New alerts can be added in templates/alerts directory.
+
+New scrape configs
+--------------
+
+New scrape configs can be added in templates/scrape_configs directory.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+    - hosts: addons
       roles:
-         - { role: username.rolename, x: 42 }
+        - prometheus
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Kubernets Community [k8s-community](https://github.com/k8s-community)
