@@ -11,15 +11,18 @@ k8s_prometheus_name: ''
 k8s_prometheus_alertmanager_name: ''
 k8s_prometheus_pushgateway_name: ''
 
+# Prometheus namespace
+k8s_prometheus_namespace: default
+
 # Prometheus images
 k8s_prometheus_image: prom/prometheus
-k8s_prometheus_image_tag: v1.5.1
+k8s_prometheus_image_tag: v1.7.2
 k8s_prometheus_alertmanager_image: prom/alertmanager
-k8s_prometheus_alertmanager_image_tag: v0.5.1
+k8s_prometheus_alertmanager_image_tag: v0.9.1
 k8s_prometheus_ksm_image: gcr.io/google_containers/kube-state-metrics
-k8s_prometheus_ksm_image_tag: v0.4.1
+k8s_prometheus_ksm_image_tag: v1.0.1
 k8s_prometheus_nodeexport_image: prom/node-exporter
-k8s_prometheus_nodeexport_image_tag: v0.13.0
+k8s_prometheus_nodeexport_image_tag: v0.14.0
 k8s_prometheus_pushgateway_image: prom/pushgateway
 k8s_prometheus_pushgateway_image_tag: v0.4.0
 
