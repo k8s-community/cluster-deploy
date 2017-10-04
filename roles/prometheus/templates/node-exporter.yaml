@@ -1,4 +1,5 @@
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -8,7 +9,9 @@ metadata:
     component: "node-exporter"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-node-exporter
+
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -25,7 +28,9 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -45,7 +50,9 @@ spec:
   selector:
     app: prometheus
     component: "node-exporter"
+
 ---
+
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:

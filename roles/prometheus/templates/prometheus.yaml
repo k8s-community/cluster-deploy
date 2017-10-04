@@ -1,5 +1,13 @@
 {% include 'server.yaml' %}
+
+
 {% include 'alert-manager.yaml' %}
+
+
 {% include 'node-exporter.yaml' %}
+
+
 {% include 'push-gateway.yaml' %}
+
+
 {% include 'kube-state-metrics.yaml' %}

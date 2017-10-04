@@ -1,4 +1,5 @@
 ---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -27,6 +28,7 @@ data:
 {% include 'scrape_configs/istio.yml' %}
 
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -38,6 +40,7 @@ metadata:
   name: prometheus-server
 
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -71,6 +74,7 @@ rules:
       - get
 
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -89,6 +93,7 @@ roleRef:
   name: prometheus-server
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -110,7 +115,7 @@ spec:
   type: "ClusterIP"
 
 ---
-# Source: prometheus/templates/server-deployment.yaml
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -170,9 +175,10 @@ spec:
             name: prometheus-server
         - name: storage-volume
           emptyDir: {}
+
 {% if k8s_prometheus_name is defined and k8s_prometheus_name != '' %}
 ---
-# Source: prometheus/templates/server-ingress.yaml
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
