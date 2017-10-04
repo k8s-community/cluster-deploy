@@ -1,5 +1,4 @@
 ---
-# Source: prometheus/templates/node-exporter-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -10,7 +9,6 @@ metadata:
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-node-exporter
 ---
-# Source: prometheus/templates/node-exporter-clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -28,7 +26,6 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 ---
-# Source: prometheus/templates/node-exporter-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -49,7 +46,6 @@ spec:
     app: prometheus
     component: "node-exporter"
 ---
-# Source: prometheus/templates/node-exporter-daemonset.yaml
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:

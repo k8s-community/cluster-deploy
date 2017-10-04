@@ -1,5 +1,4 @@
 ---
-# Source: prometheus/templates/kube-state-metrics-serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -10,7 +9,6 @@ metadata:
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-kube-state-metrics
 ---
-# Source: prometheus/templates/kube-state-metrics-clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -43,7 +41,6 @@ rules:
       - list
       - watch
 ---
-# Source: prometheus/templates/kube-state-metrics-clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -61,7 +58,6 @@ roleRef:
   kind: ClusterRole
   name: prometheus-kube-state-metrics
 ---
-# Source: prometheus/templates/kube-state-metrics-svc.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -85,7 +81,6 @@ spec:
     component: "kube-state-metrics"
   type: "ClusterIP"
 ---
-# Source: prometheus/templates/kube-state-metrics-deployment.yaml
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
