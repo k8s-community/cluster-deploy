@@ -44,7 +44,6 @@ spec:
         - name: prometheus-pushgateway
           image: "{{ k8s_prometheus_pushgateway_image }}:{{ k8s_prometheus_pushgateway_image_tag }}"
           imagePullPolicy: "IfNotPresent"
-          args:
           ports:
             - containerPort: 9091
           readinessProbe:
@@ -53,8 +52,6 @@ spec:
               port: 9091
             initialDelaySeconds: 10
             timeoutSeconds: 10
-          resources:
-            {}
 {% if k8s_prometheus_pushgateway_name is defined and k8s_prometheus_pushgateway_name != '' %}
 ---
 # Source: prometheus/templates/pushgateway-ingress.yaml

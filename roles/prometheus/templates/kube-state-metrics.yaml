@@ -51,12 +51,11 @@ metadata:
     app: prometheus
     release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "kube-state-metrics"
-  namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-kube-state-metrics
 subjects:
   - kind: ServiceAccount
     name: prometheus-kube-state-metrics
-    namespace: default
+    namespace: {{ k8s_prometheus_namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -112,5 +111,3 @@ spec:
           ports:
             - name: metrics
               containerPort: 8080
-          resources:
-            {}

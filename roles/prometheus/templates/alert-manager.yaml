@@ -48,12 +48,11 @@ metadata:
     app: prometheus
     release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
-  namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-alertmanager
 subjects:
   - kind: ServiceAccount
     name: prometheus-alertmanager
-    namespace: default
+    namespace: {{ k8s_prometheus_namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -103,7 +102,6 @@ spec:
         - name: prometheus-alertmanager
           image: "{{ k8s_prometheus_alertmanager_image }}:{{ k8s_prometheus_alertmanager_image_tag }}"
           imagePullPolicy: "IfNotPresent"
-          env:
           args:
             - --config.file=/etc/config/alertmanager.yml
             - --storage.path=/data
@@ -129,8 +127,6 @@ spec:
           args:
             - --volume-dir=/etc/config
             - --webhook-url=http://localhost:9093/-/reload
-          resources:
-            {}
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config

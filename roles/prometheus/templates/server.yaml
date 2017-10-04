@@ -82,7 +82,6 @@ metadata:
     app: prometheus
     release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
-  namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
 subjects:
   - kind: ServiceAccount
@@ -142,8 +141,6 @@ spec:
           args:
             - --volume-dir=/etc/config
             - --webhook-url=http://localhost:9090/-/reload
-          resources:
-            {}
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
@@ -165,8 +162,6 @@ spec:
               port: 9090
             initialDelaySeconds: 30
             timeoutSeconds: 30
-          resources:
-            {}
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
