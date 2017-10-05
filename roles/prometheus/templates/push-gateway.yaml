@@ -53,6 +53,13 @@ spec:
               port: 9091
             initialDelaySeconds: 10
             timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 10m
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
 
 {% if k8s_prometheus_pushgateway_name is defined and k8s_prometheus_pushgateway_name != '' %}
 ---

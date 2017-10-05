@@ -168,6 +168,13 @@ spec:
             - name: storage-volume
               mountPath: /data
               subPath: ""
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
       terminationGracePeriodSeconds: 300
       volumes:
         - name: config-volume

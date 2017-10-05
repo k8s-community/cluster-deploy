@@ -91,6 +91,13 @@ spec:
             - name: sys
               mountPath: /host/sys
               readOnly: true
+          resources:
+            limits:
+              cpu: 200m
+              memory: 50Mi
+            requests:
+              cpu: 100m
+              memory: 30Mi
       hostNetwork: true
       hostPID: true
       volumes:
