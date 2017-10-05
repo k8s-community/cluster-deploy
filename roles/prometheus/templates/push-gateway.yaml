@@ -80,5 +80,5 @@ spec:
     - hosts:
       - {{ k8s_prometheus_pushgateway_name }}
       secretName: tls-secret
-{% endif %}
 
+{% endif %}

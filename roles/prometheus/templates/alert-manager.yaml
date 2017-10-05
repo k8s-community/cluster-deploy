@@ -99,6 +99,7 @@ spec:
     metadata:
       labels:
         app: prometheus
+        release: prometheus-{{ k8s_prometheus_image_tag }}
         component: "alertmanager"
     spec:
       serviceAccountName: prometheus-alertmanager

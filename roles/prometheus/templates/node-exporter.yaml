@@ -36,6 +36,8 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/scrape: "true"
+  labels:
+    app: prometheus
     release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "node-exporter"
   namespace: {{ k8s_prometheus_namespace }}
@@ -67,6 +69,7 @@ spec:
     metadata:
       labels:
         app: prometheus
+        release: prometheus-{{ k8s_prometheus_image_tag }}
         component: "node-exporter"
     spec:
       serviceAccountName: prometheus-node-exporter
