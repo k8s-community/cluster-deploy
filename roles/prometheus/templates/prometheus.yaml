@@ -11,3 +11,6 @@
 
 
 {% include 'kube-state-metrics.yaml' %}
+
+
+{% include 'grafana.yaml' %}

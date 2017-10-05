@@ -6,10 +6,11 @@ k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 # Master hosts names
 k8s_master_hosts: {}
 
-# Prometheus host names (for Prometheus, AlertManager, PushGateway)
+# Prometheus host names (for Prometheus, AlertManager, PushGateway, Grafana)
 k8s_prometheus_name: ''
 k8s_prometheus_alertmanager_name: ''
 k8s_prometheus_pushgateway_name: ''
+k8s_prometheus_grafana_name: ''
 
 # Prometheus namespace
 k8s_prometheus_namespace: default
@@ -25,6 +26,8 @@ k8s_prometheus_nodeexport_image: prom/node-exporter
 k8s_prometheus_nodeexport_image_tag: v0.14.0
 k8s_prometheus_pushgateway_image: prom/pushgateway
 k8s_prometheus_pushgateway_image_tag: v0.4.0
+k8s_prometheus_grafana_image: grafana/grafana
+k8s_prometheus_grafana_image_tag: 4.5.2
 
 # Prometheus additional images
 k8s_prometheus_configreload_image: jimmidyson/configmap-reload
