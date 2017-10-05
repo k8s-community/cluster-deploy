@@ -113,6 +113,7 @@ k8s_registry_name: registry.your-domain-name
 # Prometheus host names
 k8s_prometheus_name: prometheus.your-domain-name
 k8s_prometheus_alertmanager_name: alertmanager.your-domain-name
+k8s_prometheus_grafana_name: grafana.your-domain-name
 
 # Charts server repository
 # k8s_charts_repo: github.com/k8s-community/charts
