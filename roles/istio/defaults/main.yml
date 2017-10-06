@@ -5,7 +5,7 @@ k8s_log_level: 3
 k8s_log_spec: ''
 
 # Istio version
-istio_version: 0.2.6
+istio_version: 0.2.7
 
 # Namespace for Istio
 k8s_istio_namespace: istio-system
