@@ -199,7 +199,7 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
           - discovery
-          - --domain={{ k8s_istio_namespace }}.svc.{{ k8s_cluster_domain }}
+          - --domain={{ k8s_cluster_domain }}
           - --admission-service
           - istio-pilot-external
           - -v
