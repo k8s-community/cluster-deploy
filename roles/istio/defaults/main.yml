@@ -7,6 +7,9 @@ k8s_log_spec: ''
 # Istio version
 istio_version: 0.2.7
 
+# Switch using of auth policy
+k8s_istio_auth: false
+
 # Namespace for Istio
 k8s_istio_namespace: istio-system
 
