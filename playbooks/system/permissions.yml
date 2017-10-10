@@ -5,6 +5,7 @@
     - build
     - master_lb
     - node_lb
+    - gateway_lb
   remote_user: root
 
   tasks:
