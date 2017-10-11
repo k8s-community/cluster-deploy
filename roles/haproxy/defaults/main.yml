@@ -8,7 +8,7 @@ haproxy_check_rise: 3
 haproxy_check_fall: 3
 
 # HAProxy services
-# List of services which use TCP connections on k8s nodes and LB
+# List of services which use TCP LB
 haproxy_services: {}
 # Example:
 #  - name: node-80

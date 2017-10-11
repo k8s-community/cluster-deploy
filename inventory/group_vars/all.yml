@@ -42,15 +42,53 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 k8s_namespaces:
   - dev
 
-# TCP services
-# List of services which use TCP connections on k8s nodes and LB
-# tcp_services: {}
-#
+# On-prem LB services
+# List of services which use TCP LB for k8s masters/nodes
+# master_services: {}
+# node_services: {}
+# gateway_services: {}
+
 # Example
-# tcp_services:
+# node_services:
 #   - name: whoisd
 #     port: 43
 #     nodePort: 30043
+
+master_services:
+  - name: master-80
+    port: 80
+    httpRedirect: true
+  - name: master-443
+    port: 443
+    nodePort: 443
+    httpCheck:
+      path: /healthz
+      status: 401
+    sslProxy: true
+
+node_services:
+  - name: node-80
+    port: 80
+    nodePort: 80
+    httpCheck:
+      path: /healthz
+      status: 200
+  - name: node-443
+    port: 443
+    nodePort: 443
+    httpCheck:
+      path: /healthz
+      status: 200
+    sslProxy: true
+
+gateway_services:
+  - name: istio-80
+    port: 80
+    nodePort: 30080
+  - name: istio-443
+    port: 443
+    nodePort: 30443
+    sslProxy: true
 
 # External services which can be outside of k8s cluster
 # external_services: {}

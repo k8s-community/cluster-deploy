@@ -17,41 +17,45 @@ Role Variables
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 
-Redirect HTTP to HTTPS
+HAProxy port used for stats
 ```yaml
-haproxy_redirect_http: true
-```
-
-HAProxy ports which allow network traffic
-```yaml
-haproxy_http_port: 80
-haproxy_https_port: 443
 haproxy_stats_port: 7111
 ```
 
-TCP services
+HAProxy check attributes
+```yaml
+haproxy_check_interval: 5000
+haproxy_check_rise: 3
+haproxy_check_fall: 3
+```
+
+HAProxy services
 List of services which use TCP connections on k8s nodes and LB
 ```yaml
-tcp_services: {}
+haproxy_services: {}
 ```
 
 Example
 ```yaml
-tcp_services:
+haproxy_services:
+  - name: node-80
+    port: 80
+    httpRedirect: true
+  - name: node-443
+    port: 443
+    nodePort: 443
+    httpCheck:
+      path: /healthz
+      status: 200
+    sslProxy: true
   - name: whoisd
     port: 43
     nodePort: 30043
 ```
 
-HTTP and HTTPS check statuses
-```yaml
-haproxy_http_check_status: 200
-haproxy_https_check_status: 401
-```
-
 Hosts names
 ```yaml
-k8s_hosts: {}
+haproxy_hosts: {}
 ```
 
 SSL dir for haproxy 
