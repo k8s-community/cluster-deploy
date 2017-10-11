@@ -3,10 +3,10 @@
   remote_user: '{{ k8s_ssh_user }}'
   become: true
 
-- hosts: node_lb
+- hosts: gateway_lb
   remote_user: '{{ k8s_ssh_user }}'
   become: true
   roles:
     - role: haproxy
       haproxy_hosts: '{{ groups["node"] }}'
-      haproxy_services: '{{ node_services }}'
+      haproxy_services: '{{ gateway_services }}'

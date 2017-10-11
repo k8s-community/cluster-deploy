@@ -25,36 +25,22 @@ defaults
     timeout server 50s
     timeout tunnel 1h        # to use with WebSocket
 
-listen kubernetes-80
-    bind *:{{ haproxy_http_port }}
-{% if haproxy_redirect_http %}
+{% for item in haproxy_services %}
+listen {{ item.name }}
+    bind *:{{ item.port }}
+{% if item.httpRedirect is defined and item.httpRedirect %}
     mode http
     redirect scheme https
 {% else %}
-    option httpchk GET /healthz
-    http-check expect status {{ haproxy_http_check_status }}
-    default-server inter 5000 rise 3 fall 2
-{% for host in k8s_hosts %}
-    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_http_port }} check
+{% if item.httpCheck is defined %}
+    option httpchk GET {{ item.httpCheck.path }}
+    http-check expect status {{ item.httpCheck.status }}
+{% endif %}
+    default-server inter {{ haproxy_check_interval }} rise {{ haproxy_check_rise }} fall {{ haproxy_check_fall }}
+{% for host in haproxy_hosts %}
+    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ item.nodePort }}{% if item.sslProxy is defined and item.sslProxy %} verify none check-ssl{% endif %} check
 {% endfor %}
 {% endif %}
-
-listen kubernetes-443
-    bind *:{{ haproxy_https_port }}
-    option httpchk GET /healthz
-    http-check expect status {{ haproxy_https_check_status }}
-    default-server inter 5000 rise 3 fall 2
-{% for host in k8s_hosts %}
-    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_https_port }} verify none check check-ssl
-{% endfor %}
-
-{% for item in tcp_services %}
-listen kubernetes-{{ item.name }}
-    bind *:{{ item.port }}
-    default-server inter 5000 rise 3 fall 2
-{% for host in k8s_hosts %}
-    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ item.nodePort }} check
-{% endfor %}
 
 {% endfor %}
 listen stats 

@@ -5,6 +5,7 @@
     - build
     - master_lb
     - node_lb
+    - gateway_lb
   remote_user: '{{ k8s_ssh_user }}'
   become: true
   vars:
@@ -21,9 +22,11 @@
       - 4194/tcp      # cAdvisor port
     flannel_ports:
       - 8472/udp      # flannel network
-    enabled_services:
+    lb_services:
       - http
       - https
+    lb_ports:
+      - 43/tcp
     disabled_services:
       - ssh
  
@@ -36,6 +39,7 @@
       build_ipv4: "{{ groups['build']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
       mts_lb_ipv4: "{{ groups['master_lb']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
       nds_lb_ipv4: "{{ groups['node_lb']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
+      gw_lb_ipv4: "{{ groups['gateway_lb']|map('extract', hostvars, 'ansible_default_ipv4')|map(attribute='address')|list }}"
 
   - name: Setup firewall cluster trusted zone master ports
     firewalld:
@@ -105,8 +109,20 @@
       state: enabled
       permanent: true
     with_items:
-      - '{{ enabled_services }}'
-    when: inventory_hostname in groups['master_lb']
+      - '{{ lb_services }}'
+    when: inventory_hostname in groups['master_lb'] or inventory_hostname in groups['node_lb']
+    notify:
+      - reload firewall
+
+  - name: Enable firewall node lb external zone ports
+    firewalld:
+      zone: external
+      port: "{{ item }}"
+      state: enabled
+      permanent: true
+    with_items:
+      - '{{ lb_ports }}'
+    when: inventory_hostname in groups['node_lb']
     notify:
       - reload firewall
 
@@ -119,32 +135,32 @@
     with_items:
       - '{{ nds_ipv4 }}'
       - '{{ build_ipv4 }}'
-    when: inventory_hostname in groups['master_lb']
+    when: inventory_hostname in groups['master_lb'] or inventory_hostname in groups['node_lb']
     notify:
       - reload firewall
 
-  - name: Setup firewall node lb external zone sources
+  - name: Enable firewall external zone master ports
     firewalld:
       zone: external
-      source: "{{ item }}"
+      port: "{{ item.nodePort }}"
       state: enabled
       permanent: true
+    when: inventory_hostname in groups['master'] and item.nodePort is defined
     with_items:
-      - '{{ nds_ipv4 }}'
-      - '{{ build_ipv4 }}'
-    when: inventory_hostname in groups['node_lb']
+      - '{{ master_services }}'
     notify:
       - reload firewall
 
-  - name: Enable firewall external zone services
+  - name: Enable firewall external zone node ports
     firewalld:
       zone: external
-      service: "{{ item }}"
+      port: "{{ item.nodePort }}"
       state: enabled
       permanent: true
+    when: inventory_hostname in groups['node'] and item.nodePort is defined
     with_items:
-      - '{{ enabled_services }}'
-    when: inventory_hostname in groups['master'] or inventory_hostname in groups['node']
+      - '{{ node_services }}'
+      - '{{ gateway_services }}'
     notify:
       - reload firewall
 
@@ -180,6 +196,7 @@
       permanent: true
     with_items:
       - '{{ nds_lb_ipv4 }}'
+      - '{{ gw_lb_ipv4 }}'
     when: inventory_hostname in groups['node']
     notify:
       - reload firewall
