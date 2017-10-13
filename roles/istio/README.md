@@ -26,9 +26,14 @@ Use to increase verbosity on particular files, e.g. k8s_log_spec=token_controlle
 k8s_log_spec: ''
 ```
 
+Switch using of auth policy
+```yaml
+k8s_istio_auth: false
+```
+
 Istio version
 ```yaml
-istio_version: 0.2.0
+istio_version: 0.2.7
 ```
 
 Namespace for Istio
