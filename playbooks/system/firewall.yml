@@ -142,7 +142,7 @@
   - name: Enable firewall external zone master ports
     firewalld:
       zone: external
-      port: "{{ item.nodePort }}"
+      port: "{{ item.nodePort }}/tcp"
       state: enabled
       permanent: true
     when: inventory_hostname in groups['master'] and item.nodePort is defined
@@ -154,7 +154,7 @@
   - name: Enable firewall external zone node ports
     firewalld:
       zone: external
-      port: "{{ item.nodePort }}"
+      port: "{{ item.nodePort }}/tcp"
       state: enabled
       permanent: true
     when: inventory_hostname in groups['node'] and item.nodePort is defined
