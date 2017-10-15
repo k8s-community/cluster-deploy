@@ -1,5 +1,6 @@
 *.retry
 community
 dev
+stage
 stable
 inventory/cluster
