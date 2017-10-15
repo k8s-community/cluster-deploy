@@ -12,16 +12,12 @@ metadata:
 data:
   alertmanager.yml: |-
     global:
-{% if prometheus_slack_api_url is defined and prometheus_slack_api_url != '' and prometheus_slack_channel is defined and prometheus_slack_channel != ''%}
-       slack_api_url: '{{ prometheus_slack_api_url }}'
-{% endif %}
+      slack_api_url: '{{ prometheus_slack_api_url }}'
     receivers:
-{% if prometheus_slack_api_url is defined and prometheus_slack_api_url != '' and prometheus_slack_channel is defined and prometheus_slack_channel != ''%}
       - name: slack-receiver
         slack_configs:
           - channel: '{{ prometheus_slack_channel }}'
             send_resolved: true
-{% endif %}
 
     route:
       group_wait: 10s

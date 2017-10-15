@@ -79,8 +79,8 @@ spec:
           image: "{{ k8s_prometheus_nodeexport_image }}:{{ k8s_prometheus_nodeexport_image_tag }}"
           imagePullPolicy: "IfNotPresent"
           args:
-            - --collector.procfs=/host/proc
-            - --collector.sysfs=/host/sys
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
           ports:
             - name: metrics
               containerPort: 9100
