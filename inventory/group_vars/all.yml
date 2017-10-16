@@ -38,9 +38,13 @@ k8s_domain_name: k8s
 k8s_cluster_name: cluster
 k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
+# Kubernetes namespace for Prometheus
+k8s_prometheus_namespace: prometheus
+
 # Additional Kubernetes namespaces
 k8s_namespaces:
   - dev
+  - '{{ k8s_prometheus_namespace }}'
 
 # On-prem LB services
 # List of services which use TCP LB for k8s masters/nodes
@@ -393,3 +397,9 @@ gce_credentials_file: '{{ ansible_env.HOME }}/gcloud.json'
 
 # Specify your project ID which one used from your GCP account
 gce_project_id: my-project-id
+
+# Slack webhook URL for Prometheus alerts
+prometheus_slack_api_url: ''
+
+# Slack channel for Prometheus alerts
+prometheus_slack_channel: ''
