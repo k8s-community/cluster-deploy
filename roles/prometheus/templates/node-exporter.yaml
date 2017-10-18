@@ -74,6 +74,15 @@ spec:
         component: "node-exporter"
     spec:
       serviceAccountName: prometheus-node-exporter
+      tolerations:
+        # Allow the pod to run on the master.  This is required for
+        # the master to communicate with pods.
+        - key: node-role.kubernetes.io/master
+          value: "true"
+          effect: NoSchedule
+        # Mark the pod as a critical add-on for rescheduling.
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
       containers:
         - name: prometheus-node-exporter
           image: "{{ k8s_prometheus_nodeexport_image }}:{{ k8s_prometheus_nodeexport_image_tag }}"
