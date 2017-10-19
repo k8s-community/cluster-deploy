@@ -61,3 +61,13 @@ k8s_istio_grafana_image: gcr.io/istio-io/grafana
 k8s_istio_grafana_image_tag: '{{ istio_version }}'
 k8s_istio_servicegraph_image: gcr.io/istio-io/servicegraph
 k8s_istio_servicegraph_image_tag: '{{ istio_version }}'
+
+# SSL certificate and private key for running user services into Kubernetes
+k8s_services_cert: |
+  ----BEGIN CERTIFICATE----
+  - Your certificate here -
+  -----END CERTIFICATE-----
+k8s_services_cert_key: |
+  ----BEGIN PRIVATE KEY----
+  - Your private key here -
+  -----END PRIVATE KEY-----

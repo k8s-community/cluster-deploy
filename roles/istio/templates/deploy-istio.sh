@@ -22,6 +22,32 @@ function deploy_accounts {
   echo
 }
 
+function deploy_ingress_certs_secrets {
+    if kubectl get secrets --namespace={{ k8s_istio_namespace }} | grep istio-ingress-certs &> /dev/null; then
+        echo "Ingress certs secret already exists"
+    else
+        echo "Creating Ingress certs secret"
+{% if k8s_services_cert | length > 1000 %}
+        kubectl apply -f {{ k8s_istio_dir }}/ingress-certs-secret.yaml
+{% else %}
+        echo "
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: istio-ingress-certs
+  namespace: {{ k8s_istio_namespace }} 
+data:
+  tls.crt: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}.pem`
+  tls.key: `base64 --wrap=0 {{ ssl_dir }}/{{ ssl_name }}-key.pem`
+" | kubectl apply -f -
+{% endif %}
+    fi
+
+  echo
+}
+
 function deploy_zipkin {
     if kubectl get deploy -l app=zipkin --namespace={{ k8s_istio_namespace }} | grep zipkin &> /dev/null; then
         echo "Zipkin already exists"
@@ -99,6 +125,7 @@ function deploy_initializer {
 
 deploy_config
 deploy_accounts
+deploy_ingress_certs_secrets
 deploy_zipkin
 deploy_grafana
 deploy_servicegraph
