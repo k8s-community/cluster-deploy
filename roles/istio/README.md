@@ -51,6 +51,22 @@ k8s_cluster_name: cluster
 k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 ```
 
+Organization name which used in `O` attribute of certificates
+```yaml
+ssl_org: organization-name
+```
+
+SSL base certificate name
+SSL folder and file names will use the same name
+```yaml
+ssl_name: kubernetes
+```
+
+Path to files with SSL certificates and keys
+```yaml
+ssl_dir: /etc/ssl/kubernetes
+```
+
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes
