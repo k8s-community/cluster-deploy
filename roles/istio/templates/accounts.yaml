@@ -287,3 +287,4 @@ spec:
           - --grpc-port=8060
           - --grpc-hostname=istio-ca
           - --self-signed-ca=true
+          - --self-signed-ca-org={{ ssl_org | lower }}.{{ k8s_cluster_domain }}
