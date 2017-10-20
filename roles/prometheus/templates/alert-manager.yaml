@@ -90,6 +90,7 @@ spec:
     metadata:
       labels:
         app: prometheus
+        component: alertmanager
     spec:
       serviceAccountName: prometheus-alertmanager
       containers:
