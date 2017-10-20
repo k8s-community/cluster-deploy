@@ -7,7 +7,6 @@ metadata:
     prometheus.io/probe: pushgateway
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "pushgateway"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-pushgateway
@@ -29,7 +28,6 @@ kind: Deployment
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "pushgateway"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-pushgateway
@@ -71,7 +69,6 @@ metadata:
     kubernetes.io/ingress.class: nginx
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "pushgateway"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-pushgateway

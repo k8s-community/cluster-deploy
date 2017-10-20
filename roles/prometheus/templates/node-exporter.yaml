@@ -5,7 +5,6 @@ kind: ServiceAccount
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "node-exporter"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-node-exporter
@@ -17,7 +16,6 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "node-exporter"
   name: prometheus-node-exporter
 subjects:
@@ -38,7 +36,6 @@ metadata:
     prometheus.io/scrape: "true"
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "node-exporter"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-node-exporter
@@ -61,7 +58,6 @@ kind: DaemonSet
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "node-exporter"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-node-exporter
@@ -70,7 +66,6 @@ spec:
     metadata:
       labels:
         app: prometheus
-        release: prometheus-{{ k8s_prometheus_image_tag }}
         component: "node-exporter"
     spec:
       serviceAccountName: prometheus-node-exporter

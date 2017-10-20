@@ -5,7 +5,6 @@ kind: ConfigMap
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-alertmanager
@@ -32,7 +31,6 @@ kind: ServiceAccount
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-alertmanager
@@ -44,7 +42,6 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
   name: prometheus-alertmanager
 subjects:
@@ -63,7 +60,6 @@ kind: Service
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-alertmanager
@@ -85,7 +81,6 @@ kind: Deployment
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-alertmanager
@@ -95,8 +90,6 @@ spec:
     metadata:
       labels:
         app: prometheus
-        release: prometheus-{{ k8s_prometheus_image_tag }}
-        component: "alertmanager"
     spec:
       serviceAccountName: prometheus-alertmanager
       containers:
@@ -154,7 +147,6 @@ metadata:
     kubernetes.io/ingress.class: nginx
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "alertmanager"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-alertmanager

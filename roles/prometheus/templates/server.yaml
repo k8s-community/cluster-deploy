@@ -5,7 +5,6 @@ kind: ConfigMap
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
@@ -34,7 +33,6 @@ kind: ServiceAccount
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
@@ -46,7 +44,6 @@ kind: ClusterRole
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   name: prometheus-server
 rules:
@@ -80,7 +77,6 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   name: prometheus-server
 subjects:
@@ -99,7 +95,6 @@ kind: Service
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
@@ -121,7 +116,6 @@ kind: Deployment
 metadata:
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
@@ -196,7 +190,6 @@ metadata:
     kubernetes.io/ingress.class: nginx
   labels:
     app: prometheus
-    release: prometheus-{{ k8s_prometheus_image_tag }}
     component: "server"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
