@@ -13,4 +13,7 @@
 {% include 'kube-state-metrics.yaml' %}
 
 
+{% include 'blackbox-exporter.yaml' %}
+
+
 {% include 'grafana.yaml' %}
