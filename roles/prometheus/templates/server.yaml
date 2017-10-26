@@ -70,6 +70,14 @@ rules:
       - configmaps
     verbs:
       - get
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
   - nonResourceURLs:
       - "/metrics"
     verbs:
@@ -103,6 +111,8 @@ metadata:
     component: "server"
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-server
+  annotations:
+    prometheus.io/probe: "true"
 spec:
   ports:
     - name: http

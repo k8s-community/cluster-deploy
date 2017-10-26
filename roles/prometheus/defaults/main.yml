@@ -11,6 +11,7 @@ k8s_prometheus_name: ''
 k8s_prometheus_alertmanager_name: ''
 k8s_prometheus_pushgateway_name: ''
 k8s_prometheus_grafana_name: ''
+k8s_prometheus_blackbox_name: ''
 
 # Prometheus namespace
 k8s_prometheus_namespace: default
@@ -28,6 +29,8 @@ k8s_prometheus_pushgateway_image: prom/pushgateway
 k8s_prometheus_pushgateway_image_tag: v0.4.0
 k8s_prometheus_grafana_image: grafana/grafana
 k8s_prometheus_grafana_image_tag: 4.5.2
+k8s_prometheus_blackbox_image: prom/blackbox-exporter
+k8s_prometheus_blackbox_image_tag: v0.10.0
 
 # Prometheus additional images
 k8s_prometheus_configreload_image: jimmidyson/configmap-reload
