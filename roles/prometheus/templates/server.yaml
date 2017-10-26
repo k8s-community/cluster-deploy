@@ -200,7 +200,6 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
-    prometheus.io/probe: "true"
   labels:
     app: prometheus
     component: "server"

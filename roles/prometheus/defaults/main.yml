@@ -11,6 +11,7 @@ k8s_prometheus_name: ''
 k8s_prometheus_alertmanager_name: ''
 k8s_prometheus_pushgateway_name: ''
 k8s_prometheus_grafana_name: ''
+k8s_prometheus_blackbox_name: ''
 
 # Prometheus namespace
 k8s_prometheus_namespace: default
