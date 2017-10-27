@@ -12,12 +12,23 @@ data:
   alertmanager.yml: |-
     global:
       slack_api_url: '{{ prometheus_slack_api_url }}'
+
     receivers:
       - name: slack-receiver
         slack_configs:
           - channel: '{{ prometheus_slack_channel }}'
             send_resolved: true
-
+{% raw %}
+            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}'
+            text: >-
+              {{ range .Alerts }}
+              *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+                *Description:* {{ .Annotations.description }}
+                *Details*:
+                  {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
+                  {{ end }}
+                {{ end }}
+{% endraw %}
     route:
       group_wait: 10s
       group_interval: 5m

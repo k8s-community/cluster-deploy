@@ -11,6 +11,18 @@ metadata:
 data:
   alerts: |-
 {% include 'alerts/common.conf' %}
+    groups:
+{% include 'alerts/app.conf' %}
+
+{% include 'alerts/deployment.conf' %}
+
+{% include 'alerts/pods.conf' %}
+
+{% include 'alerts/node.conf' %}
+
+{% include 'alerts/ingress.conf' %}
+
+{% include 'alerts/service.conf' %}
 
   prometheus.yml: |-
     alerting:
