@@ -41,8 +41,9 @@ data:
 
 {% include 'scrape_configs/kubernetes.yml' %}
 
+{% if k8s_prometheus_scrape_istio_metrics %}
 {% include 'scrape_configs/istio.yml' %}
-
+{% endif %}
 ---
 
 apiVersion: v1

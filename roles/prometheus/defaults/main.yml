@@ -1,7 +1,7 @@
 ---
 # Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes
-k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+k8s_prometheus_dir: '{{ k8s_conf_dir }}/addons/prometheus'
 
 # Master hosts names
 k8s_master_hosts: {}
@@ -14,7 +14,7 @@ k8s_prometheus_grafana_name: ''
 k8s_prometheus_blackbox_name: ''
 
 # Prometheus namespace
-k8s_prometheus_namespace: default
+k8s_prometheus_namespace: prometheus
 
 # Prometheus images
 k8s_prometheus_image: prom/prometheus
@@ -39,7 +39,20 @@ k8s_prometheus_blackbox_image_tag: v0.10.0
 k8s_prometheus_configreload_image: jimmidyson/configmap-reload
 k8s_prometheus_configreload_image_tag: v0.1
 
-# Prometheus alert configs for Slack
-prometheus_slack_api_url: ''
-prometheus_slack_channel: ''
+# Prometheus scrape configs
+k8s_prometheus_scrape_istio_metrics: false
 
+# Prometheus alert configs for Slack
+k8s_prometheus_slack_api_url: ''
+k8s_prometheus_slack_channel: ''
+k8s_prometheus_slack_message_title: '{% raw %}[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}{% endraw %}'
+k8s_prometheus_slack_message_body: |
+  {% raw %}
+  {{ range .Alerts }}
+    *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+      *Description:* {{ .Annotations.description }}
+      *Details*:
+        {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
+        {{ end }}
+      {{ end }}
+  {% endraw %}
