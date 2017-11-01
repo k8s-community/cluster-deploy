@@ -1,6 +1,53 @@
 ---
 
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: prometheus
+    component: "grafana"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-grafana
+data:
+  capacity-planning-dashboard.json: |-
+{% include 'grafana-dashboards/capacity-planning.json' %}
+
+  cluster-health-dashboard.json: |-
+{% include 'grafana-dashboards/cluster-health.json' %}
+
+  cluster-monitoring-dashboard.json: |-
+{% include 'grafana-dashboards/cluster-monitoring.json' %}
+
+  cluster-status-dashboard.json: |-
+{% include 'grafana-dashboards/cluster-status.json' %}
+
+  control-plane-status-dashboard.json: |-
+{% include 'grafana-dashboards/control-plane-status.json' %}
+
+  deployment-dashboard.json: |-
+{% include 'grafana-dashboards/deployment.json' %}
+
+  nodes-dashboard.json: |-
+{% include 'grafana-dashboards/nodes.json' %}
+
+  pods-dashboard.json: |-
+{% include 'grafana-dashboards/pods.json' %}
+
+  resource-requests-dashboard.json: |-
+{% include 'grafana-dashboards/resource-requests.json' %}
+
+  prometheus-datasource.json: |-
+    {
+      "access": "proxy",
+      "basicAuth": false,
+      "name": "prometheus",
+      "type": "prometheus",
+      "url": "http://prometheus-server"
+    }
+
+---
+
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -64,9 +111,27 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
+      - name: grafana-watcher
+        image: {{ k8s_prometheus_grafana_watcher_image }}:{{ k8s_prometheus_grafana_watcher_image_tag }}
+        args:
+          - '--watch-dir=/var/grafana-dashboards'
+          - '--grafana-url=http://localhost:3000'
+        resources:
+          requests:
+            memory: "16Mi"
+            cpu: "50m"
+          limits:
+            memory: "32Mi"
+            cpu: "100m"
+        volumeMounts:
+          - name: grafana-dashboards
+            mountPath: /var/grafana-dashboards
       volumes:
-      - name: grafana-data
-        emptyDir: {}
+        - name: grafana-data
+          emptyDir: {}
+        - name: grafana-dashboards
+          configMap:
+            name: prometheus-grafana
 
 {% if k8s_prometheus_grafana_name is defined and k8s_prometheus_grafana_name != '' %}
 ---
