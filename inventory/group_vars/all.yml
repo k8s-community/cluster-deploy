@@ -44,7 +44,6 @@ k8s_prometheus_namespace: prometheus
 # Additional Kubernetes namespaces
 k8s_namespaces:
   - dev
-  - '{{ k8s_prometheus_namespace }}'
 
 # On-prem LB services
 # List of services which use TCP LB for k8s masters/nodes
@@ -399,7 +398,7 @@ gce_credentials_file: '{{ ansible_env.HOME }}/gcloud.json'
 gce_project_id: my-project-id
 
 # Slack webhook URL for Prometheus alerts
-prometheus_slack_api_url: ''
+k8s_prometheus_slack_api_url: ''
 
 # Slack channel for Prometheus alerts
-prometheus_slack_channel: ''
+k8s_prometheus_slack_channel: ''
