@@ -205,7 +205,7 @@ spec:
         - name: storage-volume
           emptyDir: {}
 
-{% if k8s_prometheus_name is defined and k8s_prometheus_name != '' %}
+{% if k8s_prometheus_name != '' %}
 ---
 
 apiVersion: extensions/v1beta1

@@ -135,7 +135,7 @@ spec:
           configMap:
             name: prometheus-blackbox-exporter
 
-{% if k8s_prometheus_blackbox_name is defined and k8s_prometheus_blackbox_name != '' %}
+{% if k8s_prometheus_blackbox_name != '' %}
 ---
 
 apiVersion: extensions/v1beta1

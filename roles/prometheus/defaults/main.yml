@@ -46,13 +46,12 @@ k8s_prometheus_scrape_istio_metrics: false
 k8s_prometheus_slack_api_url: ''
 k8s_prometheus_slack_channel: ''
 k8s_prometheus_slack_message_title: '{% raw %}[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}{% endraw %}'
+# be careful with tabs - it can break structure of yml file
 k8s_prometheus_slack_message_body: |
-  {% raw %}
-  {{ range .Alerts }}
-    *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
-      *Description:* {{ .Annotations.description }}
-      *Details*:
-        {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
-        {{ end }}
-      {{ end }}
-  {% endraw %}
+  {% raw %}{{ range .Alerts }}
+                  *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+                    *Description:* {{ .Annotations.description }}
+                    *Details*:
+                      {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
+                      {{ end }}
+                    {{ end }}{% endraw %}

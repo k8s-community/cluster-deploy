@@ -142,7 +142,7 @@ spec:
         - name: storage-volume
           emptyDir: {}
 
-{% if k8s_prometheus_alertmanager_name is defined and k8s_prometheus_alertmanager_name != '' %}
+{% if k8s_prometheus_alertmanager_name != '' %}
 ---
 
 apiVersion: extensions/v1beta1
