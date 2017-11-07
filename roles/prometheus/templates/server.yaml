@@ -24,6 +24,10 @@ data:
 
 {% include 'alerts/service.conf' %}
 
+{% include 'alerts/prometheus.conf' %}
+
+{% include 'alerts/kubernetes.conf' %}
+
   prometheus.yml: |-
     alerting:
       alertmanagers:
