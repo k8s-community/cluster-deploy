@@ -95,10 +95,10 @@ New scrape configs can be added in `templates/scrape_configs` directory (check a
 
 All details about scrape config on: [Official documentation about scrape configs](https://prometheus.io/docs/operating/configuration/#<scrape_config>)
 
-How to add own dashboard in Grafana
+How to add dashboard in Grafana
 -----------------------------------
 
-1. You can add a new dashboard manually via `Dashboards --> New` or find existing on [grafana.com](https://grafana.com/dashboards)
+1. create a new dashboard manually via `Dashboards --> New` or find existing on [grafana.com](https://grafana.com/dashboards)
 2. export (download) it on your computer
 3. copy content of downloaded JSON file
 4. create a new file in `templates/grafana-dashboards` directory. Template:

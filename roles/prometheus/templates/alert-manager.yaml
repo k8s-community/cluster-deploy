@@ -21,7 +21,7 @@ data:
             title: '{{ k8s_prometheus_slack_message_title }}'
             text: >-
               {{ k8s_prometheus_slack_message_body }}
-      - name: null
+      - name: 'null'
 
     route:
       group_wait: 10s
@@ -29,7 +29,7 @@ data:
       receiver: slack-receiver
       repeat_interval: 3h
       routes:
-        - receiver: null
+        - receiver: 'null'
           match:
             alertname: DeadMansSwitch
 
