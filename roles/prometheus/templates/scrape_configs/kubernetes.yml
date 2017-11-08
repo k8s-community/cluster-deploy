@@ -200,6 +200,8 @@
       #
       # * `prometheus.io/probe`: Only probe services that have a value of `true`
       - job_name: 'kubernetes-services'
+        scrape_interval: 60s
+        scrape_timeout: 50s
         metrics_path: /probe
         params:
           module: [http_2xx]
@@ -229,7 +231,8 @@
       #
       # * `prometheus.io/probe`: Only probe ingresses that have a value of `true`
       - job_name: 'kubernetes-ingresses'
-
+        scrape_interval: 60s
+        scrape_timeout: 50s
         metrics_path: /probe
         params:
           module: [https_2xx]
