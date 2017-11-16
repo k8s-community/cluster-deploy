@@ -53,7 +53,10 @@ k8s_prometheus_configreload_image_tag: v0.1
 # Prometheus scrape configs for Istio
 k8s_prometheus_scrape_istio_metrics: false
 
+k8s_prometheus_alerts_default_route: 'null'
+
 # Prometheus alert configs for Slack
+k8s_prometheus_slack_alerts_enabled: true
 k8s_prometheus_slack_api_url: ''
 k8s_prometheus_slack_channel: ''
 k8s_prometheus_slack_message_title: '{% raw %}[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}{% endraw %}'
@@ -66,3 +69,7 @@ k8s_prometheus_slack_message_body: |
                       {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
                       {{ end }}
                     {{ end }}{% endraw %}
+
+# Prometheus alert configs for Telegram
+k8s_prometheus_telegram_alerts_enabled: true
+k8s_prometheus_telegram_webhook: ''

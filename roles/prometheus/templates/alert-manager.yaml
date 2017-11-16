@@ -10,24 +10,39 @@ metadata:
   name: prometheus-alertmanager
 data:
   alertmanager.yml: |-
+    {% if k8s_prometheus_slack_alerts_enabled %}
+
     global:
       slack_api_url: '{{ k8s_prometheus_slack_api_url }}'
+    {% endif %}
 
     receivers:
-      - name: slack-receiver
+      - name: 'null'
+
+      {% if k8s_prometheus_slack_alerts_enabled %}
+
+      - name: slack
         slack_configs:
           - channel: '{{ k8s_prometheus_slack_channel }}'
             send_resolved: true
             title: '{{ k8s_prometheus_slack_message_title }}'
             text: >-
               {{ k8s_prometheus_slack_message_body }}
-      - name: 'null'
+      {% endif %}
+
+      {% if k8s_prometheus_telegram_alerts_enabled %}
+
+      - name: telegram
+        webhook_configs:
+          - send_resolved: True
+            url: {{ k8s_prometheus_telegram_webhook }}
+      {% endif %}
 
     route:
       group_wait: 10s
-      group_interval: 5m
-      receiver: slack-receiver
-      repeat_interval: 3h
+      group_interval: 1h
+      receiver: {{ k8s_prometheus_alerts_default_route }}
+      repeat_interval: 4h
       routes:
         - receiver: 'null'
           match:

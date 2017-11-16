@@ -13,11 +13,11 @@ data:
     modules:
       http_2xx:
         prober: http
-        timeout: 20s
+        timeout: 50s
         http:
       https_2xx:
         prober: http
-        timeout: 20s
+        timeout: 50s
         http:
           method: GET
           valid_status_codes: [200]
