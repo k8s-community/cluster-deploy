@@ -15,6 +15,7 @@ data:
         prober: http
         timeout: 50s
         http:
+          preferred_ip_protocol: ip4
       https_2xx:
         prober: http
         timeout: 50s
@@ -24,6 +25,7 @@ data:
           no_follow_redirects: false
           fail_if_ssl: false
           fail_if_not_ssl: true
+          preferred_ip_protocol: ip4
 
 ---
 
