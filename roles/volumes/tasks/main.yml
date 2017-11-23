@@ -22,4 +22,4 @@
 
 - name: Run deploy script for services volumes
   command: "{{ k8s_addons_dir }}/deploy-volumes.sh"
-  when: inventory_hostname in k8s_master_hosts[0]
+  when: inventory_hostname in k8s_storage_hosts[0]
