@@ -1,0 +1,24 @@
+---
+# Size of volume in Gb. That volume used by services
+k8s_services_volume: 30
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+
+# Services volumes host path
+k8s_services_dir: /var/lib/data
+
+# Using of network storage
+# If network storage disabled will use local disk for every requested claim 
+network_storage: false
+
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
+# TODO: AWS persistent disk `aws`
+network_storage_type: gce 
+
+# Ceph monitor port
+ceph_monitor_port: 6789
+
+# Storage hosts names
+k8s_storage_hosts: {}

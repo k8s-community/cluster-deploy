@@ -193,11 +193,14 @@ k8s_cluster_dns: 10.254.0.10
 # Conteiner Network Interface type, valid values: `calico`, `romana`
 # cni_type: calico
 
+# Size of volume in Gb. That volume used by services
+# k8s_services_volume: 30
+
 # Using of network storage
 # If network storage disabled will use local disk for every requested claim 
 # network_storage: false
 
-# Kubernetes network persistent disk type, valid values: `gce`
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
 # TODO: AWS persistent disk `aws`
 # network_storage_type: gce 
 
