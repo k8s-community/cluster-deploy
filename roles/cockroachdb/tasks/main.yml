@@ -14,6 +14,7 @@
     dest: "{{ k8s_addons_dir }}/{{ item }}"
   with_items:
     - cockroachdb.yaml
+    - cockroachdb-init.yaml
 
 - name: Deploy script for Cockroach DB
   template:
