@@ -35,12 +35,11 @@ k8s_node_hosts: {}
 
 # Cockroach DB volume and cache size
 k8s_cockroachdb_volume_size: 1Gi
-k8s_cockroachdb_cache_size: 250Mb
+k8s_cockroachdb_cache_size: 25%
+k8s_cockroachdb_max_sql_memory: 25%
 
 # Cockroach DB images
 k8s_cockroachdb_image: cockroachdb/cockroach
-k8s_cockroachdb_image_tag: v1.0.6
-k8s_cockroachdb_init_image: cockroachdb/cockroach-k8s-init
-k8s_cockroachdb_init_image_tag: 0.2
+k8s_cockroachdb_image_tag: v1.1.2
 k8s_cockroachdb_request_cert_image: cockroachdb/cockroach-k8s-request-cert
 k8s_cockroachdb_request_cert_image_tag: 0.2
