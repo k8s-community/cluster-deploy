@@ -48,6 +48,21 @@ data:
           match:
             alertname: DeadMansSwitch
 
+        {% if k8s_prometheus_slack_alerts_enabled %}
+
+        - receiver: slack
+          match_re:
+            notify: ^sre|dev$
+          continue: true
+        {% endif %}
+
+        {% if k8s_prometheus_telegram_alerts_enabled %}
+
+        - receiver: telegram
+          match:
+            notify: sre
+        {% endif %}
+
 ---
 
 apiVersion: v1

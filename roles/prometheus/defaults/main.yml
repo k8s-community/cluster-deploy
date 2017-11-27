@@ -6,6 +6,9 @@ k8s_prometheus_dir: '{{ k8s_conf_dir }}/addons/prometheus'
 # Master hosts names
 k8s_master_hosts: {}
 
+# Retention days (how long to store data)
+k8s_prometheus_retention_days: 7
+
 # Prometheus host name (it will be created if it doesn't exist)
 k8s_prometheus_name: ''
 # AlertManager host name (it will be created if it doesn't exist)
@@ -56,7 +59,7 @@ k8s_prometheus_scrape_istio_metrics: false
 k8s_prometheus_alerts_default_route: 'null'
 
 # Prometheus alert configs for Slack
-k8s_prometheus_slack_alerts_enabled: true
+k8s_prometheus_slack_alerts_enabled: false
 k8s_prometheus_slack_api_url: ''
 k8s_prometheus_slack_channel: ''
 k8s_prometheus_slack_message_title: '{% raw %}[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}{% endraw %}'
@@ -71,5 +74,5 @@ k8s_prometheus_slack_message_body: |
                     {{ end }}{% endraw %}
 
 # Prometheus alert configs for Telegram
-k8s_prometheus_telegram_alerts_enabled: true
+k8s_prometheus_telegram_alerts_enabled: false
 k8s_prometheus_telegram_webhook: ''
