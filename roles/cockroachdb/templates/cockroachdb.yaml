@@ -229,7 +229,7 @@ spec:
         command:
         - "/bin/ash"
         - "-ecx"
-        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=node -addresses=localhost,127.0.0.1,${POD_IP},$(hostname -f),$(hostname -f|cut -f 1-2 -d '.'),cockroachdb-public -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=node -addresses=localhost,127.0.0.1,${POD_IP},$(hostname -f),$(hostname -f|cut -f 1-2 -d '.'),cockroachdb-public,cockroachdb-public.{{ k8s_cockroachdb_namespace }},cockroachdb-public.{{ k8s_cockroachdb_namespace }}.svc.{{ k8s_cluster_domain }} -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
         env:
         - name: POD_IP
           valueFrom:
