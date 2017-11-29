@@ -1,23 +1,23 @@
-{% include 'alerts/common.conf' %}
+{% include 'alerts/common.yml' %}
 
     groups:
-{% include 'alerts/app.conf' %}
+{% include 'alerts/app.yml' %}
 
-{% include 'alerts/deployment.conf' %}
+{% include 'alerts/deployment.yml' %}
 
-{% include 'alerts/pods.conf' %}
+{% include 'alerts/pods.yml' %}
 
-{% include 'alerts/node.conf' %}
+{% include 'alerts/node.yml' %}
 
-{% include 'alerts/ingress.conf' %}
+{% include 'alerts/ingress.yml' %}
 
-{% include 'alerts/service.conf' %}
+{% include 'alerts/service.yml' %}
 
-{% include 'alerts/prometheus.conf' %}
+{% include 'alerts/prometheus.yml' %}
 
-{% include 'alerts/kubernetes.conf' %}
+{% include 'alerts/kubernetes.yml' %}
 
 {% if k8s_prometheus_scrape_cockroachdb_metrics %}
 
-{% include 'alerts/cockroachdb.conf' %}
+{% include 'alerts/cockroachdb.yml' %}
 {% endif %}
