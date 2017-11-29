@@ -10,30 +10,58 @@ metadata:
   name: prometheus-alertmanager
 data:
   alertmanager.yml: |-
+    {% if k8s_prometheus_slack_alerts_enabled %}
+
     global:
-      slack_api_url: '{{ prometheus_slack_api_url }}'
+      slack_api_url: '{{ k8s_prometheus_slack_api_url }}'
+    {% endif %}
 
     receivers:
-      - name: slack-receiver
+      - name: 'null'
+
+      {% if k8s_prometheus_slack_alerts_enabled %}
+
+      - name: slack
         slack_configs:
-          - channel: '{{ prometheus_slack_channel }}'
+          - channel: '{{ k8s_prometheus_slack_channel }}'
             send_resolved: true
-{% raw %}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}'
+            title: '{{ k8s_prometheus_slack_message_title }}'
             text: >-
-              {{ range .Alerts }}
-              *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
-                *Description:* {{ .Annotations.description }}
-                *Details*:
-                  {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
-                  {{ end }}
-                {{ end }}
-{% endraw %}
+              {{ k8s_prometheus_slack_message_body }}
+      {% endif %}
+
+      {% if k8s_prometheus_telegram_alerts_enabled %}
+
+      - name: telegram
+        webhook_configs:
+          - send_resolved: True
+            url: {{ k8s_prometheus_telegram_webhook }}
+      {% endif %}
+
     route:
       group_wait: 10s
-      group_interval: 5m
-      receiver: slack-receiver
-      repeat_interval: 3h
+      group_interval: 1h
+      receiver: {{ k8s_prometheus_alerts_default_route }}
+      repeat_interval: 4h
+      routes:
+        - receiver: 'null'
+          match:
+            alertname: DeadMansSwitch
+
+        {% if k8s_prometheus_slack_alerts_enabled %}
+
+        - receiver: slack
+          match_re:
+            notify: ^sre|dev$
+          continue: true
+        {% endif %}
+
+        {% if k8s_prometheus_telegram_alerts_enabled %}
+
+        - receiver: telegram
+          match:
+            notify: sre
+        {% endif %}
 
 ---
 
@@ -149,7 +177,7 @@ spec:
         - name: storage-volume
           emptyDir: {}
 
-{% if k8s_prometheus_alertmanager_name is defined and k8s_prometheus_alertmanager_name != '' %}
+{% if k8s_prometheus_alertmanager_name != '' %}
 ---
 
 apiVersion: extensions/v1beta1

@@ -1,0 +1,185 @@
+{% raw %}
+    #
+    # CockroachDB alerts
+    #
+    - name: cockroachdb-alerts
+      rules:
+      #
+      # Aggregation rules
+      #
+      # This file contains aggregation rules, specifically:
+      #   "node:X" node-level aggregation of a per-store metric X
+      #   "cluster:X" cluster-level aggregation of a per-store or per-node metric X
+      #
+      # Most aggregation rules should use the "without (label1, label2, ...)" keyword
+      # to keep all labels but the ones specified.
+      #
+      - record: node:capacity
+        expr: sum(capacity{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:capacity
+        expr: sum(node:capacity{app="cockroachdb"}) WITHOUT (instance)
+      - record: node:capacity_available
+        expr: sum(capacity_available{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:capacity_available
+        expr: sum(node:capacity_available{app="cockroachdb"}) WITHOUT (instance)
+      - record: capacity_available:ratio
+        expr: capacity_available{app="cockroachdb"} / capacity{app="cockroachdb"}
+      - record: node:capacity_available:ratio
+        expr: node:capacity_available{app="cockroachdb"} / node:capacity{app="cockroachdb"}
+      - record: cluster:capacity_available:ratio
+        expr: cluster:capacity_available{app="cockroachdb"} / cluster:capacity{app="cockroachdb"}
+      - record: mutex_storenanos_bucket:rate1m
+        expr: rate(mutex_storenanos_bucket{app="cockroachdb"}[1m])
+      - record: node:mutex_storenanos_bucket:rate1m
+        expr: sum(mutex_storenanos_bucket:rate1m{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:mutex_storenanos_bucket:rate1m
+        expr: sum(node:mutex_storenanos_bucket:rate1m{app="cockroachdb"}) WITHOUT (instance)
+      - record: cluster:mutex_storenanos:rate1m:quantile_50
+        expr: histogram_quantile(0.5, cluster:mutex_storenanos_bucket:rate1m)
+      - record: cluster:mutex_storenanos:rate1m:quantile_75
+        expr: histogram_quantile(0.75, cluster:mutex_storenanos_bucket:rate1m)
+      - record: cluster:mutex_storenanos:rate1m:quantile_90
+        expr: histogram_quantile(0.9, cluster:mutex_storenanos_bucket:rate1m)
+      - record: cluster:mutex_storenanos:rate1m:quantile_95
+        expr: histogram_quantile(0.95, cluster:mutex_storenanos_bucket:rate1m)
+      - record: mutex_raftnanos_bucket:rate1m
+        expr: rate(mutex_raftnanos_bucket{app="cockroachdb"}[1m])
+      - record: node:mutex_raftnanos_bucket:rate1m
+        expr: sum(mutex_raftnanos_bucket:rate1m{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:mutex_raftnanos_bucket:rate1m
+        expr: sum(node:mutex_raftnanos_bucket:rate1m{app="cockroachdb"}) WITHOUT (instance)
+      - record: cluster:mutex_raftnanos:rate1m:quantile_50
+        expr: histogram_quantile(0.5, cluster:mutex_raftnanos_bucket:rate1m)
+      - record: cluster:mutex_raftnanos:rate1m:quantile_75
+        expr: histogram_quantile(0.75, cluster:mutex_raftnanos_bucket:rate1m)
+      - record: cluster:mutex_raftnanos:rate1m:quantile_90
+        expr: histogram_quantile(0.9, cluster:mutex_raftnanos_bucket:rate1m)
+      - record: cluster:mutex_raftnanos:rate1m:quantile_95
+        expr: histogram_quantile(0.95, cluster:mutex_raftnanos_bucket:rate1m)
+      - record: mutex_replicananos_bucket:rate1m
+        expr: rate(mutex_replicananos_bucket{app="cockroachdb"}[1m])
+      - record: node:mutex_replicananos_bucket:rate1m
+        expr: sum(mutex_replicananos_bucket:rate1m{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:mutex_replicananos_bucket:rate1m
+        expr: sum(node:mutex_replicananos_bucket:rate1m{app="cockroachdb"}) WITHOUT (instance)
+      - record: cluster:mutex_replicananos:rate1m:quantile_50
+        expr: histogram_quantile(0.5, cluster:mutex_replicananos_bucket:rate1m)
+      - record: cluster:mutex_replicananos:rate1m:quantile_75
+        expr: histogram_quantile(0.75, cluster:mutex_replicananos_bucket:rate1m)
+      - record: cluster:mutex_replicananos:rate1m:quantile_90
+        expr: histogram_quantile(0.9, cluster:mutex_replicananos_bucket:rate1m)
+      - record: cluster:mutex_replicananos:rate1m:quantile_95
+        expr: histogram_quantile(0.95, cluster:mutex_replicananos_bucket:rate1m)
+      - record: mutex_commandqueuenanos_bucket:rate1m
+        expr: rate(mutex_commandqueuenanos_bucket{app="cockroachdb"}[1m])
+      - record: node:mutex_commandqueuenanos_bucket:rate1m
+        expr: sum(mutex_commandqueuenanos_bucket:rate1m{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:mutex_commandqueuenanos_bucket:rate1m
+        expr: sum(node:mutex_commandqueuenanos_bucket:rate1m{app="cockroachdb"}) WITHOUT
+          (instance)
+      - record: cluster:mutex_commandqueuenanos:rate1m:quantile_50
+        expr: histogram_quantile(0.5, cluster:mutex_commandqueuenanos_bucket:rate1m)
+      - record: cluster:mutex_commandqueuenanos:rate1m:quantile_75
+        expr: histogram_quantile(0.75, cluster:mutex_commandqueuenanos_bucket:rate1m)
+      - record: cluster:mutex_commandqueuenanos:rate1m:quantile_90
+        expr: histogram_quantile(0.9, cluster:mutex_commandqueuenanos_bucket:rate1m)
+      - record: cluster:mutex_commandqueuenanos:rate1m:quantile_95
+        expr: histogram_quantile(0.95, cluster:mutex_commandqueuenanos_bucket:rate1m)
+      - record: mutex_schedulernanos_bucket:rate1m
+        expr: rate(mutex_schedulernanos_bucket{app="cockroachdb"}[1m])
+      - record: node:mutex_schedulernanos_bucket:rate1m
+        expr: sum(mutex_schedulernanos_bucket:rate1m{app="cockroachdb"}) WITHOUT (store)
+      - record: cluster:mutex_schedulernanos_bucket:rate1m
+        expr: sum(node:mutex_schedulernanos_bucket:rate1m{app="cockroachdb"}) WITHOUT
+          (instance)
+      - record: cluster:mutex_schedulernanos:rate1m:quantile_50
+        expr: histogram_quantile(0.5, cluster:mutex_schedulernanos_bucket:rate1m)
+      - record: cluster:mutex_schedulernanos:rate1m:quantile_75
+        expr: histogram_quantile(0.75, cluster:mutex_schedulernanos_bucket:rate1m)
+      - record: cluster:mutex_schedulernanos:rate1m:quantile_90
+        expr: histogram_quantile(0.9, cluster:mutex_schedulernanos_bucket:rate1m)
+      - record: cluster:mutex_schedulernanos:rate1m:quantile_95
+        expr: histogram_quantile(0.95, cluster:mutex_schedulernanos_bucket:rate1m)
+
+      #
+      # Alert rules
+      #
+
+      #
+      # Alert on version mismatch.
+      #
+      # This alert is intentionally loose (30 minutes) to allow for rolling upgrades.
+      # This may need to be adjusted for large clusters.
+      #
+      - alert: VersionMismatch
+        expr: count(count_values("version", build_timestamp{app="cockroachdb"}) BY (tag)) > 1
+        for: 30m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "CockroachDB: Cluster running {{ $value }} different versions"
+          summary: "CockroachDB: Binary version mismatch"
+
+      #
+      # Alert on available capacity < 15%
+      #
+      - alert: StoreDiskLow
+        expr: capacity_available:ratio{app="cockroachdb"} < 0.15
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Store {{ $labels.store }} on node {{ $labels.kubernetes_pod_node_name }} at {{ $value }} available disk fraction"
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: CockroachDB store has low disk"
+
+      #
+      # Alert on low disk < 20%
+      #
+      - alert: ClusterDiskLow
+        expr: cluster:capacity_available:ratio{app="cockroachdb"} < 0.2
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "CockroachDB cluster at {{ $value }} available disk fraction"
+          summary: "CockroachDB cluster at {{ $value }} available disk fraction"
+
+      #
+      # Alert on zero SQL qps
+      #
+      - alert: ZeroSQLQps
+        expr: sql_conns{app="cockroachdb"} > 0 and rate(sql_query_count{app="cockroachdb"}[5m]) == 0
+        for: 10m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: CockroachDB pod has SQL connections but no queries"
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: CockroachDB pod has SQL connections but no queries"
+
+      #
+      # Alert on certificate expiration (< 1 year)
+      #
+      - alert: CACertificateExpiresSoon
+        expr: (security_certificate_expiration_ca{app="cockroachdb"} > 0) and (security_certificate_expiration_ca{app="cockroachdb"} - time()) < 86400 * 366
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: CA certificate for CockroachDB pod expires in less than a year"
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: CA certificate for CockroachDB pod expires in less than a year"
+
+      #
+      # Alert on certificate expiration (< 0.5 year)
+      #
+      - alert: NodeCertificateExpiresSoon
+        expr: (security_certificate_expiration_node{app="cockroachdb"} > 0) and (security_certificate_expiration_node{app="cockroachdb"} - time()) < 86400 * 183
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Node certificate expires in less than 6 months"
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Node certificate expires in less than 6 months"
+
+{% endraw %}

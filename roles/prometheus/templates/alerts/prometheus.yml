@@ -1,0 +1,30 @@
+{% raw %}
+    #
+    # Applications alerts (from /metrics handler)
+    #
+    - name: prometheus-alerts
+      rules:
+      #
+      # Alert on failed config reload
+      #
+      - alert: FailedReload
+        expr: prometheus_config_last_reload_successful == 0
+        for: 10m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          description: "Reloading Prometheus' configuration has failed"
+          summary: "Prometheus configuration reload has failed"
+
+      #
+      # Alert to check pipeline
+      #
+      - alert: DeadMansSwitch
+        expr: vector(1)
+        labels:
+          severity: none
+        annotations:
+          summary: "Alerting DeadMansSwitch"
+          description: "This is a DeadMansSwitch meant to ensure that the entire Alerting pipeline is functional"
+{% endraw %}

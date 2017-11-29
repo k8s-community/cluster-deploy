@@ -9,32 +9,7 @@ metadata:
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-grafana
 data:
-  capacity-planning-dashboard.json: |-
-{% include 'grafana-dashboards/capacity-planning.json' %}
-
-  cluster-health-dashboard.json: |-
-{% include 'grafana-dashboards/cluster-health.json' %}
-
-  cluster-monitoring-dashboard.json: |-
-{% include 'grafana-dashboards/cluster-monitoring.json' %}
-
-  cluster-status-dashboard.json: |-
-{% include 'grafana-dashboards/cluster-status.json' %}
-
-  control-plane-status-dashboard.json: |-
-{% include 'grafana-dashboards/control-plane-status.json' %}
-
-  deployment-dashboard.json: |-
-{% include 'grafana-dashboards/deployment.json' %}
-
-  nodes-dashboard.json: |-
-{% include 'grafana-dashboards/nodes.json' %}
-
-  pods-dashboard.json: |-
-{% include 'grafana-dashboards/pods.json' %}
-
-  resource-requests-dashboard.json: |-
-{% include 'grafana-dashboards/resource-requests.json' %}
+{% include 'grafana-dashboards/all.yml' %}
 
   prometheus-datasource.json: |-
     {
@@ -133,7 +108,7 @@ spec:
           configMap:
             name: prometheus-grafana
 
-{% if k8s_prometheus_grafana_name is defined and k8s_prometheus_grafana_name != '' %}
+{% if k8s_prometheus_grafana_name != '' %}
 ---
 
 apiVersion: extensions/v1beta1

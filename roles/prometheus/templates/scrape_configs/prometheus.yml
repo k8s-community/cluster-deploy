@@ -1,4 +1,4 @@
-      # A scrape configuration for monitoring itself
+      # A scrape configuration for short-lived jobs (ephemeral and batch jobs)
       #
       - job_name: prometheus
         static_configs:

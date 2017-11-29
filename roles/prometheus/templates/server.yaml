@@ -10,19 +10,7 @@ metadata:
   name: prometheus-server
 data:
   alerts: |-
-{% include 'alerts/common.conf' %}
-    groups:
-{% include 'alerts/app.conf' %}
-
-{% include 'alerts/deployment.conf' %}
-
-{% include 'alerts/pods.conf' %}
-
-{% include 'alerts/node.conf' %}
-
-{% include 'alerts/ingress.conf' %}
-
-{% include 'alerts/service.conf' %}
+{% include 'alerts/all.yml' %}
 
   prometheus.yml: |-
     alerting:
@@ -37,11 +25,7 @@ data:
 
     # A list of scrape configurations.
     scrape_configs:
-{% include 'scrape_configs/prometheus.yml' %}
-
-{% include 'scrape_configs/kubernetes.yml' %}
-
-{% include 'scrape_configs/istio.yml' %}
+{% include 'scrape_configs/all.yml' %}
 
 ---
 
@@ -172,7 +156,7 @@ spec:
           args:
             - --config.file=/etc/config/prometheus.yml
             - --storage.tsdb.path=/data
-            - --storage.tsdb.retention=7d
+            - --storage.tsdb.retention={{ k8s_prometheus_retention_days }}d
             - --web.console.libraries=/etc/prometheus/console_libraries
             - --web.console.templates=/etc/prometheus/consoles
           ports:
@@ -204,7 +188,7 @@ spec:
         - name: storage-volume
           emptyDir: {}
 
-{% if k8s_prometheus_name is defined and k8s_prometheus_name != '' %}
+{% if k8s_prometheus_name != '' %}
 ---
 
 apiVersion: extensions/v1beta1

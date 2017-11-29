@@ -1,0 +1,32 @@
+{% raw %}
+    #
+    # Applications alerts (from /metrics handler)
+    #
+    - name: application-alerts
+      rules:
+      #
+      # Alert on each 5XX code of any http service
+      #
+      - alert: HttpServiceFatalError
+        expr: rate(http_requests_total{job="kubernetes-service-endpoints",status=~"5.."}[1m]) > 0
+        labels:
+          severity: warning
+          notify: dev
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $label.kubernetes_pod_name }}: Service returns 5XX error"
+          description: "{{ $labels.kubernetes_namespace }}/{{ $label.kubernetes_pod_name }}: Service has processed some request incorrectly (code = {{ $labels.status }})"
+
+      #
+      # Alert for any instance that have a median request latency > 0.5s
+      #
+      #- alert: HttpServiceHighRequestLatency
+      #  expr: http_request_duration_seconds_bucket{le="0.5"} > 0.5
+      #  for: 1m
+      #  labels:
+      #    severity: warning
+      #    notify: sre
+      #  annotations:
+      #    summary: "{{ $labels.kubernetes_namespace }}/{{ $label.kubernetes_pod_name }}: High request latency"
+      #    description: "{{ $labels.kubernetes_namespace }}/{{ $label.kubernetes_pod_name }} (instance {{ $labels.instance }}): Service has a median request latency > 0.5s (current value: {{ $value }}s)"
+
+{% endraw %}
