@@ -131,6 +131,9 @@
         kubernetes_sd_configs:
           - role: endpoints
 
+        tls_config:
+          insecure_skip_verify: true
+
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep

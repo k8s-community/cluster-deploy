@@ -10,23 +10,7 @@ metadata:
   name: prometheus-server
 data:
   alerts: |-
-{% include 'alerts/common.conf' %}
-    groups:
-{% include 'alerts/app.conf' %}
-
-{% include 'alerts/deployment.conf' %}
-
-{% include 'alerts/pods.conf' %}
-
-{% include 'alerts/node.conf' %}
-
-{% include 'alerts/ingress.conf' %}
-
-{% include 'alerts/service.conf' %}
-
-{% include 'alerts/prometheus.conf' %}
-
-{% include 'alerts/kubernetes.conf' %}
+{% include 'alerts/all.yml' %}
 
   prometheus.yml: |-
     alerting:
@@ -41,13 +25,8 @@ data:
 
     # A list of scrape configurations.
     scrape_configs:
-{% include 'scrape_configs/prometheus.yml' %}
+{% include 'scrape_configs/all.yml' %}
 
-{% include 'scrape_configs/kubernetes.yml' %}
-
-{% if k8s_prometheus_scrape_istio_metrics %}
-{% include 'scrape_configs/istio.yml' %}
-{% endif %}
 ---
 
 apiVersion: v1
