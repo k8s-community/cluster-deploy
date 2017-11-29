@@ -138,6 +138,12 @@
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep
             regex: true
+{% if k8s_prometheus_scrape_cockroachdb_metrics %}
+
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: drop
+            regex: cockroachdb-(\d+)
+{% endif %}
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
             action: replace
             target_label: __scheme__

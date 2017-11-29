@@ -101,7 +101,7 @@ How to add dashboard in Grafana
 1. create a new dashboard manually via `Dashboards --> New` or find existing on [grafana.com](https://grafana.com/dashboards)
 2. export (download) it on your computer
 3. copy content of downloaded JSON file
-4. create a new file in `templates/grafana-dashboards` directory. Template:
+4. create a new file in `templates/grafana-dashboards` directory. Template (`templates/grafana-dashboards/dashboard-template.json`):
 
         {% raw %}
         {

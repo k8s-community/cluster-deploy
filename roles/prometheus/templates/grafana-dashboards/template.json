@@ -1,0 +1,15 @@
+{% raw %}
+{
+  "dashboard": {
+    ... <copied content data> ...
+  },
+  "overwrite": true,
+  "inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "value": "prometheus"
+    }
+  ]
+}{% endraw %}
