@@ -54,7 +54,7 @@ metadata:
 # Each RBAC deny needs to be mapped into a rule for the role.
 # If using minikube, start with '--extra-config=apiserver.Authorization.Mode=RBAC'
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-pilot
 rules:
@@ -83,7 +83,7 @@ rules:
 ---
 
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-initializer
 rules:
@@ -100,7 +100,7 @@ rules:
 # It also uses discovery API to discover Kinds of config.istio.io
 # K8s adapter needs to list pods, services etc.
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-mixer
 rules:
@@ -117,7 +117,7 @@ rules:
 ---
 
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-ca
 rules:
@@ -132,7 +132,7 @@ rules:
 
 # Permissions for the sidecar proxy.
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-sidecar
 rules:
@@ -150,7 +150,7 @@ rules:
 
 # Grant permissions to the Pilot/discovery.
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-pilot-admin-role-binding
 roleRef:
@@ -166,7 +166,7 @@ subjects:
 
 # Grant permissions to the Sidecar initializer
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-initializer-admin-role-binding
 roleRef:
@@ -182,7 +182,7 @@ subjects:
 
 # Grant permissions to mixer.
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-mixer-admin-role-binding
 roleRef:
@@ -198,7 +198,7 @@ subjects:
 
 # Grant permissions to the Ingress controller.
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-ingress-admin-role-binding
 roleRef:
@@ -214,7 +214,7 @@ subjects:
 
 # Grant permissions to the Egress controller.
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-egress-admin-role-binding
 roleRef:
@@ -230,7 +230,7 @@ subjects:
 
 # Grant permissions to the CA.
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-ca-role-binding
 roleRef:
@@ -248,7 +248,7 @@ subjects:
 # TEMPORARY: the istioctl should generate a separate service account for the proxy, and permission
 # granted only to that account !
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: istio-sidecar-role-binding
 roleRef:
