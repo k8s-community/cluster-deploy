@@ -1,0 +1,25 @@
+---
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_addons_dir }}'
+
+- name: Core DNS
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    - coredns.yaml
+
+- name: Deploy script for Core DNS
+  template:
+    src: deploy-coredns.sh
+    dest: "{{ k8s_addons_dir }}/deploy-coredns.sh"
+    mode: 0755
+
+- name: Run deploy script for Core DNS
+  command: "{{ k8s_addons_dir }}/deploy-coredns.sh"
+  when: inventory_hostname in k8s_master_hosts[0]
