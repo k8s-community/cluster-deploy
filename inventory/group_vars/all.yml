@@ -396,9 +396,3 @@ gce_credentials_file: '{{ ansible_env.HOME }}/gcloud.json'
 
 # Specify your project ID which one used from your GCP account
 gce_project_id: my-project-id
-
-# Slack webhook URL for Prometheus alerts
-k8s_prometheus_slack_api_url: ''
-
-# Slack channel for Prometheus alerts
-k8s_prometheus_slack_channel: ''

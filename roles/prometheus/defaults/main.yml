@@ -55,6 +55,8 @@ k8s_prometheus_configreload_image_tag: v0.1
 
 # Prometheus scrape configs for Istio
 k8s_prometheus_scrape_istio_metrics: false
+# Prometheus scrape configs for Cockroachdb
+k8s_prometheus_scrape_cockroachdb_metrics: false
 
 # Alerts default route is stub
 k8s_prometheus_alerts_default_route: 'null'
@@ -77,6 +79,3 @@ k8s_prometheus_slack_message_body: |
 # Prometheus alert configs for Telegram
 k8s_prometheus_telegram_alerts_enabled: false
 k8s_prometheus_telegram_webhook: ''
-
-# Prometheus scrape configs for Cockroachdb
-k8s_prometheus_scrape_cockroachdb_metrics: false
