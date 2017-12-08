@@ -17,7 +17,6 @@ spec:
     - --anonymous-auth=false
     - --apiserver-count={{ k8s_master_hosts | length }}
     - --authorization-mode=Node,RBAC
-    - --basic-auth-file={{ k8s_policy_dir }}/basic-auth.csv
     - --bind-address=0.0.0.0
     - --client-ca-file={{ ssl_dir }}/ca.pem
     - --etcd-servers={{ k8s_etcd_servers }}
