@@ -61,7 +61,7 @@ k8s_cluster_dns: 10.254.0.10
 k8s_cluster_cidr: 10.20.0.0/16
 
 # Kubernetes hyperkube version
-k8s_version: 1.7.6
+k8s_version: 1.8.5
 
 # Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes
