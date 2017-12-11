@@ -396,3 +396,6 @@ gce_credentials_file: '{{ ansible_env.HOME }}/gcloud.json'
 
 # Specify your project ID which one used from your GCP account
 gce_project_id: my-project-id
+
+# Retention days (how long to store data)
+k8s_prometheus_retention_days: 7
