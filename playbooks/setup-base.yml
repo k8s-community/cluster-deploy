@@ -7,7 +7,7 @@
 - include: cluster/node.yml
 - include: cluster/cni.yml
 - include: cluster/policy.yml
-- include: cluster/coredns.yml
+- include: cluster/kubedns.yml
 - include: cluster/ingress.yml
 - include: cluster/stats.yml
 - include: cluster/registry.yml
