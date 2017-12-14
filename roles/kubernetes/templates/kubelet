@@ -18,6 +18,7 @@ KUBELET_ARGS="--allow-privileged=true \
 --cni-conf-dir={{ cni_conf_dir }} \
 --cluster-dns={{ k8s_cluster_dns }} \
 --cluster-domain={{ k8s_cluster_domain }} \
+--fail-swap-on=false \
 --kubeconfig={{ k8s_policy_dir }}/kubelet.kubeconfig \
 --network-plugin=cni \
 --node-labels={% if inventory_hostname in k8s_master_hosts %}node-role.kubernetes.io/master=true{% else %}node-role.kubernetes.io/node=true{% endif %} \

@@ -12,6 +12,9 @@
     src: "{{ item }}"
     dest: "{{ k8s_addons_dir }}/{{ item }}"
   with_items:
+    - gce-storage.yaml
+    - ceph-storage.yaml
+    - local-storage.yaml
     - volumes.yaml
 
 - name: Deploy script for services volumes

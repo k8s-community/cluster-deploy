@@ -1,0 +1,8 @@
+---
+- hosts: master
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  roles:
+    - readiness
+    - role: coredns
+      k8s_master_hosts: '{{ groups["master"] }}'

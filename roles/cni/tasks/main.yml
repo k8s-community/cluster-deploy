@@ -8,7 +8,15 @@
     - '{{ cni_bin_dir }}'
     - '{{ cni_conf_dir }}'
     - '{{ k8s_cni_dir }}'
+
+- name: Check kubernetes directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
     - '{{ k8s_romana_etcd_dir }}'
+  when: cni_type == 'romana'
 
 - name: Get calicoctl
   get_url:
@@ -24,9 +32,17 @@
     dest: "{{ k8s_cni_dir }}/{{ item }}"
     mode: 0644
   with_items:
-    - romana.yaml
     - canal.yaml
-  when: inventory_hostname in k8s_master_hosts
+  when: inventory_hostname in k8s_master_hosts and cni_type == 'calico'
+
+- name: CNI types
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_cni_dir }}/{{ item }}"
+    mode: 0644
+  with_items:
+    - romana.yaml
+  when: inventory_hostname in k8s_master_hosts and cni_type == 'romana'
 
 - name: Deploy script for CNI
   template:

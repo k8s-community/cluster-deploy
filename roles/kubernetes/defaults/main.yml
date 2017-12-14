@@ -25,7 +25,6 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 
 # Kubernetes master and services host names
 k8s_master_name: master.your-domain-name
-k8s_services_name: services.your-domain-name
 
 # SSL base certificate name
 # SSL folder and file names will use the same name
@@ -62,7 +61,7 @@ k8s_cluster_dns: 10.254.0.10
 k8s_cluster_cidr: 10.20.0.0/16
 
 # Kubernetes hyperkube version
-k8s_version: 1.7.6
+k8s_version: 1.8.5
 
 # Kubernetes configs path
 k8s_conf_dir: /etc/kubernetes

@@ -44,23 +44,23 @@ k8s_romana_version: 2.0-preview.1
 k8s_romana_etcd_dir: /var/lib/romana/etcd
 
 # Calico version 
-k8s_calico_version: 2.5.1
+k8s_calico_version: 2.6.3
 
 # Calico CTL version 
-k8s_calicoctl_version: 1.5.0
+k8s_calicoctl_version: 1.6.2
 
 # Flannel backend type (Options: gce, vxlan)
 k8s_flannel_backend: vxlan
 
 # Flannel image
 k8s_flannel_image: quay.io/coreos/flannel
-k8s_flannel_image_tag: v0.8.0
+k8s_flannel_image_tag: v0.9.1
 
 # Calico images
 k8s_calico_node_image: quay.io/calico/node
 k8s_calico_node_image_tag: v{{ k8s_calico_version }}
 k8s_calico_cni_image: quay.io/calico/cni
-k8s_calico_cni_image_tag: v1.10.0
+k8s_calico_cni_image_tag: v1.11.1
 
 # Romana images
 k8s_romana_agent: quay.io/romana/agent

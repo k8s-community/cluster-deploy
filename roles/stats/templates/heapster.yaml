@@ -8,7 +8,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: heapster-binding
@@ -27,7 +27,7 @@ subjects:
 ---
 # Heapster's pod_nanny monitors the heapster deployment & its pod(s), and scales
 # the resources of the deployment if necessary.
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: system:pod-nanny
@@ -51,7 +51,7 @@ rules:
   - update
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: heapster-binding
@@ -141,9 +141,11 @@ spec:
             - --extra-cpu={{ k8s_heapster_metrics_cpu_per_node }}m
             - --memory={{ k8s_heapster_base_metrics_memory }}
             - --extra-memory={{ k8s_heapster_metrics_memory_per_node }}Mi
+            - --threshold=5
             - --deployment=heapster-{{ k8s_heapster_image_tag }}
             - --container=heapster
             - --poll-period=300000
+            - --estimator=exponential
         - image: {{ k8s_heapster_addon_resizer_image }}:{{ k8s_heapster_addon_resizer_image_tag }}
           name: eventer-nanny
           resources:
@@ -168,9 +170,11 @@ spec:
             - --extra-cpu=0m
             - --memory={{ k8s_heapster_base_eventer_memory }}
             - --extra-memory={{ k8s_heapster_eventer_memory_per_node }}Ki
+            - --threshold=5
             - --deployment=heapster-{{ k8s_heapster_image_tag }}
             - --container=eventer
             - --poll-period=300000
+            - --estimator=exponential
 
 ---
 kind: Service
@@ -212,7 +216,14 @@ spec:
         k8s-app: influxGrafana
         version: v4
         kubernetes.io/cluster-service: "true"
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec: 
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
       containers: 
         - image: {{ k8s_heapster_influxdb_image }}:{{ k8s_heapster_influxdb_image_tag }}
           name: influxdb
@@ -225,8 +236,10 @@ spec:
               cpu: 100m
               memory: 500Mi
           ports: 
-            - containerPort: 8083
-            - containerPort: 8086
+            - name: http
+              containerPort: 8083
+            - name: api
+              containerPort: 8086
           volumeMounts:
           - name: influxdb-persistent-storage
             mountPath: /data
@@ -257,6 +270,9 @@ spec:
               value: Admin
             - name: GF_SERVER_ROOT_URL
               value: /api/v1/proxy/namespaces/kube-system/services/monitoring-grafana/
+          ports:
+          - name: ui
+            containerPort: 3000
           volumeMounts:
           - name: grafana-persistent-storage
             mountPath: /var
