@@ -1,0 +1,43 @@
+{% for host in k8s_node_hosts %}
+---
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: cockroachdb-volume-{{ loop.index0 }}
+  labels:
+    app: cockroachdb
+    db: db-{{ loop.index0 }}
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: {{ k8s_cockroachdb_volume_size }}
+  hostPath:
+    path: {{ k8s_cockroachdb_dir }}/{{ loop.index0 }}
+  persistentVolumeReclaimPolicy: Recycle
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-cockroachdb-{{ loop.index0 }}
+  labels:
+    app: cockroachdb
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+  namespace: {{ k8s_cockroachdb_namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ k8s_cockroachdb_volume_size }}
+  selector:
+    matchLabels:
+      db: db-{{ loop.index0 }}
+
+{% endfor %}

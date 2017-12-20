@@ -15,6 +15,7 @@
   with_items:
     - cockroachdb.yaml
     - cockroachdb-init.yaml
+    - cockroachdb-volumes.yaml
 
 - name: Deploy script for Cockroach DB
   template:

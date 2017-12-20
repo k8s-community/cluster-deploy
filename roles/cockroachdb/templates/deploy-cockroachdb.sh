@@ -1,5 +1,17 @@
 #!/bin/bash
 
+function deploy_cockroachdb_volumes {
+
+    if kubectl get pv | grep cockroachdb-volume &> /dev/null; then
+        echo "Cockroach DB volumes already exists"
+    else
+        echo "Creating Cockroach DB volumes"
+        kubectl apply -f {{ k8s_addons_dir }}/cockroachdb-volumes.yaml
+    fi
+
+    echo
+}
+
 function deploy_cockroachdb {
     local times=300
 
@@ -58,6 +70,7 @@ function deploy_cockroachdb-init {
     echo
 }
 
+deploy_cockroachdb_volumes
 deploy_cockroachdb
 {% if k8s_cockroachdb_secure %}
 deploy_cockroachdb-init-secure
