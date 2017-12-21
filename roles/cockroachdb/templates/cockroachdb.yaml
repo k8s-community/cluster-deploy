@@ -207,16 +207,14 @@ spec:
 {% endif %}
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - cockroachdb
-              topologyKey: kubernetes.io/hostname
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cockroachdb
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: cockroachdb
         image: {{ k8s_cockroachdb_image }}:{{ k8s_cockroachdb_image_tag }}
@@ -266,7 +264,6 @@ spec:
         requests:
           storage: {{ k8s_cockroachdb_volume_size }}
 
-{% if not k8s_cockroachdb_secure %}
 ---
 
 apiVersion: extensions/v1beta1
@@ -276,11 +273,17 @@ metadata:
   namespace: {{ k8s_cockroachdb_namespace }}
   labels:
     app: cockroachdb
+{% if k8s_cockroachdb_secure %}
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+{% endif %}
 spec:
+{% if not k8s_cockroachdb_secure %}
   tls:
   - hosts:
     - {{ k8s_services_name }}
     secretName: tls-secret
+{% endif %}
   rules:
   - host: {{ k8s_services_name }}
     http:
@@ -289,4 +292,3 @@ spec:
         backend:
           serviceName: cockroachdb-public
           servicePort: 8080
-{% endif %}
