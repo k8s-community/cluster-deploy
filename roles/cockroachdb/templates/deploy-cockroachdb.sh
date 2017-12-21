@@ -37,7 +37,7 @@ function deploy_cockroachdb {
     echo
 }
 
-function deploy_cockroachdb-init-secure {
+function deploy_cockroachdb_init_secure {
     local times=300
 
     if kubectl get job -l app=cockroachdb | grep cluster-init &> /dev/null; then
@@ -58,7 +58,7 @@ function deploy_cockroachdb-init-secure {
     echo
 }
 
-function deploy_cockroachdb-init {
+function deploy_cockroachdb_init {
 
     if kubectl get job -l app=cockroachdb | grep cluster-init &> /dev/null; then
         echo "Cockroach DB Init already exists"
@@ -70,10 +70,23 @@ function deploy_cockroachdb-init {
     echo
 }
 
+function deploy_cockroachdb_client {
+
+    if kubectl get pod -l app=cockroachdb-client | grep cockroachdb-client &> /dev/null; then
+        echo "Cockroach DB Client already exists"
+    else
+        echo "Creating Cockroach DB Client"
+        kubectl apply -f {{ k8s_addons_dir }}/cockroachdb-client.yaml
+    fi
+
+    echo
+}
+
 deploy_cockroachdb_volumes
 deploy_cockroachdb
 {% if k8s_cockroachdb_secure %}
-deploy_cockroachdb-init-secure
+deploy_cockroachdb_init_secure
 {% else %}
-deploy_cockroachdb-init
+deploy_cockroachdb_init
 {% endif %}
+deploy_cockroachdb_client

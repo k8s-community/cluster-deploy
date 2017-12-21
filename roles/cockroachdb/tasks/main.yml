@@ -16,6 +16,7 @@
     - cockroachdb.yaml
     - cockroachdb-init.yaml
     - cockroachdb-volumes.yaml
+    - cockroachdb-client.yaml
 
 - name: Deploy script for Cockroach DB
   template:
