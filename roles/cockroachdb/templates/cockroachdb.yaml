@@ -77,6 +77,25 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
+  name: cockroachdb-dashboard
+  namespace: {{ k8s_cockroachdb_namespace }}
+  labels:
+    app: cockroachdb
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 31443
+    name: https
+  selector:
+    app: cockroachdb
+  externalTrafficPolicy: Local
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   # This service is meant to be used by clients of the database. It exposes a ClusterIP that will
   # automatically load balance connections to the different database pods.
   name: cockroachdb-public
