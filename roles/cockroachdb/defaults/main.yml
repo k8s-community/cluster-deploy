@@ -27,6 +27,9 @@ k8s_cockroachdb_namespace: default
 # Cockroach DB data dir
 k8s_cockroachdb_dir: /var/lib/cockroachdb
 
+# List of databases for backup
+k8s_cockroachdb_backup: {}
+
 # Master hosts nsmes
 k8s_master_hosts: {}
 
