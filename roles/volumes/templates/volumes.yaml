@@ -5,6 +5,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: services-{{ namespace }}
+  volume: services
 spec:
 {% if network_storage and network_storage_type == 'ceph' %}
   capacity:
@@ -52,5 +53,66 @@ spec:
     requests:
       storage: 1Gi
 {% endif %}
+  selector:
+    matchLabels:
+      volume: services
 
 {% endfor %}
+---
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: backup
+  labels:
+    volume: backup
+spec:
+{% if network_storage and network_storage_type == 'ceph' %}
+  capacity:
+    storage: {{ k8s_backup_volume }}Gi
+  accessModes:
+    - ReadWriteMany
+  cephfs:
+    monitors:
+{% for item in k8s_storage_hosts %}
+      - {{ item }}:{{ ceph_monitor_port }}
+{% endfor %}
+    user: admin
+    secretRef:
+      name: ceph-secret
+    readOnly: false
+{% else %}
+  capacity:
+    storage: 1Gi
+    - ReadWriteOnce
+  hostPath:
+    path: {{ k8s_backup_dir }}
+{% endif %}
+  persistentVolumeReclaimPolicy: Retain
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: backup
+  labels:
+    kubernetes.io/cluster-service: "true"
+    volume: backup
+spec:
+{% if network_storage and network_storage_type == 'ceph' %}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ k8s_backup_volume }}Gi
+{% else %}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+{% endif %}
+  selector:
+    matchLabels:
+      volume: backup

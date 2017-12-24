@@ -21,6 +21,11 @@ Size of volume in Gb. That volume used by services
 k8s_services_volume: 30
 ```
 
+Size of volume in Gb. That volume used for backups
+```yaml
+k8s_backup_volume: 30
+```
+
 Kubernetes configs path
 ```yaml
 k8s_conf_dir: /etc/kubernetes
@@ -30,6 +35,11 @@ k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
 Services volumes host path
 ```yaml
 k8s_services_dir: /var/lib/data
+```
+
+Backup volumes host path
+```yaml
+k8s_backup_dir: /var/lib/backup
 ```
 
 Using of network storage
