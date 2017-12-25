@@ -72,43 +72,24 @@ subjects:
     namespace: {{ k8s_cockroachdb_namespace }}
 
 {% endif %}
-{% for host in k8s_node_hosts %}
 ---
 
-kind: PersistentVolume
 apiVersion: v1
+kind: Service
 metadata:
-  name: cockroachdb-volume-{{ loop.index0 }}
-  labels:
-    app: cockroachdb
-    kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: {{ k8s_cockroachdb_volume_size }}
-  hostPath:
-    path: {{ k8s_cockroachdb_dir }}/{{ loop.index0 }}
-
----
-
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: datadir-cockroachdb-{{ loop.index0 }}
-  labels:
-    app: cockroachdb
-    kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
+  name: cockroachdb-dashboard
   namespace: {{ k8s_cockroachdb_namespace }}
+  labels:
+    app: cockroachdb
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ k8s_cockroachdb_volume_size }}
-{% endfor %}
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 31443
+    name: https
+  selector:
+    app: cockroachdb
+  externalTrafficPolicy: Local
 
 ---
 
@@ -245,16 +226,14 @@ spec:
 {% endif %}
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - cockroachdb
-              topologyKey: kubernetes.io/hostname
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cockroachdb
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: cockroachdb
         image: {{ k8s_cockroachdb_image }}:{{ k8s_cockroachdb_image_tag }}
@@ -304,7 +283,6 @@ spec:
         requests:
           storage: {{ k8s_cockroachdb_volume_size }}
 
-{% if not k8s_cockroachdb_secure %}
 ---
 
 apiVersion: extensions/v1beta1
@@ -314,11 +292,17 @@ metadata:
   namespace: {{ k8s_cockroachdb_namespace }}
   labels:
     app: cockroachdb
+{% if k8s_cockroachdb_secure %}
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+{% endif %}
 spec:
+{% if not k8s_cockroachdb_secure %}
   tls:
   - hosts:
     - {{ k8s_services_name }}
     secretName: tls-secret
+{% endif %}
   rules:
   - host: {{ k8s_services_name }}
     http:
@@ -327,4 +311,3 @@ spec:
         backend:
           serviceName: cockroachdb-public
           servicePort: 8080
-{% endif %}

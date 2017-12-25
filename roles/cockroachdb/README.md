@@ -46,7 +46,13 @@ k8s_cockroachdb_dir: /var/lib/cockroachdb
 Cockroach DB volume and cache size
 ```yaml
 k8s_cockroachdb_volume_size: 1Gi
-k8s_cockroachdb_cache_size: 250Mb
+k8s_cockroachdb_cache_size: 25%
+k8s_cockroachdb_max_sql_memory: 25%
+```
+
+List of databases for backup
+```yaml
+k8s_cockroachdb_backup: {}
 ```
 
 Master hosts nsmes
