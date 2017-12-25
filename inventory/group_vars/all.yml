@@ -80,6 +80,13 @@ node_services:
       path: /healthz
       status: 200
     sslProxy: true
+  - name: k8s-dashboard-7443
+    port: 7443
+    nodePort: 32443
+    httpCheck:
+      path: /
+      status: 200
+    sslProxy: true
 
 gateway_services:
   - name: istio-80
