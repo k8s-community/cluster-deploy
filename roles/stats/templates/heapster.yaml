@@ -1,3 +1,5 @@
+---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -8,6 +10,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -25,6 +28,7 @@ subjects:
   namespace: kube-system
 
 ---
+
 # Heapster's pod_nanny monitors the heapster deployment & its pod(s), and scales
 # the resources of the deployment if necessary.
 apiVersion: rbac.authorization.k8s.io/v1
@@ -51,6 +55,7 @@ rules:
   - update
 
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -69,6 +74,37 @@ subjects:
   namespace: kube-system
 
 ---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: heapster-config
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: EnsureExists
+data:
+  NannyConfiguration: |-
+    apiVersion: nannyconfig/v1alpha1
+    kind: NannyConfiguration
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eventer-config
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: EnsureExists
+data:
+  NannyConfiguration: |-
+    apiVersion: nannyconfig/v1alpha1
+    kind: NannyConfiguration
+
+---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -137,6 +173,7 @@ spec:
                   fieldPath: metadata.namespace
           command:
             - /pod_nanny
+            - --config-dir=/etc/config
             - --cpu={{ k8s_heapster_base_metrics_cpu }}
             - --extra-cpu={{ k8s_heapster_metrics_cpu_per_node }}m
             - --memory={{ k8s_heapster_base_metrics_memory }}
@@ -146,6 +183,9 @@ spec:
             - --container=heapster
             - --poll-period=300000
             - --estimator=exponential
+          volumeMounts:
+          - name: heapster-config-volume
+            mountPath: /etc/config
         - image: {{ k8s_heapster_addon_resizer_image }}:{{ k8s_heapster_addon_resizer_image_tag }}
           name: eventer-nanny
           resources:
@@ -166,6 +206,7 @@ spec:
                   fieldPath: metadata.namespace
           command:
             - /pod_nanny
+            - --config-dir=/etc/config
             - --cpu=100m
             - --extra-cpu=0m
             - --memory={{ k8s_heapster_base_eventer_memory }}
@@ -175,8 +216,19 @@ spec:
             - --container=eventer
             - --poll-period=300000
             - --estimator=exponential
+          volumeMounts:
+          - name: eventer-config-volume
+            mountPath: /etc/config
+      volumes:
+        - name: heapster-config-volume
+          configMap:
+            name: heapster-config
+        - name: eventer-config-volume
+          configMap:
+            name: eventer-config
 
 ---
+
 kind: Service
 apiVersion: v1
 metadata:
@@ -194,6 +246,7 @@ spec:
     k8s-app: heapster
 
 ---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -283,6 +336,7 @@ spec:
         emptyDir: {}
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -304,6 +358,7 @@ spec:
     k8s-app: influxGrafana
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
