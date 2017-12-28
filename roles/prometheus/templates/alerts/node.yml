@@ -77,7 +77,7 @@
       # Alert for node that is unreachable for > 5 minutes
       #
       - alert: NodeIsDown
-        expr: up{job="kubernetes-nodes"} == 0 or absent(up{job="kubernetes-nodes"} == 1)
+        expr: absent(up{job="kubernetes-nodes"} == 1)
         for: 5m
         labels:
           severity: warning

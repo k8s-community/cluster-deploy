@@ -22,7 +22,7 @@
       # Alert for pod that is unreachable for > 5 minutes
       #
       - alert: PodIsDown
-        expr: up{job="kubernetes-service-endpoints"} == 0 or absent(up{job="kubernetes-service-endpoints"} == 1)
+        expr: absent(up{job="kubernetes-service-endpoints"} == 1)
         for: 5m
         labels:
           severity: warning
