@@ -31,4 +31,4 @@ k8s_master_hosts: {}
 
 # KubeDNS images
 k8s_coredns_image: coredns/coredns
-k8s_coredns_image_tag: 1.0.0
+k8s_coredns_image_tag: 1.0.1
