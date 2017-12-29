@@ -65,6 +65,9 @@ data:
         errors
         log
         health
+{% for service in external_services %}
+        rewrite name prefix {{ service.name }} {{ service.host }}
+{% endfor %}
         kubernetes {{ k8s_cluster_domain }} {{ k8s_services_network }} {{ k8s_cluster_cidr }}
         proxy . /etc/resolv.conf
         cache 30
