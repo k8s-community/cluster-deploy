@@ -297,4 +297,4 @@ spec:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
         - --configmap=kube-system/nginx-configuration
-        - --annotations-prefix=nginx.ingress.kubernetes.io
+        - --annotations-prefix=ingress.kubernetes.io
