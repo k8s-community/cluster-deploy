@@ -4,3 +4,4 @@
 - include: system/master-lb.yml
 - include: system/node-lb.yml
 - include: system/gateway-lb.yml
+- include: system/logs-rotation.yml
