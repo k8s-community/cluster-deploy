@@ -1,0 +1,8 @@
+---
+# handlers file for logrotate
+
+- name: apply logrotate configs
+  command: 'logrotate -f {{ logrotate_config_path }}'
+  ignore_errors: yes
+  register: command_result
+  failed_when: command_result.stderr != "" or command_result.stdout != ""

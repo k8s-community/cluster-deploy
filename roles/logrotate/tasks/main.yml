@@ -1,0 +1,127 @@
+---
+# tasks file for logrotate
+- name: Install logrotate (if it's absent)
+  yum: name=logrotate state=present
+
+- name: Set period count for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*rotate'
+    line: '    rotate {{ rotate_count }}'
+    insertafter: '^{'
+  notify:
+    - apply logrotate configs
+
+- name: Set period for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*hourly|daily|weekly|monthly|yearly'
+    line: '    {{ rotate_period }}'
+    insertafter: '^{'
+  notify:
+    - apply logrotate configs
+
+- name: Set missingok for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*missingok'
+    line: '    missingok'
+    insertafter: '^{'
+  when: missingok == true
+  notify:
+    - apply logrotate configs
+
+- name: Unset missingok for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*missingok'
+    state: absent
+  when: missingok != true
+  notify:
+    - apply logrotate configs
+
+- name: Set notifempty for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*notifempty'
+    line: '    notifempty'
+    insertafter: '^{'
+  when: notifempty == true
+  notify:
+    - apply logrotate configs
+
+- name: Unset notifempty for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*notifempty'
+    state: absent
+  when: notifempty != true
+  notify:
+    - apply logrotate configs
+
+- name: Set missingok for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*missingok'
+    line: '    missingok'
+    insertafter: '^{'
+  when: missingok == true
+  notify:
+    - apply logrotate configs
+
+- name: Unset missingok for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*missingok'
+    state: absent
+  when: missingok != true
+  notify:
+    - apply logrotate configs
+
+- name: Set compress for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*compress'
+    line: '    compress'
+    insertafter: '^{'
+  when: compress == true
+  notify:
+    - apply logrotate configs
+
+- name: Unset compress for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*compress'
+    state: absent
+  when: compress != true
+  notify:
+    - apply logrotate configs
+
+- name: Set delaycompress for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*delaycompress'
+    line: '    delaycompress'
+    insertafter: '^{'
+  when: delaycompress == true
+  notify:
+    - apply logrotate configs
+
+- name: Unset delaycompress for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*delaycompress'
+    state: absent
+  when: delaycompress != true
+  notify:
+    - apply logrotate configs
+
+- name: Set file size for syslog rotation
+  lineinfile:
+    dest: '{{ syslog_path }}'
+    regexp: '^\s*size'
+    line: '    size {{ size }}'
+    insertafter: '^{'
+  when: size is defined and size != ""
+  notify:
+    - apply logrotate configs
