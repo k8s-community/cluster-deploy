@@ -1,0 +1,5 @@
+---
+# handlers file for journald
+
+- name: restart journald
+  command: systemctl restart systemd-journald

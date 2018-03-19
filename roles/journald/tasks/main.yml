@@ -1,0 +1,42 @@
+---
+# tasks file for journald
+
+- name: Set maximum disk space in persistent storage for journald
+  lineinfile:
+    dest: '{{ journald_config_path }}'
+    regexp: 'SystemMaxUse='
+    line: 'SystemMaxUse={{ system_max_use }}'
+  notify:
+    - restart journald
+
+- name: Set max file size for individual journal files in persistent storage
+  lineinfile:
+    dest: '{{ journald_config_path }}'
+    regexp: 'SystemMaxFileSize='
+    line: 'SystemMaxFileSize={{ system_max_file_size }}'
+  notify:
+    - restart journald
+
+- name: Set max retention time (in seconds) for journald information
+  lineinfile:
+    dest: '{{ journald_config_path }}'
+    regexp: 'MaxRetentionSec='
+    line: 'MaxRetentionSec={{ max_retention_sec }}'
+  notify:
+    - restart journald
+
+- name: Set maximum disk space in volatile storage for journald
+  lineinfile:
+    dest: '{{ journald_config_path }}'
+    regexp: 'RuntimeMaxUse='
+    line: 'RuntimeMaxUse={{ runtime_max_use }}'
+  notify:
+    - restart journald
+
+- name: Set max file size for individual journal files in volatile storage
+  lineinfile:
+    dest: '{{ journald_config_path }}'
+    regexp: 'RuntimeMaxFileSize='
+    line: 'RuntimeMaxFileSize={{ runtime_max_file_size }}'
+  notify:
+    - restart journald

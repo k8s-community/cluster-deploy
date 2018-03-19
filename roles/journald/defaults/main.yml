@@ -1,0 +1,22 @@
+---
+# defaults file for journald
+
+# Journald configs' path
+journald_config_path: /etc/systemd/journald.conf
+
+# The maximum disk space that can be used by the journal in persistent storage
+system_max_use: 512M
+
+# How large individual journal files can grow to in persistent storage before being rotated
+system_max_file_size: 64M
+
+# Max retention time (in seconds)
+max_retention_sec: 604800
+
+# The maximum disk space that can be used in volatile storage
+# (within the /run filesystem)
+runtime_max_use: 256M
+
+# The amount of space that an individual journal file can take up
+# in volatile storage (within the /run filesystem) before being rotated
+runtime_max_file_size: 64M
