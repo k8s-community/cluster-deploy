@@ -1,7 +1,9 @@
 ---
 # tasks file for logrotate
 - name: Install logrotate (if it's absent)
-  yum: name=logrotate state=present
+  yum:
+    name: logrotate
+    state: present
 
 - name: Set period count for syslog rotation
   lineinfile:
