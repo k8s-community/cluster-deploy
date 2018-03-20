@@ -1,7 +1,7 @@
 Ansible Role: Setup logrotate
 ======================
 
-This role install logrotate on Red Hat linux based systems.
+This role installs logrotate on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/k8s-community/cluster-deploy/issues)
 

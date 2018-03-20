@@ -1,7 +1,7 @@
 Ansible Role: Setup configs for journald
 ============================
 
-This role setup configs for journald on Red Hat linux based systems.
+This role setups configs for journald on Red Hat linux based systems.
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/openprovider/cloud-setup/issues)
 
