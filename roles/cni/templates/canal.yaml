@@ -2,10 +2,9 @@
 # Calico Roles
 # Pulled from https://docs.projectcalico.org/v2.5/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico
-  namespace: kube-system
 rules:
   - apiGroups: [""]
     resources:
@@ -60,7 +59,7 @@ rules:
 # Flannel roles
 # Pulled from https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel-rbac.yml
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: flannel
 rules:
@@ -87,7 +86,7 @@ rules:
 
 # Bind the flannel ClusterRole to the canal ServiceAccount.
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: canal-flannel
 roleRef:
@@ -102,7 +101,7 @@ subjects:
 ---
 
 # Bind the calico ClusterRole to the canal ServiceAccount.
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: canal-calico
@@ -234,7 +233,7 @@ data:
         {
           "type": "portmap",
           "capabilities": {"portMappings": true},
-          "snat": false
+          "snat": true
         }
       ]
     }
@@ -274,6 +273,11 @@ spec:
       hostNetwork: true
       serviceAccountName: canal
       tolerations:
+        # this taint is set by all kubelets running `--cloud-provider=external`
+        # so we should tolerate it to schedule the canal pods
+        - key: node.cloudprovider.kubernetes.io/uninitialized
+          value: "true"
+          effect: NoSchedule
         # Allow the pod to run on the master.  This is required for
         # the master to communicate with pods.
         - key: node-role.kubernetes.io/master
@@ -282,6 +286,9 @@ spec:
         # Mark the pod as a critical add-on for rescheduling.
         - key: "CriticalAddonsOnly"
           operator: "Exists"
+      # Minimize downtime during a rolling upgrade or deletion; tell Kubernetes to do a "force
+      # deletion": https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods.
+      terminationGracePeriodSeconds: 0
       containers:
         # Runs calico/node container on each Kubernetes node.  This
         # container programs network policy and routes on each

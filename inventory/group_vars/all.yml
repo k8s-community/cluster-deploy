@@ -5,13 +5,13 @@
 # k8s_log_spec: ''
 
 # Kubernetes version
-# k8s_version: 1.7.6
+# k8s_version: 1.8.5
 
 # Helm package manager version
-# helm_version: 2.6.1
+# helm_version: 2.7.2
 
 # Golang compiller version
-# go_version: 1.9
+# go_version: 1.9.2
 
 # Account name of remote user. Ansible will use this user account to ssh into
 # the managed machines. The user must be able to use sudo without asking
@@ -81,6 +81,13 @@ node_services:
     nodePort: 443
     httpCheck:
       path: /healthz
+      status: 200
+    sslProxy: true
+  - name: k8s-dashboard-7443
+    port: 7443
+    nodePort: 32443
+    httpCheck:
+      path: /
       status: 200
     sslProxy: true
 
@@ -201,11 +208,14 @@ k8s_cluster_dns: 10.254.0.10
 # Conteiner Network Interface type, valid values: `calico`, `romana`
 # cni_type: calico
 
+# Size of volume in Gb. That volume used by services
+# k8s_services_volume: 30
+
 # Using of network storage
 # If network storage disabled will use local disk for every requested claim
 # network_storage: false
 
-# Kubernetes network persistent disk type, valid values: `gce`
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
 # TODO: AWS persistent disk `aws`
 # network_storage_type: gce
 

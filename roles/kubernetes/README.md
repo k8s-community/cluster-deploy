@@ -52,7 +52,6 @@ k8s_cluster_domain: '{{ k8s_domain_name }}.{{ k8s_cluster_name }}'
 Kubernetes master and services host names
 ```yaml
 k8s_master_name: master.your-domain-name
-k8s_services_name: services.your-domain-name
 ```
 
 SSL base certificate name

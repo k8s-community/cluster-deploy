@@ -7,9 +7,11 @@ metadata:
   labels:
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
+
 ---
+
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: tiller-deploy
   labels:
@@ -22,7 +24,9 @@ subjects:
 - kind: ServiceAccount
   name: tiller-deploy
   namespace: kube-system
+
 ---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -64,11 +68,15 @@ spec:
         env:
         - name: TILLER_NAMESPACE
           value: kube-system
+        - name: TILLER_HISTORY_MAX
+          value: "3"
         ports:
         - containerPort: 44134
           name: tiller
           protocol: TCP
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:

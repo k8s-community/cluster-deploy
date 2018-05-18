@@ -1,0 +1,53 @@
+---
+# Size of volume in Gb. That volume used by services
+k8s_services_volume: 30
+
+# Size of volume in Gb. That volume used for backups
+k8s_backup_volume: 30
+
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_addons_dir: '{{ k8s_conf_dir }}/addons'
+
+# Services volumes host path
+k8s_services_dir: /var/lib/data
+
+# Backup volumes host path
+k8s_backup_dir: /var/lib/backup
+
+# Using of network storage
+# If network storage disabled will use local disk for every requested claim 
+network_storage: false
+
+# Kubernetes network persistent disk type, valid values: `gce`, `ceph`
+# TODO: AWS persistent disk `aws`
+network_storage_type: gce 
+
+# Storage hosts names
+k8s_storage_hosts: {}
+
+# A zone is an isolated location within a region.
+# Resources that live in a zone, such as instances,
+# are referred to as zonal resources
+gce_instances_zone: europe-west1-b
+
+# Name of GCE persistent disk
+gce_storage_name: pd-std
+
+# Type of GCE storage, options: `slow`, `fast`
+gce_storage_type: slow
+
+# Ceph monitor port
+ceph_monitor_port: 6789
+
+# Ceph pool name
+ceph_pull_name: rbd
+
+# Ceph RBD image name
+ceph_rbd_image_name: rbdstore
+
+# Ceph user name
+ceph_user_name: admin
+
+# Ceph monitor servers
+ceph_monitor_servers: "{% for host in k8s_storage_hosts %}{{ host }}:{{ ceph_monitor_port }}{% if not loop.last %},{% endif %}{% endfor %}"

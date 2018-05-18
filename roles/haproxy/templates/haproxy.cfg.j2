@@ -27,7 +27,8 @@ defaults
 
 {% for item in haproxy_services %}
 listen {{ item.name }}
-    bind *:{{ item.port }}
+    bind *:{{ item.port }}{% if item.sslTerminate is defined and item.sslTerminate %} ssl crt {{ haproxy_ssl_dir }}/certs.pem no-sslv3{% endif %}
+
 {% if item.httpRedirect is defined and item.httpRedirect %}
     mode http
     redirect scheme https
@@ -38,7 +39,7 @@ listen {{ item.name }}
 {% endif %}
     default-server inter {{ haproxy_check_interval }} rise {{ haproxy_check_rise }} fall {{ haproxy_check_fall }}
 {% for host in haproxy_hosts %}
-    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ item.nodePort }}{% if item.sslProxy is defined and item.sslProxy %} verify none check-ssl{% endif %} check
+    server {{ host }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ item.nodePort }}{% if item.sslProxy is defined and item.sslProxy %} verify none check-ssl{% endif %}{% if item.sslTerminate is defined and item.sslTerminate %} ssl verify none{% endif %} check
 {% endfor %}
 {% endif %}
 

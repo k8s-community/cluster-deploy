@@ -23,10 +23,10 @@ k8s_master_hosts: {}
 
 # KubeDNS images
 k8s_kubedns_image: gcr.io/google_containers/k8s-dns-kube-dns-amd64
-k8s_kubedns_image_tag: 1.14.4
+k8s_kubedns_image_tag: 1.14.7
 k8s_kubednsmasq_image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64
-k8s_kubednsmasq_image_tag: 1.14.4
+k8s_kubednsmasq_image_tag: 1.14.7
 k8s_kubednssidecar_image: gcr.io/google_containers/k8s-dns-sidecar-amd64
-k8s_kubednssidecar_image_tag: 1.14.4
+k8s_kubednssidecar_image_tag: 1.14.7
 k8s_cluster_autoscaler_image: gcr.io/google_containers/cluster-proportional-autoscaler-amd64
 k8s_cluster_autoscaler_image_tag: 1.1.2

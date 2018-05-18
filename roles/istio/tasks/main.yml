@@ -20,6 +20,12 @@
     mode: 0755
     remote_src: true
 
+- name: Istio Ingress Certs Secret
+  template:
+    src: ingress-certs-secret.yaml
+    dest: "{{ k8s_istio_dir }}/ingress-certs-secret.yaml"
+  when: k8s_services_cert | length > 1000
+
 - name: Istio
   template:
     src: "{{ item }}"

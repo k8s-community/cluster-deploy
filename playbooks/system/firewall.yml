@@ -104,7 +104,19 @@
     notify:
       - reload firewall
 
-  - name: Enable firewall master lb external zone services
+  - name: Disable firewall node lb external zone services
+    firewalld:
+      zone: external
+      service: "{{ item }}"
+      state: disabled
+      permanent: true
+    with_items:
+      - '{{ disabled_services }}'
+    when: inventory_hostname in groups['node_lb']
+    notify:
+      - reload firewall
+
+  - name: Enable firewall master/node lb external zone services
     firewalld:
       zone: external
       service: "{{ item }}"
@@ -128,7 +140,7 @@
     notify:
       - reload firewall
 
-  - name: Setup firewall master lb external zone sources
+  - name: Setup firewall master/node lb external zone sources
     firewalld:
       zone: external
       source: "{{ item }}"

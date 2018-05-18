@@ -1,0 +1,28 @@
+---
+- name: Check addons directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - '{{ k8s_addons_dir }}'
+
+- name: Service volumes
+  template:
+    src: "{{ item }}"
+    dest: "{{ k8s_addons_dir }}/{{ item }}"
+  with_items:
+    - gce-storage.yaml
+    - ceph-storage.yaml
+    - local-storage.yaml
+    - volumes.yaml
+
+- name: Deploy script for services volumes
+  template:
+    src: deploy-volumes.sh
+    dest: "{{ k8s_addons_dir }}/deploy-volumes.sh"
+    mode: 0755
+
+- name: Run deploy script for services volumes
+  command: "{{ k8s_addons_dir }}/deploy-volumes.sh"
+  when: inventory_hostname in k8s_storage_hosts[0]

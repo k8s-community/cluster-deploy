@@ -1,0 +1,5 @@
+---
+# handlers file for logrotate
+
+- name: apply logrotate configs
+  command: 'logrotate {{ logrotate_config_path }}'

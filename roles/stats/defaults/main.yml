@@ -8,9 +8,9 @@ k8s_master_hosts: {}
 
 # Heapster images
 k8s_heapster_image: gcr.io/google_containers/heapster-amd64
-k8s_heapster_image_tag: v1.4.2
+k8s_heapster_image_tag: v1.5.0
 k8s_heapster_addon_resizer_image: gcr.io/google_containers/addon-resizer
-k8s_heapster_addon_resizer_image_tag: 2.1
+k8s_heapster_addon_resizer_image_tag: 1.8.1
 k8s_heapster_influxdb_image: gcr.io/google_containers/heapster-influxdb-amd64
 k8s_heapster_influxdb_image_tag: v1.3.3
 k8s_heapster_grafana_image: gcr.io/google_containers/heapster-grafana-amd64

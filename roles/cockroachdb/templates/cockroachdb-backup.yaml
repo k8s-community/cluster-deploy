@@ -1,0 +1,69 @@
+{% for database in k8s_cockroachdb_backup %}
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-{{ database | replace("_", "-") }}
+  namespace: {{ k8s_cockroachdb_namespace }}
+  labels:
+    app: backup-{{ database | replace("_", "-") }}
+spec:
+  schedule: "@hourly"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 900
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+{% if k8s_cockroachdb_secure %}
+          serviceAccountName: cockroachdb
+          initContainers:
+          # The init-certs container sends a certificate signing request to the
+          # kubernetes cluster.
+          # You can see pending requests using: kubectl get csr
+          # CSRs can be approved using:         kubectl certificate approve <csr name>
+          #
+          # In addition to the client certificate and key, the init-certs entrypoint will symlink
+          # the cluster CA to the certs directory.
+          - name: init-certs
+            image: {{ k8s_cockroachdb_request_cert_image }}:{{ k8s_cockroachdb_request_cert_image_tag }}
+            imagePullPolicy: IfNotPresent
+            command:
+            - "/bin/ash"
+            - "-ecx"
+            - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=backup -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+            env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            volumeMounts:
+            - name: client-certs
+              mountPath: /cockroach-certs
+{% endif %}
+          containers:
+          - name: cockroachdb-client
+            image: {{ k8s_cockroachdb_image }}:{{ k8s_cockroachdb_image_tag }}
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/bash"]
+            args: ["-c", "./cockroach dump {{ database }} --user=backup {% if k8s_cockroachdb_secure %}--certs-dir=/cockroach-certs{% else %}--insecure{% endif %} --host=cockroachdb-public | gzip > /var/lib/backup/`date +%Y-%m-%d_%H-%M-%S`_{{ database }}.sql.gz"]
+            volumeMounts:
+            - name: backup
+              mountPath: /var/lib/backup
+              subPath: cockroachdb-backup
+{% if k8s_cockroachdb_secure %}
+            - name: client-certs
+              mountPath: /cockroach-certs
+{% endif %}
+          volumes:
+          - name: backup
+            persistentVolumeClaim:
+              claimName: backup
+{% if k8s_cockroachdb_secure %}
+          - name: client-certs
+            emptyDir: {}
+{% endif %}
+
+{% endfor %}

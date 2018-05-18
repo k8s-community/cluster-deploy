@@ -8,4 +8,14 @@ k8s_master_hosts: {}
 
 # Dashboard image
 k8s_dashboard_image: gcr.io/google_containers/kubernetes-dashboard-amd64
-k8s_dashboard_image_tag: v1.6.3
+k8s_dashboard_image_tag: v1.8.0
+
+# SSL certificate and private key for running dashboard into Kubernetes
+k8s_services_cert: |
+  ----BEGIN CERTIFICATE----
+  - Your certificate here -
+  -----END CERTIFICATE-----
+k8s_services_cert_key: |
+  ----BEGIN PRIVATE KEY----
+  - Your private key here -
+  -----END PRIVATE KEY-----

@@ -1,0 +1,32 @@
+---
+# defaults file for logrotate
+
+logrotate_config_path: /etc/logrotate.conf
+syslog_path: /etc/logrotate.d/syslog
+
+# Log files are rotated <rotate_period>
+rotate_period: daily
+
+# Logs are stored for <rotate_count> periods
+rotate_count: 7
+
+# If the log file is missing, go on to the next one without issuing an error message.
+missingok: true
+
+# Do not rotate the log if it is empty
+notifempty: true
+
+# Old versions of log files are compressed with gzip(1) by default.
+compress: true
+
+# Postpone  compression of the previous log file to the next rotation cycle.
+# This only has effect when used in combination with compress.
+# It can be used when some program cannot be told to close its logfile and
+# thus might continue writing to the previous log file for some time.
+delaycompress: true
+
+# Log  files  are rotated only if they grow bigger then size bytes.
+# If size is followed by k, the size is assumed to be in kilobytes.
+# If the M is used, the size is in megabytes, and if G is used, the size
+# is in gigabytes. So size 100, size 100k, size 100M and size 100G are all valid.
+size: 50M

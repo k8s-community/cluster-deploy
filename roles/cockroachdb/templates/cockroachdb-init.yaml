@@ -1,0 +1,66 @@
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cluster-init
+  namespace: {{ k8s_cockroachdb_namespace }}
+  labels:
+    app: cockroachdb
+spec:
+  template:
+    spec:
+{% if k8s_cockroachdb_secure %}
+      serviceAccountName: cockroachdb
+      initContainers:
+      # The init-certs container sends a certificate signing request to the
+      # kubernetes cluster.
+      # You can see pending requests using: kubectl get csr
+      # CSRs can be approved using:         kubectl certificate approve <csr name>
+      #
+      # In addition to the client certificate and key, the init-certs entrypoint will symlink
+      # the cluster CA to the certs directory.
+      - name: init-certs
+        image: {{ k8s_cockroachdb_request_cert_image }}:{{ k8s_cockroachdb_request_cert_image_tag }}
+        imagePullPolicy: IfNotPresent
+{% if k8s_cockroachdb_privileged %}
+        securityContext:
+          privileged: true
+{% endif %}
+        command:
+        - "/bin/ash"
+        - "-ecx"
+        - "/request-cert -namespace=${POD_NAMESPACE} -certs-dir=/cockroach-certs -type=client -user=root -symlink-ca-from=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: client-certs
+          mountPath: /cockroach-certs
+{% endif %}
+      containers:
+      - name: cluster-init
+        image: {{ k8s_cockroachdb_image }}:{{ k8s_cockroachdb_image_tag }}
+        imagePullPolicy: IfNotPresent
+{% if k8s_cockroachdb_privileged %}
+        securityContext:
+          privileged: true
+{% endif %}
+        volumeMounts:
+        - name: client-certs
+          mountPath: /cockroach-certs
+        command:
+          - "/cockroach/cockroach"
+          - "init"
+{% if k8s_cockroachdb_secure %}
+          - "--certs-dir=/cockroach-certs"
+{% else %}
+          - "--insecure"
+{% endif %}
+          - "--host=cockroachdb-0.cockroachdb"
+      restartPolicy: OnFailure
+      volumes:
+      - name: client-certs
+        emptyDir: {}

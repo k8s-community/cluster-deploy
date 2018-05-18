@@ -63,7 +63,6 @@
   when: inventory_hostname in k8s_master_hosts
   with_items:
     - known-tokens.csv
-    - basic-auth.csv
   notify:
     - restart kubelet
 
