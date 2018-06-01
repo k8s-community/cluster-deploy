@@ -90,7 +90,7 @@ metadata:
   namespace: {{ k8s_prometheus_namespace }}
   name: prometheus-blackbox-exporter
 spec:
-  replicas: 2
+  replicas: 5
   template:
     metadata:
       labels:
