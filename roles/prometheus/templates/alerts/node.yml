@@ -1,0 +1,138 @@
+{% raw %}
+    #
+    # Node alerts (from kube-state-metrics / node-exporter)
+    #
+    # There are some alerts from https://github.com/kayrus/prometheus-kubernetes/tree/master/prometheus-rules
+    - name: node-alerts
+      rules:
+
+      #
+      # Alert on CPU > 75% on all nodes
+      #
+      - alert: NodeCPUUsage
+        expr: (100 - (avg(irate(node_cpu{component="node-exporter",mode="idle"}[5m]))
+          BY (kubernetes_pod_node_name) * 100)) > 75
+        for: 2m
+        labels:
+          severity: info
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_pod_node_name }}: High CPU usage is detected"
+          description: "{{ $labels.kubernetes_pod_node_name }}: CPU usage is above 75% (current value is: {{ $value }})"
+
+      #
+      # Alert on load average > 1.5
+      #
+      - alert: NodeLoadAverage
+        expr: ((node_load5 / count(node_cpu{mode="system"}) WITHOUT (cpu, mode)) > 1.5)
+        for: 5m
+        labels:
+          severity: info
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_pod_node_name }}: High LA detected"
+          description: "{{ $labels.kubernetes_pod_node_name }}: Load average is high (current value is: {{ $value }})"
+
+      #
+      # Alert on swap > 75%
+      #
+      - alert: NodeSwapUsage
+        expr: (((node_memory_SwapTotal - node_memory_SwapFree) / node_memory_SwapTotal) * 100) > 75
+        for: 5m
+        labels:
+          severity: info
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_pod_node_name }}: Swap usage is detected"
+          description: "{{ $labels.kubernetes_pod_node_name }}: Swap usage usage is above 75% (current value is: {{ $value }})"
+
+      #
+      # Alert on memory > 75%
+      #
+      - alert: NodeMemoryUsage
+        expr: (((node_memory_MemTotal - node_memory_MemFree - node_memory_Cached) / (node_memory_MemTotal)* 100)) > 75
+        for: 5m
+        labels:
+          severity: info
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_pod_node_name }}: High memory usage is detected"
+          description: "{{ $labels.kubernetes_pod_node_name }}: Memory usage is above 75% (current value is: {{ $value }})"
+
+      #
+      # Disk is free < 10%
+      #
+      - alert: HighNodeDiskUsage
+        expr: (avg(node_filesystem_avail{device=~"^/dev/[sv]da[0-9]$"}) BY (kubernetes_pod_node_name)) / (avg(node_filesystem_size{device=~"^/dev/[sv]da[0-9]$"})
+          BY (kubernetes_pod_node_name)) * 100 < 10
+        for: 5m
+        labels:
+          severity: high
+          notify: sre
+        annotations:
+          summary: "{{$labels.kubernetes_pod_node_name}}: High disk usage is detected"
+          description: "{{$labels.kubernetes_pod_node_name}}: Disk is free less than 10% (current value is: {{ $value }})"
+
+      #
+      # Alert for node that is unreachable for > 5 minutes
+      #
+      - alert: NodeIsDown
+        expr: absent(up{job="kubernetes-nodes"} == 1)
+        for: 5m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_node_name }}: Node is down"
+          description: "{{ $labels.kubernetes_node_name }}: Node is down for more than 5 minutes"
+
+      #
+      # Defines ratio between max and open file descriptors
+      #
+      - record: instance:fd_node_utilization
+        expr: process_open_fds{job="kubernetes-nodes"} / process_max_fds{job="kubernetes-nodes"}
+
+      #
+      # Alert for node that uses 80% of available file descriptors
+      #
+      - alert: TooManyOpenFDNode
+        expr: 100 * instance:fd_node_utilization > 80
+        for: 10m
+        labels:
+          severity: critical
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_node_name }}: High usage of file descriptors by node"
+          description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_node_name }}: Node is using {{ $value }}% of the available file/socket descriptors'
+
+      #
+      # Alert on expected limit of open file descriptors after 4 hours
+      #
+      - alert: FdNodeExhaustionClose
+        expr: predict_linear(instance:fd_node_utilization[1h], 3600 * 4) > 1
+        for: 10m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_node_name }}: Expected high usage of file descriptors by node"
+          description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_node_name }}: Node will exhaust in file/socket descriptors after 4 hours'
+
+      #
+      # Alert on expected limit of open file descriptors after 1h
+      #
+      - alert: FdNodeExhaustionTooClose
+        expr: predict_linear(instance:fd_node_utilization[10m], 3600) > 1
+        for: 10m
+        labels:
+          severity: critical
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_node_name }}: Expected high usage of file descriptors by node"
+          description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_node_name }}: Node will exhaust in file/socket descriptors after 1 hour'
+
+      #
+      # TODO: Disk will be busy after 4 hours
+      # something like: predict_linear((avg by (instance) (node_filesystem_avail{device=~"^/dev/[sv]da[0-9]$"})), 4*3600) < 0
+
+{% endraw %}

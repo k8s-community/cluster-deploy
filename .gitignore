@@ -4,3 +4,5 @@ dev
 stage
 stable
 inventory/cluster
+inventory/.certs
+.idea

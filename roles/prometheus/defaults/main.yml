@@ -1,0 +1,81 @@
+---
+# Kubernetes configs path
+k8s_conf_dir: /etc/kubernetes
+k8s_prometheus_dir: '{{ k8s_conf_dir }}/addons/prometheus'
+
+# Master hosts names
+k8s_master_hosts: {}
+
+# Retention days (how long to store data)
+k8s_prometheus_retention_days: 7
+
+# Prometheus host name (it will be created if it doesn't exist)
+k8s_prometheus_name: ''
+# AlertManager host name (it will be created if it doesn't exist)
+k8s_prometheus_alertmanager_name: ''
+# PushGateway host name (it will be created if it doesn't exist)
+k8s_prometheus_pushgateway_name: ''
+# Grafana host name (it will be created if it doesn't exist)
+k8s_prometheus_grafana_name: ''
+# AlertManager host name (it will be created if it doesn't exist)
+k8s_prometheus_blackbox_name: ''
+
+# Prometheus namespace (it will be created if it doesn't exist)
+k8s_prometheus_namespace: prometheus
+
+# Prometheus image
+k8s_prometheus_image: prom/prometheus
+k8s_prometheus_image_tag: v2.2.1
+# Alert manager image
+k8s_prometheus_alertmanager_image: prom/alertmanager
+k8s_prometheus_alertmanager_image_tag: v0.14.0
+# Kube state metrics image
+k8s_prometheus_ksm_image: gcr.io/google_containers/kube-state-metrics
+k8s_prometheus_ksm_image_tag: v0.5.0
+# Node exporter image
+k8s_prometheus_nodeexport_image: prom/node-exporter
+k8s_prometheus_nodeexport_image_tag: v0.16.0
+# Black box exporter image
+k8s_prometheus_blackbox_image: prom/blackbox-exporter
+k8s_prometheus_blackbox_image_tag: v0.12.0
+
+# Prometheus additional components
+
+# Push gateway image
+k8s_prometheus_pushgateway_image: prom/pushgateway
+k8s_prometheus_pushgateway_image_tag: v0.4.0
+# Grafan image (+ grafana watcher)
+k8s_prometheus_grafana_image: grafana/grafana
+k8s_prometheus_grafana_image_tag: 4.5.2
+k8s_prometheus_grafana_watcher_image: quay.io/coreos/grafana-watcher
+k8s_prometheus_grafana_watcher_image_tag: v0.0.8
+# Config reload image
+k8s_prometheus_configreload_image: jimmidyson/configmap-reload
+k8s_prometheus_configreload_image_tag: v0.1
+
+# Prometheus scrape configs for Istio
+k8s_prometheus_scrape_istio_metrics: false
+# Prometheus scrape configs for Cockroachdb
+k8s_prometheus_scrape_cockroachdb_metrics: false
+
+# Alerts default route is stub
+k8s_prometheus_alerts_default_route: 'null'
+
+# Prometheus alert configs for Slack
+k8s_prometheus_slack_alerts_enabled: false
+k8s_prometheus_slack_api_url: ''
+k8s_prometheus_slack_channel: ''
+k8s_prometheus_slack_message_title: '{% raw %}[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}]{{.CommonAnnotations.summary}}{% endraw %}'
+# be careful with tabs - it can break structure of yml file
+k8s_prometheus_slack_message_body: |
+  {% raw %}{{ range .Alerts }}
+                  *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+                    *Description:* {{ .Annotations.description }}
+                    *Details*:
+                      {{ range .Labels.SortedPairs }} • {{ .Name }}: `{{ .Value }}`
+                      {{ end }}
+                    {{ end }}{% endraw %}
+
+# Prometheus alert configs for Telegram
+k8s_prometheus_telegram_alerts_enabled: false
+k8s_prometheus_telegram_webhook: ''

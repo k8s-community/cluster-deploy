@@ -1,0 +1,8 @@
+---
+- hosts: addons
+  remote_user: '{{ k8s_ssh_user }}'
+  become: true
+  roles:
+    - role: prometheus
+      k8s_master_hosts: '{{ groups["master"] }}'
+      k8s_node_hosts: '{{ groups["node"] }}'

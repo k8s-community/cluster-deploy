@@ -1,0 +1,114 @@
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: prometheus
+    component: "node-exporter"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-node-exporter
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus
+    component: "node-exporter"
+  name: prometheus-node-exporter
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-node-exporter
+    namespace: {{ k8s_prometheus_namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    app: prometheus
+    component: "node-exporter"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-node-exporter
+spec:
+  clusterIP: None
+  ports:
+    - name: metrics
+      port: 9100
+      protocol: TCP
+      targetPort: 9100
+  selector:
+    app: prometheus
+    component: "node-exporter"
+  type: "ClusterIP"
+
+---
+
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: prometheus
+    component: "node-exporter"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-node-exporter
+spec:
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: "node-exporter"
+    spec:
+      serviceAccountName: prometheus-node-exporter
+      tolerations:
+        # Allow the pod to run on the master.  This is required for
+        # the master to communicate with pods.
+        - key: node-role.kubernetes.io/master
+          value: "true"
+          effect: NoSchedule
+        # Mark the pod as a critical add-on for rescheduling.
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+      containers:
+        - name: prometheus-node-exporter
+          image: "{{ k8s_prometheus_nodeexport_image }}:{{ k8s_prometheus_nodeexport_image_tag }}"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+          ports:
+            - name: metrics
+              containerPort: 9100
+              hostPort: 9100
+          volumeMounts:
+            - name: proc
+              mountPath: /host/proc
+              readOnly:  true
+            - name: sys
+              mountPath: /host/sys
+              readOnly: true
+          resources:
+            limits:
+              cpu: 200m
+              memory: 50Mi
+            requests:
+              cpu: 100m
+              memory: 30Mi
+      hostNetwork: true
+      hostPID: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys

@@ -75,4 +75,14 @@
     service_account_email: '{{ gce_service_account_email }}'
     credentials_file: '{{ gce_credentials_file }}'
     project_id: '{{ gce_project_id }}'
-   
+- name: Firewall - allow internal prometheus node exporter
+  gce_net:
+    name: '{{ gce_network_name }}'
+    fwname: k8s-allow-prometheus-node-exporter
+    allowed: tcp:9100
+    src_range:
+      - '{{ gce_instances_ip_range }}'
+      - '{{ k8s_flannel_network }}'
+    service_account_email: '{{ gce_service_account_email }}'
+    credentials_file: '{{ gce_credentials_file }}'
+    project_id: '{{ gce_project_id }}'

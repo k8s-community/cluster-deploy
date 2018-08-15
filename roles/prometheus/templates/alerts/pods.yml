@@ -1,0 +1,79 @@
+{% raw %}
+    #
+    # Pod alerts (from cAdvisor / kube-state-metrics)
+    #
+    - name: pod-alerts
+      rules:
+
+      #
+      # Pod restarting count > 5 times per minute
+      #
+      - alert: PodRestartingTooMuch
+        expr: rate(kube_pod_container_status_restarts[1m]) > 1 / (5 * 60)
+        for: 1h
+        labels:
+          severity: warning
+          notify: tech
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.pod }}: Pod restarts too much"
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.pod }}: Pod restarts more than 5 times per minute"
+
+      #
+      # Alert for pod that is unreachable for > 5 minutes
+      #
+      - alert: PodIsDown
+        expr: absent(up{job="kubernetes-service-endpoints"} == 1)
+        for: 5m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Pod is down"
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Pod is down for more than 5 minutes"
+
+      #
+      # Defines ratio between max and open file descriptors
+      #
+      - record: instance:fd_pod_utilization
+        expr: process_open_fds{job="kubernetes-service-endpoints"} / process_max_fds{job="kubernetes-service-endpoints"}
+
+      #
+      # Alert for pod that uses 80% of available file descriptors
+      #
+      - alert: TooManyOpenFDPod
+        expr: 100 * instance:fd_pod_utilization > 80
+        for: 10m
+        labels:
+          severity: critical
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: High usage of file descriptors by pod"
+          description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Pod is using {{ $value }}% of the available file/socket descriptors'
+
+      #
+      # Alert on expected limit of open file descriptors after 4 hours
+      #
+      - alert: FdPodExhaustionClose
+        expr: predict_linear(instance:fd_pod_utilization[1h], 3600 * 4) > 1
+        for: 10m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Expected high usage of file descriptors by pod"
+          description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Pod will exhaust in file/socket descriptors after 4 hours'
+
+      #
+      # Alert on expected limit of open file descriptors after 1h
+      #
+      - alert: FdPodExhaustionTooClose
+        expr: predict_linear(instance:fd_pod_utilization[10m], 3600) > 1
+        for: 10m
+        labels:
+          severity: critical
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Expected high usage of file descriptors by pod"
+          description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_pod_name }}: Pod will exhaust in file/socket descriptors after 1 hour'
+
+{% endraw %}

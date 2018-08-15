@@ -1,0 +1,15 @@
+    #
+    # Common rules of monitoring:
+    #
+    # Severity of problem:
+    # severity = debug | info | warning | high | disaster
+    #
+    # Responsible for reaction on problem:
+    # notify = sre | dev | support | ... | all
+    #
+    #
+    # Monitored services must have labels like component and other
+    # TODO: describe it
+    #
+    #
+

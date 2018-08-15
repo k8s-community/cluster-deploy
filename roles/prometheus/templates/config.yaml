@@ -1,0 +1,60 @@
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ k8s_prometheus_namespace }}
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-secret
+  namespace: {{ k8s_prometheus_namespace }}
+data:
+  tls.crt: {{ k8s_services_cert | b64encode }}
+  tls.key: {{ k8s_services_cert_key | b64encode }}
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-pull-secret
+  namespace: {{ k8s_prometheus_namespace }}
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ k8s_docker_registry_auth_token }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ k8s_prometheus_namespace }}-admin
+  namespace: {{ k8s_prometheus_namespace }}
+  labels:
+    basic.auth/role: {{ k8s_prometheus_namespace }}-admin
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ k8s_prometheus_namespace }}
+  namespace: {{ k8s_prometheus_namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ k8s_prometheus_namespace }}-admin
+subjects:
+- kind: User
+  name: {{ k8s_release_username }}

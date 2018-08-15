@@ -1,0 +1,44 @@
+  capacity-planning-dashboard.json: |-
+{% include 'grafana-dashboards/capacity-planning.json' %}
+
+  cluster-health-dashboard.json: |-
+{% include 'grafana-dashboards/cluster-health.json' %}
+
+  cluster-monitoring-dashboard.json: |-
+{% include 'grafana-dashboards/cluster-monitoring.json' %}
+
+  cluster-status-dashboard.json: |-
+{% include 'grafana-dashboards/cluster-status.json' %}
+
+  control-plane-status-dashboard.json: |-
+{% include 'grafana-dashboards/control-plane-status.json' %}
+
+  deployment-dashboard.json: |-
+{% include 'grafana-dashboards/deployment.json' %}
+
+  nodes-dashboard.json: |-
+{% include 'grafana-dashboards/nodes.json' %}
+
+  pods-dashboard.json: |-
+{% include 'grafana-dashboards/pods.json' %}
+
+  resource-requests-dashboard.json: |-
+{% include 'grafana-dashboards/resource-requests.json' %}
+
+{% if k8s_prometheus_scrape_cockroachdb_metrics %}
+
+  cockroachdb-replicas-dashboard.json: |-
+{% include 'grafana-dashboards/cockroachdb/replicas.json' %}
+
+  cockroachdb-runtime-dashboard.json: |-
+{% include 'grafana-dashboards/cockroachdb/runtime.json' %}
+
+  cockroachdb-sql-dashboard.json: |-
+{% include 'grafana-dashboards/cockroachdb/sql.json' %}
+
+  cockroachdb-storage-dashboard.json: |-
+{% include 'grafana-dashboards/cockroachdb/storage.json' %}
+
+
+
+{% endif %}

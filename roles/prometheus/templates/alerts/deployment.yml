@@ -1,0 +1,21 @@
+{% raw %}
+    #
+    # Deployment alerts (from kube-state-metrics)
+    #
+    - name: deployments-alerts
+      rules:
+      #
+      # Alert on deployment has not enough replicas
+      #
+      - alert: DeploymentReplicasMismatch
+        expr: (kube_deployment_spec_replicas != kube_deployment_status_replicas_available)
+          or (kube_deployment_spec_replicas unless kube_deployment_status_replicas_unavailable)
+        for: 5m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.namespace }}/{{ $labels.deployment }}: Deployment is failed"
+          description: "{{ $labels.namespace }}/{{ $labels.deployment }}: Deployment is failed - observed replicas != intended replicas"
+
+{% endraw %}

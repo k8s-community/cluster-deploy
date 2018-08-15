@@ -16,10 +16,12 @@
       - 10250/tcp     # kubelet port
       - 10255/tcp     # kubelet port
       - 4194/tcp      # cAdvisor port
+      - 9100/tcp      # Prometheus node-exporter port
     nodes_ports:
       - 10250/tcp     # kubelet port
       - 10255/tcp     # kubelet port
       - 4194/tcp      # cAdvisor port
+      - 9100/tcp      # Prometheus node-exporter port
     flannel_ports:
       - 8472/udp      # flannel network
     lb_services:
@@ -29,7 +31,7 @@
       - 43/tcp
     disabled_services:
       - ssh
- 
+
   tasks:
 
   # Collect Cluster IPs

@@ -1,0 +1,23 @@
+{% include 'alerts/common.yml' %}
+
+    groups:
+{% include 'alerts/app.yml' %}
+
+{% include 'alerts/deployment.yml' %}
+
+{% include 'alerts/pods.yml' %}
+
+{% include 'alerts/node.yml' %}
+
+{% include 'alerts/ingress.yml' %}
+
+{% include 'alerts/service.yml' %}
+
+{% include 'alerts/prometheus.yml' %}
+
+{% include 'alerts/kubernetes.yml' %}
+
+{% if k8s_prometheus_scrape_cockroachdb_metrics %}
+
+{% include 'alerts/cockroachdb.yml' %}
+{% endif %}

@@ -1,0 +1,205 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: prometheus
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+data:
+  alertmanager.yml: |-
+    {% if k8s_prometheus_slack_alerts_enabled %}
+
+    global:
+      slack_api_url: '{{ k8s_prometheus_slack_api_url }}'
+    {% endif %}
+
+    receivers:
+      - name: 'null'
+
+      {% if k8s_prometheus_slack_alerts_enabled %}
+
+      - name: slack
+        slack_configs:
+          - channel: '{{ k8s_prometheus_slack_channel }}'
+            send_resolved: true
+            title: '{{ k8s_prometheus_slack_message_title }}'
+            text: >-
+              {{ k8s_prometheus_slack_message_body }}
+      {% endif %}
+
+      {% if k8s_prometheus_telegram_alerts_enabled %}
+
+      - name: telegram
+        webhook_configs:
+          - send_resolved: True
+            url: {{ k8s_prometheus_telegram_webhook }}
+      {% endif %}
+
+    route:
+      group_wait: 10s
+      group_interval: 1h
+      receiver: {{ k8s_prometheus_alerts_default_route }}
+      repeat_interval: 4h
+      routes:
+        - receiver: 'null'
+          match:
+            alertname: DeadMansSwitch
+
+        {% if k8s_prometheus_slack_alerts_enabled %}
+
+        - receiver: slack
+          match_re:
+            notify: ^sre|dev$
+          continue: true
+        {% endif %}
+
+        {% if k8s_prometheus_telegram_alerts_enabled %}
+
+        - receiver: telegram
+          match:
+            notify: sre
+        {% endif %}
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: prometheus
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: prometheus
+    component: "alertmanager"
+  name: prometheus-alertmanager
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-alertmanager
+    namespace: {{ k8s_prometheus_namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 9093
+  selector:
+    app: prometheus
+    component: "alertmanager"
+  type: "ClusterIP"
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        component: alertmanager
+    spec:
+      serviceAccountName: prometheus-alertmanager
+      containers:
+        - name: prometheus-alertmanager
+          image: "{{ k8s_prometheus_alertmanager_image }}:{{ k8s_prometheus_alertmanager_image_tag }}"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --config.file=/etc/config/alertmanager.yml
+            - --storage.path=/data
+          ports:
+            - containerPort: 9093
+          readinessProbe:
+            httpGet:
+              path: /#/status
+              port: 9093
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 10m
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: "/data"
+              subPath: ""
+        - name: prometheus-alertmanager-configmap-reload
+          image: "{{ k8s_prometheus_configreload_image }}:{{ k8s_prometheus_configreload_image_tag }}"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://localhost:9093/-/reload
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-alertmanager
+        - name: storage-volume
+          emptyDir: {}
+
+{% if k8s_prometheus_alertmanager_name != '' %}
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  labels:
+    app: prometheus
+    component: "alertmanager"
+  namespace: {{ k8s_prometheus_namespace }}
+  name: prometheus-alertmanager
+spec:
+  rules:
+    - host: {{ k8s_prometheus_alertmanager_name }}
+      http:
+        paths:
+          - backend:
+              serviceName: prometheus-alertmanager
+              servicePort: 80
+  tls:
+    - hosts:
+      - {{ k8s_prometheus_alertmanager_name }}
+      secretName: tls-secret
+{% endif %}

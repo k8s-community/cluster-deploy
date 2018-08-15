@@ -1,0 +1,33 @@
+{% raw %}
+    #
+    # Ingress alerts (from blackbox-exporter)
+    #
+    - name: ingress-alerts
+      rules:
+      #
+      # Alert on host (in ingress) is unreachable > 5 min
+      #
+      - alert: IngressIsUnreachable
+        expr: probe_success{job="kubernetes-ingresses"} == 0 or absent(probe_success{job="kubernetes-ingresses"} == 1)
+        for: 5m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_ingress_name }}: Ingress is unreachable"
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_ingress_name }}: Ingress is unreachable more than 5 minutes (domain is {{ $labels.instance }})"
+
+      #
+      # Alert on SSL certificate will be expired < 30 days
+      #
+      - alert: SSLCertExpiringSoon
+        expr: probe_ssl_earliest_cert_expiry{job="kubernetes-ingresses"} - time() < 86400 * 30
+        for: 5m
+        labels:
+          severity: warning
+          notify: sre
+        annotations:
+          summary: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_ingress_name }}: SSL certificate will be expired soon"
+          description: "{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_ingress_name }}: SSL certificate will be expired less than 30 days (domain is {{ $labels.instance }})"
+
+{% endraw %}
